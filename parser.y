@@ -27,14 +27,15 @@ extern FILE *yyin;
 %token <type_float> FLOAT         //指定ID的语义值是type_id，有词法分析得到的标识符字符串
 
 %token LP RP LC RC SEMI COMMA   //用bison对该文件编译时，带参数-d，生成的exp.tab.h中给这些单词进行编码，可在lex.l中包含parser.tab.h使用这些单词种类码
-%token PLUS MINUS STAR DIV ASSIGNOP AND OR NOT IF ELSE WHILE RETURN DPLUS DMINUS 
+%token PLUS MINUS STAR DIV PER ASSIGNOP AND OR NOT IF ELSE WHILE RETURN DPLUS DMINUS 
+%token PLUSASSIGN MINUSASSIGN MULTASSIGN DIVASSIGN PERASSIGN
 
-%left ASSIGNOP
+%left ASSIGNOP PLUSASSIGN MINUSASSIGN MULTASSIGN DIVASSIGN PERASSIGN
 %left OR
 %left AND
 %left RELOP
 %left PLUS MINUS
-%left STAR DIV
+%left MULT DIV PER
 %right UMINUS UPLUS NOT FDPLUS FDMINUS
 
 %nonassoc LOWER_THEN_ELSE
@@ -77,6 +78,7 @@ Stmt:   Exp SEMI    {$$=mknode(EXP_STMT,$1,NULL,NULL,yylineno);}
       | IF LP Exp RP Stmt %prec LOWER_THEN_ELSE   {$$=mknode(IF_THEN,$3,$5,NULL,yylineno);}
       | IF LP Exp RP Stmt ELSE Stmt   {$$=mknode(IF_THEN_ELSE,$3,$5,$7,yylineno);}
       | WHILE LP Exp RP Stmt {$$=mknode(WHILE,$3,$5,NULL,yylineno);}
+      | DefList {$$=$1;}
       ;
   
 DefList: {$$=NULL; }
@@ -90,14 +92,20 @@ DecList: Dec  {$$=mknode(DEC_LIST,$1,NULL,NULL,yylineno);} //声明表
 Dec:     VarDec  {$$=$1;} //单个声明表达式
        | VarDec ASSIGNOP Exp  {$$=mknode(ASSIGNOP,$1,$3,NULL,yylineno);strcpy($$->type_id,"ASSIGNOP");}
        ;
-Exp:    Exp ASSIGNOP Exp {$$=mknode(ASSIGNOP,$1,$3,NULL,yylineno);strcpy($$->type_id,"ASSIGNOP");}//$$结点type_id空置未用，正好存放运算符
+Exp:    VarDec ASSIGNOP Exp {$$=mknode(ASSIGNOP,$1,$3,NULL,yylineno);strcpy($$->type_id,"ASSIGNOP");}//$$结点type_id空置未用，正好存放运算符
+      | VarDec PLUSASSIGN Exp {$$=mknode(PLUSASSIGN,$1,$3,NULL,yylineno);strcpy($$->type_id,"PLUSASSIGN");}
+      | VarDec MINUSASSIGN Exp {$$=mknode(MINUSASSIGN,$1,$3,NULL,yylineno);strcpy($$->type_id,"MINUSASSIGN");}
+      | VarDec MULTASSIGN Exp {$$=mknode(MULTASSIGN,$1,$3,NULL,yylineno);strcpy($$->type_id,"MULTASSIGN");}
+      | VarDec DIVASSIGN Exp {$$=mknode(DIVASSIGN,$1,$3,NULL,yylineno);strcpy($$->type_id,"DIVASSIGN");}
+      | VarDec PERASSIGN Exp {$$=mknode(PERASSIGN,$1,$3,NULL,yylineno);strcpy($$->type_id,"PERASSIGN");}
       | Exp AND Exp   {$$=mknode(AND,$1,$3,NULL,yylineno);strcpy($$->type_id,"AND");}
       | Exp OR Exp    {$$=mknode(OR,$1,$3,NULL,yylineno);strcpy($$->type_id,"OR");}
       | Exp RELOP Exp {$$=mknode(RELOP,$1,$3,NULL,yylineno);strcpy($$->type_id,$2);}  //词法分析关系运算符号自身值保存在$2中
       | Exp PLUS Exp  {$$=mknode(PLUS,$1,$3,NULL,yylineno);strcpy($$->type_id,"PLUS");}
       | Exp MINUS Exp {$$=mknode(MINUS,$1,$3,NULL,yylineno);strcpy($$->type_id,"MINUS");}
-      | Exp STAR Exp  {$$=mknode(STAR,$1,$3,NULL,yylineno);strcpy($$->type_id,"STAR");}
+      | Exp MULT Exp  {$$=mknode(MULT,$1,$3,NULL,yylineno);strcpy($$->type_id,"MULT");}
       | Exp DIV Exp   {$$=mknode(DIV,$1,$3,NULL,yylineno);strcpy($$->type_id,"DIV");}
+      | Exp PER Exp   {$$=mknode(PER,$1,$3,NULL,yylineno);strcpy($$->type_id,"PER");}
       | Exp DPLUS     {$$=mknode(DPLUS,$1,NULL,NULL,yylineno);strcpy($$->type_id,"DPLUS");}
       | DPLUS Exp %prec FDPLUS    {$$=mknode(FDPLUS,$2,NULL,NULL,yylineno);strcpy($$->type_id,"FDPLUS");}
       | Exp DMINUS     {$$=mknode(DMINUS,$1,NULL,NULL,yylineno);strcpy($$->type_id,"DMINUS");}

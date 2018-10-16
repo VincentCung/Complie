@@ -70,8 +70,7 @@ void display(struct node *T, int indent)
       break;
     case COMP_STM:
       printf("%*c复合语句：\n", indent, ' ');
-      printf("%*c复合语句的变量定义：\n", indent + 3, ' ');
-      display(T->ptr[0], indent + 6); //显示定义部分
+      display(T->ptr[0], indent + 3); //显示定义部分
       printf("%*c复合语句的语句部分：\n", indent + 3, ' ');
       display(T->ptr[1], indent + 6); //显示语句部分
       break;
@@ -107,7 +106,7 @@ void display(struct node *T, int indent)
       display(T->ptr[1], indent); //显示其它局部变量定义
       break;
     case VAR_DEF:
-      printf("%*cLOCAL VAR_NAME：\n", indent, ' ');
+      printf("%*c局部变量定义：\n", indent, ' ');
       display(T->ptr[0], indent + 3); //显示变量类型
       display(T->ptr[1], indent + 3); //显示该定义的全部变量名
       break;
@@ -140,13 +139,19 @@ void display(struct node *T, int indent)
       printf("%*cCHAR：%s\n", indent, ' ', T->type_id);
       break;
     case ASSIGNOP:
+    case PLUSASSIGN:
+    case MINUSASSIGN:
+    case MULTASSIGN:
+    case DIVASSIGN:
+    case PERASSIGN:
     case AND:
     case OR:
     case RELOP:
     case PLUS:
     case MINUS:
-    case STAR:
+    case MULT:
     case DIV:
+    case PER:
       printf("%*c%s\n", indent, ' ', T->type_id);
       display(T->ptr[0], indent + 3);
       display(T->ptr[1], indent + 3);

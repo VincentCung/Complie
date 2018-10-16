@@ -42,12 +42,18 @@ string (")(.|\n)*(")
 ";"			{return SEMI;}
 ","			{return COMMA;}
 ">"|"<"|">="|"<="|"=="|"!=" {strcpy(yylval.type_id, yytext);;return RELOP;}
+"+="    {return PLUSASSIGN;}
+"-="		{return MINUSASSIGN;}
+"*="		{return MULTASSIGN;}
+"/="		{return DIVASSIGN;}
+"%="		{return PERASSIGN;}
 "++"		{return DPLUS;}
 "--"    {return DMINUS;}
 "="			{return ASSIGNOP;}
 "+"			{return PLUS;}
+"%"			{return PER;}
 "-"			{return MINUS;}
-"*"			{return STAR;}
+"*"			{return MULT;}
 "/"			{return DIV;}
 "&&"    {return AND;}
 "||"    {return OR;}
