@@ -34,7 +34,10 @@ enum node_kind
   JGT,
   JGE,
   EQ,
-  NEQ
+  NEQ,
+  ARRAY_LIST,
+  ARRAY,
+  ARRAY_ELE
 };
 #define MAXLENGTH 1000     //定义符号表的大小
 #define DX 3 * sizeof(int) //活动记录控制信息需要的单元数

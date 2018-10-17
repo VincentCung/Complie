@@ -62,6 +62,8 @@ string (")(.|\n)*(")
 ")"			{return RP;}
 "{"			{return LC;}
 "}"			{return RC;}
+"["			{return LM;}
+"]"			{return RM;}
 [\n]           {yycolumn=1;}   
 [ \r\t]          {}   
 .			{printf("Error type A at Line %d\n :Unknown character \"%s\"",yylineno,yytext);}

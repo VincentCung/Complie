@@ -187,6 +187,24 @@ void display(struct node *T, int indent)
       printf("%*c%s\n", indent, ' ', T->type_id);
       display(T->ptr[0], indent + 3);
       break;
+    case ARRAY_LIST:
+      i = 1;
+      while (T)
+      {
+        struct node *T0 = T->ptr[0];
+        printf("%*c第%d维：", indent, ' ', i++);
+        display(T0, indent);
+        T = T->ptr[1];
+      }
+      printf("\n");
+      break;
+    case ARRAY:
+      printf(" %d\n" ,T->type_int);
+      break;
+    case ARRAY_ELE:
+      printf("%*c数组元素：%s\n", indent + 3, ' ', T->type_id);
+      display(T->ptr[0], indent + 3);
+      break;
     }
   }
 }

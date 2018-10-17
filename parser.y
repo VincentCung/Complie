@@ -19,14 +19,14 @@ extern FILE *yyin;
 };
 
 //  %type ¶¨Òå·ÇÖÕ½á·ûµÄÓïÒåÖµÀàĞÍ
-%type  <ptr> program ExtDefList ExtDef  Specifier ExtDecList FuncDec CompSt VarList VarDec ParamDec Stmt StmList DefList Def DecList Dec Exp Args
+%type  <ptr> program ExtDefList ExtDef Specifier ExtDecList FuncDec CompSt VarList VarDec ParamDec Stmt StmList DefList Def DecList Dec Exp Args ArrayChild ArrayList 
 
 //% token ¶¨ÒåÖÕ½á·ûµÄÓïÒåÖµÀàĞÍ
 %token <type_int> INT              //Ö¸¶¨INTµÄÓïÒåÖµÊÇtype_int£¬ÓĞ´Ê·¨·ÖÎöµÃµ½µÄÊıÖµ
 %token <type_id> ID RELOP TYPE CHAR  //Ö¸¶¨ID,RELOP µÄÓïÒåÖµÊÇtype_id£¬ÓĞ´Ê·¨·ÖÎöµÃµ½µÄ±êÊ¶·û×Ö·û´®
 %token <type_float> FLOAT         //Ö¸¶¨IDµÄÓïÒåÖµÊÇtype_id£¬ÓĞ´Ê·¨·ÖÎöµÃµ½µÄ±êÊ¶·û×Ö·û´®
 
-%token LP RP LC RC SEMI COMMA   //ÓÃbison¶Ô¸ÃÎÄ¼ş±àÒëÊ±£¬´ø²ÎÊı-d£¬Éú³ÉµÄexp.tab.hÖĞ¸øÕâĞ©µ¥´Ê½øĞĞ±àÂë£¬¿ÉÔÚlex.lÖĞ°üº¬parser.tab.hÊ¹ÓÃÕâĞ©µ¥´ÊÖÖÀàÂë
+%token LP RP LC RC SEMI COMMA LM RM //ÓÃbison¶Ô¸ÃÎÄ¼ş±àÒëÊ±£¬´ø²ÎÊı-d£¬Éú³ÉµÄexp.tab.hÖĞ¸øÕâĞ©µ¥´Ê½øĞĞ±àÂë£¬¿ÉÔÚlex.lÖĞ°üº¬parser.tab.hÊ¹ÓÃÕâĞ©µ¥´ÊÖÖÀàÂë
 %token PLUS MINUS STAR DIV PER ASSIGNOP AND OR NOT IF ELSE WHILE RETURN DPLUS DMINUS 
 %token PLUSASSIGN MINUSASSIGN MULTASSIGN DIVASSIGN PERASSIGN
 
@@ -36,7 +36,7 @@ extern FILE *yyin;
 %left RELOP
 %left PLUS MINUS
 %left MULT DIV PER
-%right UMINUS UPLUS NOT FDPLUS FDMINUS
+%right UMINUS UPLUS NOT FDPLUS FDMINUS DPLUS DMINUS
 
 %nonassoc LOWER_THEN_ELSE
 %nonassoc ELSE
@@ -58,9 +58,10 @@ ExtDecList:  VarDec      {$$=$1;}       /*Ã¿Ò»¸öEXT_DECLISTµÄ½áµã£¬ÆäµÚÒ»¿Ã×ÓÊ÷¶
            | VarDec COMMA ExtDecList {$$=mknode(EXT_DEC_LIST,$1,$3,NULL,yylineno);}
            ;  
 VarDec:  ID          {$$=mknode(ID,NULL,NULL,NULL,yylineno);strcpy($$->type_id,$1);}   //ID½áµã£¬±êÊ¶·û·ûºÅ´®´æ·Å½áµãµÄtype_id
+         | ID ArrayList  {$$=mknode(ARRAY_ELE,$2,NULL,NULL,yylineno);strcpy($$->type_id,$1);}
          ;
 FuncDec: ID LP VarList RP   {$$=mknode(FUNC_DEC,$3,NULL,NULL,yylineno);strcpy($$->type_id,$1);}//º¯ÊıÃû´æ·ÅÔÚ$$->type_id
-		|ID LP  RP   {$$=mknode(FUNC_DEC,NULL,NULL,NULL,yylineno);strcpy($$->type_id,$1);}//º¯ÊıÃû´æ·ÅÔÚ$$->type_id
+	|ID LP  RP   {$$=mknode(FUNC_DEC,NULL,NULL,NULL,yylineno);strcpy($$->type_id,$1);}//º¯ÊıÃû´æ·ÅÔÚ$$->type_id
         ;  
 VarList: ParamDec  {$$=mknode(PARAM_LIST,$1,NULL,NULL,yylineno);}
         | ParamDec COMMA  VarList  {$$=mknode(PARAM_LIST,$1,$3,NULL,yylineno);}
@@ -78,7 +79,6 @@ Stmt:   Exp SEMI    {$$=mknode(EXP_STMT,$1,NULL,NULL,yylineno);}
       | IF LP Exp RP Stmt %prec LOWER_THEN_ELSE   {$$=mknode(IF_THEN,$3,$5,NULL,yylineno);}
       | IF LP Exp RP Stmt ELSE Stmt   {$$=mknode(IF_THEN_ELSE,$3,$5,$7,yylineno);}
       | WHILE LP Exp RP Stmt {$$=mknode(WHILE,$3,$5,NULL,yylineno);}
-      | DefList {$$=$1;}
       ;
   
 DefList: {$$=NULL; }
@@ -117,6 +117,7 @@ Exp:    VarDec ASSIGNOP Exp {$$=mknode(ASSIGNOP,$1,$3,NULL,yylineno);strcpy($$->
       | ID LP Args RP {$$=mknode(FUNC_CALL,$3,NULL,NULL,yylineno);strcpy($$->type_id,$1);}
       | ID LP RP      {$$=mknode(FUNC_CALL,NULL,NULL,NULL,yylineno);strcpy($$->type_id,$1);}
       | ID            {$$=mknode(ID,NULL,NULL,NULL,yylineno);strcpy($$->type_id,$1);}
+      | ID ArrayList  {$$=mknode(ARRAY_ELE,$2,NULL,NULL,yylineno);strcpy($$->type_id,$1);}
       | INT           {$$=mknode(INT,NULL,NULL,NULL,yylineno);$$->type_int=$1;$$->type=INT;}
       | FLOAT         {$$=mknode(FLOAT,NULL,NULL,NULL,yylineno);$$->type_float=$1;$$->type=FLOAT;}
       | CHAR         {$$=mknode(CHAR,NULL,NULL,NULL,yylineno);strcpy($$->type_id,$1);$$->type=CHAR;}
@@ -124,7 +125,11 @@ Exp:    VarDec ASSIGNOP Exp {$$=mknode(ASSIGNOP,$1,$3,NULL,yylineno);strcpy($$->
 Args:    Exp COMMA Args    {$$=mknode(ARGS,$1,$3,NULL,yylineno);}
        | Exp               {$$=mknode(ARGS,$1,NULL,NULL,yylineno);}
        ;
-       
+ArrayList: ArrayChild ArrayList  {$$=mknode(ARRAY_LIST,$1,$2,NULL,yylineno);}
+       | ArrayChild {$$=mknode(ARRAY_LIST,$1,NULL,NULL,yylineno);}
+       ;
+ArrayChild:LM INT RM {$$=mknode(ARRAY,NULL,NULL,NULL,yylineno);$$->type_int=$2;$$->type=INT;}
+       ;
 %%
 
 
