@@ -174,6 +174,10 @@ void display(struct node *T, int indent)
           }
           //显示初始化表达式
           display(T0->ptr[0]->ptr[1], indent + strlen(T0->ptr[0]->ptr[0]->type_id) + 4);
+          if (T0->ptr[0]->ptr[1] == NULL)
+          {
+            printf("%*c无初始值\n", indent+3, ' ');
+          }
         }
         else if (T0->ptr[0]->kind == ARRAY_ELE)
         {

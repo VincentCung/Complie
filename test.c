@@ -19,15 +19,15 @@
 // }
 int main() 
 {
-  char s[5];
-  // s[0] = '1544641';
-  // int a[2][3];
-  // int b = 1;
-  // int c[5] = {};
-  // float y[2][3] = {3,4,5};
-  // char c = 'j';
-  // int m,n=0,i=1;
-  // float a[1][2];
+  // char s[5];
+  int a[2][3];
+  int b = 1;
+  int c[5] = {};
+  float y[2][3] = {3,4,5};
+  char c = 'j';
+  int m,n=0,i=1;
+  float a[] = {'4',5,1.1} ;
+  s[0] = '1';
   // a[0][0] =1;
   // m = read(a[0][0]);
   // m += n;
