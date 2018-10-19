@@ -62,7 +62,14 @@ void display(struct node *T, int indent)
       break;
     case EXP_STMT:
       printf("%*c表达式语句：\n", indent, ' ');
-      display(T->ptr[0], indent + 3);
+      if (T->ptr[0] == NULL)
+      {
+        printf("%*c空表达式\n", indent + 3, ' ');
+      }
+      else
+      {
+        display(T->ptr[0], indent + 3);
+      }
       break;
     case RETURN:
       printf("%*c返回语句：\n", indent, ' ');
@@ -79,11 +86,48 @@ void display(struct node *T, int indent)
       display(T->ptr[1], indent); //显示剩下语句
       break;
     case WHILE:
-      printf("%*c循环语句：\n", indent, ' ');
+      printf("%*cwhile循环语句：\n", indent, ' ');
       printf("%*c循环条件：\n", indent + 3, ' ');
       display(T->ptr[0], indent + 6); //显示循环条件
       printf("%*c循环体：\n", indent + 3, ' ');
       display(T->ptr[1], indent + 6); //显示循环体
+      break;
+    case FOR:
+      printf("%*cfor循环语句：\n", indent, ' ');
+      printf("%*c循环条件：\n", indent + 3, ' ');
+      display(T->ptr[0], indent + 6); //显示循环条件
+      printf("%*c循环体：\n", indent + 3, ' ');
+      display(T->ptr[1], indent + 6); //显示循环体
+      break;
+    case CON_LIST:
+
+      printf("%*c条件一：\n", indent, ' ');
+      if (T->ptr[0] == NULL)
+      {
+        printf("%*c空表达式\n", indent + 3, ' ');
+      }
+      else
+      {
+        display(T->ptr[0], indent + 3);
+      }
+      printf("%*c条件二：\n", indent, ' ');
+      if (T->ptr[1] == NULL)
+      {
+        printf("%*c空表达式\n", indent + 3, ' ');
+      }
+      else
+      {
+        display(T->ptr[1], indent + 3);
+      }
+      printf("%*c条件三：\n", indent, ' ');
+      if (T->ptr[2] == NULL)
+      {
+        printf("%*c空表达式\n", indent + 3, ' ');
+      }
+      else
+      {
+        display(T->ptr[2], indent + 3);
+      }
       break;
     case IF_THEN:
       printf("%*c条件语句(IF_THEN)：\n", indent, ' ');
@@ -119,9 +163,21 @@ void display(struct node *T, int indent)
           printf("%*c %s\n", indent + 3, ' ', T0->ptr[0]->type_id);
         else if (T0->ptr[0]->kind == ASSIGNOP)
         {
-          printf("%*c %s ASSIGNOP\n ", indent + 3, ' ', T0->ptr[0]->ptr[0]->type_id);
+          if (T0->ptr[0]->ptr[0]->kind == ARRAY_ELE)
+          {
+            display(T->ptr[0]->ptr[0], indent + 3);
+            printf("%*c ASSIGNOP\n", indent + 3, ' ');
+          }
+          else
+          {
+            printf("%*c %s ASSIGNOP\n ", indent + 3, ' ', T0->ptr[0]->ptr[0]->type_id);
+          }
           //显示初始化表达式
           display(T0->ptr[0]->ptr[1], indent + strlen(T0->ptr[0]->ptr[0]->type_id) + 4);
+        }
+        else if (T0->ptr[0]->kind == ARRAY_ELE)
+        {
+          display(T->ptr[0], indent + 3);
         }
         T0 = T0->ptr[1];
       }
@@ -198,12 +254,23 @@ void display(struct node *T, int indent)
       }
       printf("\n");
       break;
-    case ARRAY:
-      printf(" %d\n" ,T->type_int);
+    case ARRAY_SUB:
+      printf(" %d\n", T->type_int);
       break;
     case ARRAY_ELE:
-      printf("%*c数组元素：%s\n", indent + 3, ' ', T->type_id);
+      printf("%*c数组：%s\n", indent, ' ', T->type_id);
       display(T->ptr[0], indent + 3);
+      break;
+    case VAL_LIST:
+      i = 1;
+      while (T)
+      {
+        struct node *T0 = T->ptr[0];
+        printf("%*c第%d个值：\n", indent, ' ', i++);
+        display(T0, indent + 3);
+        T = T->ptr[1];
+      }
+      printf("\n");
       break;
     }
   }

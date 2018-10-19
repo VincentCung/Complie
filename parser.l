@@ -19,7 +19,7 @@ typedef union {
 id   [A-Za-z][A-Za-z0-9]*  
 int    [0-9]+
 float  ([0-9]*\.[0-9]+)|([0-9]+\.)
-char   (')(.)(')
+char   (')(.)*(')
 string (")(.|\n)*(")
 
 %%
@@ -28,7 +28,7 @@ string (")(.|\n)*(")
 
 {int}        {yylval.type_int=atoi(yytext); return INT;}
 {float}      {yylval.type_float=atof(yytext); return FLOAT;}
-{char}			 {yylval.type_id[0]=yytext[1];return CHAR;}
+{char}			 {memcpy(yylval.type_id-1,  yytext,strlen(yytext)-1);return CHAR;}
 "int"        {strcpy(yylval.type_id,  yytext);return TYPE;}
 "float"      {strcpy(yylval.type_id,  yytext);return TYPE;}
 "char"			 {strcpy(yylval.type_id,  yytext);return TYPE;}
@@ -37,6 +37,7 @@ string (")(.|\n)*(")
 "if"         {return IF;}
 "else"       {return ELSE;}
 "while"      {return WHILE;}
+"for"				 {return FOR;}
 
 {id}       {strcpy(yylval.type_id,  yytext); return ID;}/*���ڹؼ��ֵ���ʽҲ���ϱ�ʾ���Ĺ������԰ѹؼ��ֵĴ���ȫ�����ڱ�ʶ����ǰ�棬����ʶ��*/
 ";"			{return SEMI;}
