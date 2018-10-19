@@ -64,7 +64,6 @@ ExtDecList:  VarDec      {$$=$1;}       /*Ã¿Ò»¸öEXT_DECLISTµÄ½áµã£¬ÆäµÚÒ»¿Ã×ÓÊ÷¶
 VarDec:  ID          {$$=mknode(ID,NULL,NULL,NULL,yylineno);strcpy($$->type_id,$1);}   //ID½áµã£¬±êÊ¶·û·ûºÅ´®´æ·Å½áµãµÄtype_id
         ;
 ArrayDec: ID ArrayList {$$=mknode(ARRAY_ELE,$2,NULL,NULL,yylineno);strcpy($$->type_id,$1);}        
-        | ID LM RM {$$=mknode(ARRAY_ELE,NULL,NULL,NULL,yylineno);strcpy($$->type_id,$1);} 
         ;
 FuncDec: ID LP VarList RP   {$$=mknode(FUNC_DEC,$3,NULL,NULL,yylineno);strcpy($$->type_id,$1);}//º¯ÊýÃû´æ·ÅÔÚ$$->type_id
 	|ID LP  RP   {$$=mknode(FUNC_DEC,NULL,NULL,NULL,yylineno);strcpy($$->type_id,$1);}//º¯ÊýÃû´æ·ÅÔÚ$$->type_id

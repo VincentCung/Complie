@@ -19,14 +19,12 @@
 // }
 int main() 
 {
-  // char s[5];
+  char s[5];
   // s[0] = '1544641';
-  int a[2][3];
-  int b = 1;
-  int c[5] = {};
-  float s[] = {1};
-  float x[] = {1,2};
-  float y[2][3] = {3,4,5};
+  // int a[2][3];
+  // int b = 1;
+  // int c[5] = {};
+  // float y[2][3] = {3,4,5};
   // char c = 'j';
   // int m,n=0,i=1;
   // float a[1][2];
@@ -44,5 +42,5 @@ int main()
   //   a[0][0]++;
   // }
   // ;
-  // return 1;  //123123
+  // return 1;  
 }
