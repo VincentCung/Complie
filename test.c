@@ -17,30 +17,51 @@
 //   if (a==1|| a==2) return 1;
 //   return fibo(a-1) + fibo(a-2);
 // }
+// int main() 
+// {
+//   // char s[5];
+//   int a[2][3];
+//   int b = 1;
+//   int c[5] = {};
+//   float y[2][3] = {3,4,5};
+//   char c = 'j';
+//   int m,n=0,i=1;
+//   float a[] = {'4',5,1.1} ;
+//   // a[0][0] =1;
+//   // m = read(a[0][0]);
+//   // m += n;
+//   // while(i<=m)
+//   // {
+//   //   n = fibo(i);
+//   //   write(n);
+//   //   i++;
+//   // }
+
+//   // for (i=0;i<3;i++) {
+//   //   a[0][0]++;
+//   // }
+//   // ;
+//   // return 1;  
+// }
+
+int a,b,c;
+float m,n;
+int fibo(int a) 
+{
+  if (a==1|| a==2) return 1;
+  return fibo(a-1) + fibo(a-2);
+}
 int main() 
 {
-  // char s[5];
-  int a[2][3];
-  int b = 1;
-  int c[5] = {};
-  float y[2][3] = {3,4,5};
-  char c = 'j';
-  int m,n=0,i=1;
-  float a[] = {'4',5,1.1} ;
-  s[0] = '1';
-  // a[0][0] =1;
-  // m = read(a[0][0]);
-  // m += n;
-  // while(i<=m)
-  // {
-  //   n = fibo(i);
-  //   write(n);
-  //   i++;
-  // }
-
-  // for (i=0;i<3;i++) {
-  //   a[0][0]++;
-  // }
-  // ;
-  // return 1;  
+  int m,n,i;
+  int j = +1; 
+  m = read();
+  i = 1;
+  while(i<=m)
+  {
+    n = fibo(i);
+    write(n);
+    i = i+1;
+  }
+  return 1;
 }

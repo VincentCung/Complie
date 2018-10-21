@@ -897,5 +897,5 @@ void semantic_Analysis0(struct node *T)
   symbol_scope_TX.top = 1;
   T->offset = 0; //外部变量在数据区的偏移量
   semantic_Analysis(T);
-  //objectCode(T->code);
+  objectCode(T->code);
 }
