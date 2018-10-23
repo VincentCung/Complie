@@ -29,7 +29,7 @@ extern FILE *yyin;
 %token <type_float> FLOAT         //Ö¸¶¨IDµÄÓïÒåÖµÊÇtype_id£¬ÓÐ´Ê·¨·ÖÎöµÃµ½µÄ±êÊ¶·û×Ö·û´®
 
 %token LP RP LC RC SEMI COMMA LM RM //ÓÃbison¶Ô¸ÃÎÄ¼þ±àÒëÊ±£¬´ø²ÎÊý-d£¬Éú³ÉµÄexp.tab.hÖÐ¸øÕâÐ©µ¥´Ê½øÐÐ±àÂë£¬¿ÉÔÚlex.lÖÐ°üº¬parser.tab.hÊ¹ÓÃÕâÐ©µ¥´ÊÖÖÀàÂë
-%token PLUS MINUS STAR DIV PER ASSIGNOP AND OR NOT IF ELSE WHILE RETURN DPLUS DMINUS FOR
+%token PLUS MINUS STAR DIV PER ASSIGNOP AND OR NOT IF ELSE WHILE RETURN DPLUS DMINUS FOR BREAK
 %token PLUSASSIGN MINUSASSIGN MULTASSIGN DIVASSIGN PERASSIGN 
 
 %left ASSIGNOP PLUSASSIGN MINUSASSIGN MULTASSIGN DIVASSIGN PERASSIGN
@@ -45,7 +45,7 @@ extern FILE *yyin;
 
 %%
 
-program: ExtDefList    { display($1,0); semantic_Analysis0($1);}     /*ÏÔÊ¾Óï·¨Ê÷,ÓïÒå·ÖÎö*/
+program: ExtDefList    { /*display($1,0);*/semantic_Analysis0($1);}     /*ÏÔÊ¾Óï·¨Ê÷,ÓïÒå·ÖÎö*/
          ; 
 ExtDefList: {$$=NULL;}
           | ExtDef ExtDefList {$$=mknode(EXT_DEF_LIST,$1,$2,NULL,yylineno);}   //Ã¿Ò»¸öEXTDEFLISTµÄ½áµã£¬ÆäµÚ1¿Ã×ÓÊ÷¶ÔÓ¦Ò»¸öÍâ²¿±äÁ¿ÉùÃ÷»òº¯Êý
@@ -64,7 +64,6 @@ ExtDecList:  VarDec      {$$=$1;}       /*Ã¿Ò»¸öEXT_DECLISTµÄ½áµã£¬ÆäµÚÒ»¿Ã×ÓÊ÷¶
 VarDec:  ID          {$$=mknode(ID,NULL,NULL,NULL,yylineno);strcpy($$->type_id,$1);}   //ID½áµã£¬±êÊ¶·û·ûºÅ´®´æ·Å½áµãµÄtype_id
         ;
 ArrayDec: ID ArrayList {$$=mknode(ARRAY_ELE,$2,NULL,NULL,yylineno);strcpy($$->type_id,$1);}        
-        | ID LM RM {$$=mknode(ARRAY_ELE,NULL,NULL,NULL,yylineno);strcpy($$->type_id,$1);} 
         ;
 FuncDec: ID LP VarList RP   {$$=mknode(FUNC_DEC,$3,NULL,NULL,yylineno);strcpy($$->type_id,$1);}//º¯ÊýÃû´æ·ÅÔÚ$$->type_id
 	|ID LP  RP   {$$=mknode(FUNC_DEC,NULL,NULL,NULL,yylineno);strcpy($$->type_id,$1);}//º¯ÊýÃû´æ·ÅÔÚ$$->type_id
@@ -86,6 +85,7 @@ Stmt:  ExpStmt {$$=$1;}
       | IF LP Exp RP Stmt ELSE Stmt   {$$=mknode(IF_THEN_ELSE,$3,$5,$7,yylineno);}
       | WHILE LP Exp RP Stmt {$$=mknode(WHILE,$3,$5,NULL,yylineno);}
       | FOR LP ConList RP Stmt {$$=mknode(FOR,$3,$5,NULL,yylineno);}
+      | BREAK SEMI {$$=mknode(BREAK,NULL,NULL,NULL,yylineno);}
       ;
 ConList: ExpStmt ExpStmt Exp {$$=mknode(CON_LIST,$1->ptr[0],$2->ptr[0],$3,yylineno);}
         | ExpStmt ExpStmt {$$=mknode(CON_LIST,$1->ptr[0],$2->ptr[0],NULL,yylineno);}

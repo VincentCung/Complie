@@ -43,6 +43,9 @@ enum node_kind
 };
 #define MAXLENGTH 1000     //定义符号表的大小
 #define DX 3 * sizeof(int) //活动记录控制信息需要的单元数
+#define FLOAT_LENGTH 8
+#define CHAR_LENGTH 2 
+#define INT_LENGTH 4
 
 struct opn
 {
@@ -106,8 +109,9 @@ struct symboltable
   int index;
 } symbolTable;
 
+/*当前作用域的符号在符号表的起始位置序号,这是一个栈结构，/每到达一个复合语句，将符号表的index值进栈，离开复合语句时，取其退栈值修改符号表的index值，完成删除该复合语句中的所有变量和临时变量*/
 struct symbol_scope_begin
-{ /*当前作用域的符号在符号表的起始位置序号,这是一个栈结构，/每到达一个复合语句，将符号表的index值进栈，离开复合语句时，取其退栈值修改符号表的index值，完成删除该复合语句中的所有变量和临时变量*/
+{
   int TX[30];
   int top;
 } symbol_scope_TX;

@@ -32,6 +32,64 @@ char *newTemp()
   return strcat0("temp", s);
 }
 
+char *getTypeChar(enum node_kind src)
+{
+  switch (src)
+  {
+  case INT:
+    return "int";
+    break;
+  case FLOAT:
+    return "float";
+    break;
+  case CHAR:
+    return "char";
+    break;
+  default:
+    return NULL;
+  }
+  return NULL;
+}
+
+int getWidth(enum node_kind src)
+{
+  switch (src)
+  {
+  case INT:
+    return INT_LENGTH;
+    break;
+  case FLOAT:
+    return FLOAT_LENGTH;
+    break;
+  case CHAR:
+    return CHAR_LENGTH;
+    break;
+  default:
+    return 0;
+  }
+  return 0;
+}
+
+enum node_kind getType(char *src)
+{
+  if (!strcmp(src, "int"))
+  {
+    return INT;
+  }
+  else if (!strcmp(src, "float"))
+  {
+    return FLOAT;
+  }
+  else if (!strcmp(src, "char"))
+  {
+    return CHAR;
+  }
+  else
+  {
+    return -1;
+  }
+}
+
 //生成一条TAC代码的结点组成的双向循环链表，返回头指针
 struct codenode *genIR(int op, struct opn opn1, struct opn opn2, struct opn result)
 {
@@ -171,8 +229,9 @@ void prnIR(struct codenode *head)
 void semantic_error(int line, char *msg1, char *msg2)
 {
   //这里可以只收集错误信息，最后在一次显示
-  printf("在%d行,%s %s\n", line, msg1, msg2);
+  printf("Error type C at Line %d :%s %s\n", line, msg1, msg2);
 }
+
 void prn_symbol()
 { //显示符号表
   int i = 0;
@@ -180,7 +239,7 @@ void prn_symbol()
   for (i = 0; i < symbolTable.index; i++)
     printf("%6s %6s %6d  %6s %4c %6d\n", symbolTable.symbols[i].name,
            symbolTable.symbols[i].alias, symbolTable.symbols[i].level,
-           symbolTable.symbols[i].type == INT ? "int" : "float",
+           getTypeChar(symbolTable.symbols[i].type),
            symbolTable.symbols[i].flag, symbolTable.symbols[i].offset);
 }
 
@@ -229,10 +288,9 @@ int fill_Temp(char *name, int level, int type, char flag, int offset)
 }
 
 int LEV = 0;   //层号
-int func_size; //1个函数的活动记录大小
 
-void ext_var_list(struct node *T)
-{ //处理变量列表
+void ext_var_list(struct node *T) //处理外部变量列表
+{
   int rtn, num = 1;
   switch (T->kind)
   {
@@ -247,6 +305,7 @@ void ext_var_list(struct node *T)
     T->num = T->ptr[1]->num + 1;
     break;
   case ID:
+  case ARRAY_ELE:
     rtn = fillSymbolTable(T->type_id, newAlias(), LEV, T->type, 'V', T->offset); //最后一个变量名
     if (rtn == -1)
       semantic_error(T->pos, T->type_id, "变量重复定义");
@@ -257,6 +316,7 @@ void ext_var_list(struct node *T)
   }
 }
 
+//匹配参数个数类型
 int match_param(int i, struct node *T)
 {
   int j, num = symbolTable.symbols[i].paramnum;
@@ -286,9 +346,9 @@ int match_param(int i, struct node *T)
   }
   return 1;
 }
-
+//布尔表达式，参考文献[2]p84的思想
 void boolExp(struct node *T)
-{ //布尔表达式，参考文献[2]p84的思想
+{
   struct opn opn1, opn2, result;
   int op;
   int rtn;
@@ -394,9 +454,9 @@ void boolExp(struct node *T)
     }
   }
 }
-
+//处理基本表达式，参考文献[2]p82的思想
 void Exp(struct node *T)
-{ //处理基本表达式，参考文献[2]p82的思想
+{
   int rtn, num, width;
   struct node *T0;
   struct opn opn1, opn2, result;
@@ -428,7 +488,7 @@ void Exp(struct node *T)
       strcpy(result.id, symbolTable.symbols[T->place].alias);
       result.offset = symbolTable.symbols[T->place].offset;
       T->code = genIR(ASSIGNOP, opn1, opn2, result);
-      T->width = 4;
+      T->width = INT_LENGTH;
       break;
     case FLOAT:
       T->place = fill_Temp(newTemp(), LEV, T->type, 'T', T->offset); //为浮点常量生成一个临时变量
@@ -439,7 +499,7 @@ void Exp(struct node *T)
       strcpy(result.id, symbolTable.symbols[T->place].alias);
       result.offset = symbolTable.symbols[T->place].offset;
       T->code = genIR(ASSIGNOP, opn1, opn2, result);
-      T->width = 4;
+      T->width = FLOAT_LENGTH;
       break;
     case ASSIGNOP:
       if (T->ptr[0]->kind != ID)
@@ -482,9 +542,9 @@ void Exp(struct node *T)
       //判断T->ptr[0]，T->ptr[1]类型是否正确，可能根据运算符生成不同形式的代码，给T的type赋值
       //下面的类型属性计算，没有考虑错误处理情况
       if (T->ptr[0]->type == FLOAT || T->ptr[1]->type == FLOAT)
-        T->type = FLOAT, T->width = T->ptr[0]->width + T->ptr[1]->width + 4;
-      else
-        T->type = INT, T->width = T->ptr[0]->width + T->ptr[1]->width + 2;
+        T->type = FLOAT, T->width = FLOAT_LENGTH;
+      else 
+        T->type = INT, T->width = INT_LENGTH;
       T->place = fill_Temp(newTemp(), LEV, T->type, 'T', T->offset + T->ptr[0]->width + T->ptr[1]->width);
       opn1.kind = ID;
       strcpy(opn1.id, symbolTable.symbols[T->ptr[0]->place].alias);
@@ -499,7 +559,7 @@ void Exp(struct node *T)
       result.type = T->type;
       result.offset = symbolTable.symbols[T->place].offset;
       T->code = merge(3, T->ptr[0]->code, T->ptr[1]->code, genIR(T->kind, opn1, opn2, result));
-      T->width = T->ptr[0]->width + T->ptr[1]->width + (T->type == INT ? 4 : 8);
+      T->width = T->ptr[0]->width + T->ptr[1]->width + getWidth(T->type);
       break;
     case NOT: //未写完整
       break;
@@ -518,7 +578,7 @@ void Exp(struct node *T)
         break;
       }
       T->type = symbolTable.symbols[rtn].type;
-      width = T->type == INT ? 4 : 8; //存放函数返回值的单数字节数
+      width = getWidth(T->type); //存放函数返回值的单数字节数
       if (T->ptr[0])
       {
         T->ptr[0]->offset = T->offset;
@@ -591,15 +651,15 @@ void semantic_Analysis(struct node *T)
       }
       break;
     case EXT_VAR_DEF: //处理外部说明,将第一个孩子(TYPE结点)中的类型送到第二个孩子的类型域
-      T->type = T->ptr[1]->type = !strcmp(T->ptr[0]->type_id, "int") ? INT : FLOAT;
+      T->type = T->ptr[1]->type = getType(T->ptr[0]->type_id);
       T->ptr[1]->offset = T->offset;                        //这个外部变量的偏移量向下传递
-      T->ptr[1]->width = T->type == INT ? 4 : 8;            //将一个变量的宽度向下传递
+      T->ptr[1]->width = getWidth(T->type) ;            //将一个变量的宽度向下传递
       ext_var_list(T->ptr[1]);                              //处理外部变量说明中的标识符序列
-      T->width = (T->type == INT ? 4 : 8) * T->ptr[1]->num; //计算这个外部变量说明的宽度
+      T->width = getWidth(T->type) * T->ptr[1]->num; //计算这个外部变量说明的宽度
       T->code = NULL;                                       //这里假定外部变量不支持初始化
       break;
     case FUNC_DEF:                                                        //填写函数定义信息到符号表
-      T->ptr[1]->type = !strcmp(T->ptr[0]->type_id, "int") ? INT : FLOAT; //获取函数返回类型送到含函数名、参数的结点
+      T->ptr[1]->type = getType(T->ptr[0]->type_id); //获取函数返回类型送到含函数名、参数的结点
       T->width = 0;                                                       //函数的宽度设置为0，不会对外部变量的地址分配产生影响
       T->offset = DX;                                                     //设置局部变量在活动记录中的偏移量初值
       semantic_Analysis(T->ptr[1]);                                       //处理函数名和参数结点部分，这里不考虑用寄存器传递参数
@@ -661,7 +721,7 @@ void semantic_Analysis(struct node *T)
       else
         T->ptr[1]->place = rtn;
       T->num = 1;                                //参数个数计算的初始值
-      T->width = T->ptr[0]->type == INT ? 4 : 8; //参数宽度
+      T->width = getWidth(T->ptr[0]->type); //参数宽度
       result.kind = ID;
       strcpy(result.id, symbolTable.symbols[rtn].alias);
       result.offset = T->offset;
@@ -712,12 +772,12 @@ void semantic_Analysis(struct node *T)
     case VAR_DEF: //处理一个局部变量定义,将第一个孩子(TYPE结点)中的类型送到第二个孩子的类型域
                   //类似于上面的外部变量EXT_VAR_DEF，换了一种处理方法
       T->code = NULL;
-      T->ptr[1]->type = !strcmp(T->ptr[0]->type_id, "int") ? INT : FLOAT; //确定变量序列各变量类型
+      T->ptr[1]->type = getType(T->ptr[0]->type_id); //确定变量序列各变量类型
       T0 = T->ptr[1];                                                     //T0为变量名列表子树根指针，对ID、ASSIGNOP类结点在登记到符号表，作为局部变量
       num = 0;
       T0->offset = T->offset;
       T->width = 0;
-      width = T->ptr[1]->type == INT ? 4 : 8; //一个变量宽度
+      width = getWidth(T->ptr[1]->type); //一个变量宽度
       while (T0)
       { //处理所以DEC_LIST结点
         num++;
@@ -897,5 +957,5 @@ void semantic_Analysis0(struct node *T)
   symbol_scope_TX.top = 1;
   T->offset = 0; //外部变量在数据区的偏移量
   semantic_Analysis(T);
-  objectCode(T->code);
+  //objectCode(T->code);
 }

@@ -38,6 +38,7 @@ string (")(.|\n)*(")
 "else"       {return ELSE;}
 "while"      {return WHILE;}
 "for"				 {return FOR;}
+"break"			 {return BREAK;}
 
 {id}       {strcpy(yylval.type_id,  yytext); return ID;}/*���ڹؼ��ֵ���ʽҲ���ϱ�ʾ���Ĺ������԰ѹؼ��ֵĴ���ȫ�����ڱ�ʶ����ǰ�棬����ʶ��*/
 ";"			{return SEMI;}
