@@ -732,7 +732,7 @@ YY_RULE_SETUP
 case 5:
 YY_RULE_SETUP
 #line 31 "parser.l"
-{memcpy(yylval.type_id-1,  yytext,strlen(yytext)-1);return CHAR;}
+{strcpy(yylval.type_id,yytext+1),yylval.type_id[strlen(yylval.type_id)-1]='\0';return CHAR;}
 	YY_BREAK
 case 6:
 YY_RULE_SETUP

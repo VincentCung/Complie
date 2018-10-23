@@ -287,7 +287,7 @@ int fill_Temp(char *name, int level, int type, char flag, int offset)
   return symbolTable.index++; //返回的是临时变量在符号表中的位置序号
 }
 
-int LEV = 0;   //层号
+int LEV = 0; //层号
 
 void ext_var_list(struct node *T) //处理外部变量列表
 {
@@ -298,7 +298,7 @@ void ext_var_list(struct node *T) //处理外部变量列表
     T->ptr[0]->type = T->type;                //将类型属性向下传递变量结点
     T->ptr[0]->offset = T->offset;            //外部变量的偏移量向下传递
     T->ptr[1]->type = T->type;                //将类型属性向下传递变量结点
-    T->ptr[1]->offset = T->offset + T->width; //外部变量的偏移量向下传递
+    T->ptr[1]->offset = T->offset + T->width; //外部变量的偏移量向下传递 TODO: 数组长度空间变化
     T->ptr[1]->width = T->width;
     ext_var_list(T->ptr[0]);
     ext_var_list(T->ptr[1]);
@@ -317,31 +317,32 @@ void ext_var_list(struct node *T) //处理外部变量列表
 }
 
 //匹配参数个数类型
-int match_param(int i, struct node *T)
-{
+int match_param(int i, struct node *T,int pos)
+{ 
   int j, num = symbolTable.symbols[i].paramnum;
   int type1, type2;
-  if (num == 0 && T == NULL)
+  if (num == 0 && T == NULL){
     return 1;
-  for (j = 1; j < num; j++)
+  }
+  for (j = 1; j <= num; j++)
   {
     if (!T)
-    {
-      semantic_error(T->pos, "", "函数调用参数太少");
+    { 
+      semantic_error(pos, "", "函数调用参数太少");
       return 0;
     }
     type1 = symbolTable.symbols[i + j].type; //形参类型
     type2 = T->ptr[0]->type;
     if (type1 != type2)
     {
-      semantic_error(T->pos, "", "参数类型不匹配");
+      semantic_error(pos, "", "参数类型不匹配");
       return 0;
     }
     T = T->ptr[1];
   }
-  if (T->ptr[1])
+  if (T)
   { //num个参数已经匹配完，还有实参表达式
-    semantic_error(T->pos, "", "函数调用参数太多");
+    semantic_error(pos, "", "函数调用参数太多");
     return 0;
   }
   return 1;
@@ -370,6 +371,11 @@ void boolExp(struct node *T)
         T->code = genGoto(T->Efalse);
       T->width = 0;
       break;
+    case CHAR:
+      if (strlen(T->type_id) != 0)
+        T->code = genGoto(T->Etrue);
+      else
+        T->code = genGoto(T->Efalse);
     case ID: //查符号表，获得符号表中的位置，类型送type
       rtn = searchSymbolTable(T->type_id);
       if (rtn == -1)
@@ -543,7 +549,7 @@ void Exp(struct node *T)
       //下面的类型属性计算，没有考虑错误处理情况
       if (T->ptr[0]->type == FLOAT || T->ptr[1]->type == FLOAT)
         T->type = FLOAT, T->width = FLOAT_LENGTH;
-      else 
+      else
         T->type = INT, T->width = INT_LENGTH;
       T->place = fill_Temp(newTemp(), LEV, T->type, 'T', T->offset + T->ptr[0]->width + T->ptr[1]->width);
       opn1.kind = ID;
@@ -591,9 +597,9 @@ void Exp(struct node *T)
         T->width = width;
         T->code = NULL;
       }
-      match_param(rtn, T->ptr[0]); //处理所以参数的匹配
-                                   //处理参数列表的中间代码
-      T0 = T->ptr[0];
+      match_param(rtn, T->ptr[0],T->pos); //处理所以参数的匹配
+        
+      T0 = T->ptr[0];//处理参数列表的中间代码
       while (T0)
       {
         result.kind = ID;
@@ -652,18 +658,18 @@ void semantic_Analysis(struct node *T)
       break;
     case EXT_VAR_DEF: //处理外部说明,将第一个孩子(TYPE结点)中的类型送到第二个孩子的类型域
       T->type = T->ptr[1]->type = getType(T->ptr[0]->type_id);
-      T->ptr[1]->offset = T->offset;                        //这个外部变量的偏移量向下传递
-      T->ptr[1]->width = getWidth(T->type) ;            //将一个变量的宽度向下传递
-      ext_var_list(T->ptr[1]);                              //处理外部变量说明中的标识符序列
+      T->ptr[1]->offset = T->offset;                 //这个外部变量的偏移量向下传递
+      T->ptr[1]->width = getWidth(T->type);          //将一个变量的宽度向下传递
+      ext_var_list(T->ptr[1]);                       //处理外部变量说明中的标识符序列
       T->width = getWidth(T->type) * T->ptr[1]->num; //计算这个外部变量说明的宽度
-      T->code = NULL;                                       //这里假定外部变量不支持初始化
+      T->code = NULL;                                //这里假定外部变量不支持初始化
       break;
-    case FUNC_DEF:                                                        //填写函数定义信息到符号表
+    case FUNC_DEF:                                   //填写函数定义信息到符号表
       T->ptr[1]->type = getType(T->ptr[0]->type_id); //获取函数返回类型送到含函数名、参数的结点
-      T->width = 0;                                                       //函数的宽度设置为0，不会对外部变量的地址分配产生影响
-      T->offset = DX;                                                     //设置局部变量在活动记录中的偏移量初值
-      semantic_Analysis(T->ptr[1]);                                       //处理函数名和参数结点部分，这里不考虑用寄存器传递参数
-      T->offset += T->ptr[1]->width;                                      //用形参单元宽度修改函数局部变量的起始偏移量
+      T->width = 0;                                  //函数的宽度设置为0，不会对外部变量的地址分配产生影响
+      T->offset = DX;                                //设置局部变量在活动记录中的偏移量初值
+      semantic_Analysis(T->ptr[1]);                  //处理函数名和参数结点部分，这里不考虑用寄存器传递参数
+      T->offset += T->ptr[1]->width;                 //用形参单元宽度修改函数局部变量的起始偏移量
       T->ptr[2]->offset = T->offset;
       strcpy(T->ptr[2]->Snext, newLabel()); //函数体语句执行结束后的位置属性
       semantic_Analysis(T->ptr[2]);         //处理函数体结点
@@ -720,7 +726,7 @@ void semantic_Analysis(struct node *T)
         semantic_error(T->ptr[1]->pos, T->ptr[1]->type_id, "参数名重复定义");
       else
         T->ptr[1]->place = rtn;
-      T->num = 1;                                //参数个数计算的初始值
+      T->num = 1;                           //参数个数计算的初始值
       T->width = getWidth(T->ptr[0]->type); //参数宽度
       result.kind = ID;
       strcpy(result.id, symbolTable.symbols[rtn].alias);
@@ -773,7 +779,7 @@ void semantic_Analysis(struct node *T)
                   //类似于上面的外部变量EXT_VAR_DEF，换了一种处理方法
       T->code = NULL;
       T->ptr[1]->type = getType(T->ptr[0]->type_id); //确定变量序列各变量类型
-      T0 = T->ptr[1];                                                     //T0为变量名列表子树根指针，对ID、ASSIGNOP类结点在登记到符号表，作为局部变量
+      T0 = T->ptr[1];                                //T0为变量名列表子树根指针，对ID、ASSIGNOP类结点在登记到符号表，作为局部变量
       num = 0;
       T0->offset = T->offset;
       T->width = 0;
@@ -950,12 +956,12 @@ void semantic_Analysis0(struct node *T)
   symbolTable.index = 0;
   fillSymbolTable("read", "", 0, INT, 'F', 4);
   symbolTable.symbols[0].paramnum = 0; //read的形参个数
-  fillSymbolTable("x", "", 1, INT, 'P', 12);
   fillSymbolTable("write", "", 0, INT, 'F', 4);
-  symbolTable.symbols[2].paramnum = 1;
+  fillSymbolTable("x", "", 1, INT, 'P', 12);
+  symbolTable.symbols[1].paramnum = 1;
   symbol_scope_TX.TX[0] = 0; //外部变量在符号表中的起始序号为0
   symbol_scope_TX.top = 1;
   T->offset = 0; //外部变量在数据区的偏移量
   semantic_Analysis(T);
-  //objectCode(T->code);
+  //prnIR(T->code);
 }

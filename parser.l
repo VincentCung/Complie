@@ -28,7 +28,7 @@ string (")(.|\n)*(")
 
 {int}        {yylval.type_int=atoi(yytext); return INT;}
 {float}      {yylval.type_float=atof(yytext); return FLOAT;}
-{char}			 {memcpy(yylval.type_id-1,  yytext,strlen(yytext)-1);return CHAR;}
+{char}			 {strcpy(yylval.type_id,yytext+1),yylval.type_id[strlen(yylval.type_id)-1]='\0';return CHAR;}
 "int"        {strcpy(yylval.type_id,  yytext);return TYPE;}
 "float"      {strcpy(yylval.type_id,  yytext);return TYPE;}
 "char"			 {strcpy(yylval.type_id,  yytext);return TYPE;}

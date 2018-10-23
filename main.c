@@ -176,7 +176,7 @@ void display(struct node *T, int indent)
           display(T0->ptr[0]->ptr[1], indent + strlen(T0->ptr[0]->ptr[0]->type_id) + 4);
           if (T0->ptr[0]->ptr[1] == NULL)
           {
-            printf("%*c无初始值\n", indent+3, ' ');
+            printf("%*c无初始值\n", indent + 3, ' ');
           }
         }
         else if (T0->ptr[0]->kind == ARRAY_ELE)
@@ -196,7 +196,14 @@ void display(struct node *T, int indent)
       printf("%*cFLAOT：%f\n", indent, ' ', T->type_float);
       break;
     case CHAR:
-      printf("%*cCHAR：%s\n", indent, ' ', T->type_id);
+      if (strlen(T->type_id) == 0)
+      {
+        printf("%*cCHAR：空字符\n", indent, ' ', T->type_id);
+      }
+      else
+      {
+        printf("%*cCHAR：%s\n", indent, ' ', T->type_id);
+      }
       break;
     case ASSIGNOP:
     case PLUSASSIGN:
