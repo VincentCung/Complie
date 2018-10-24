@@ -31,7 +31,7 @@ void display(struct node *T, int indent)
       printf("%*cExtern variable define:\n", indent, ' ');
       display(T->ptr[0], indent + 3); 
       printf("%*cvariable name:\n", indent + 3, ' ');
-      display(T->ptr[1], indent + 6); //��ʾ�����б�
+      display(T->ptr[1], indent + 6); 
       break;
     case TYPE:
       printf("%*ctype:%s\n", indent, ' ', T->type_id);
@@ -51,13 +51,13 @@ void display(struct node *T, int indent)
       if (T->ptr[0])
       {
         printf("%*cformal params:\n", indent, ' ');
-        display(T->ptr[0], indent + 3); //��ʾ���������б�
+        display(T->ptr[0], indent + 3); 
       }
       else
         printf("%*cnoParam function.\n", indent + 3, ' ');
       break;
     case PARAM_LIST:
-      display(T->ptr[0], indent); //������ʾȫ���������ͺ����ƣ�
+      display(T->ptr[0], indent); 
       display(T->ptr[1], indent);
       break;
     case PARAM_DEC:
@@ -86,22 +86,22 @@ void display(struct node *T, int indent)
       display(T->ptr[1], indent + 6); 
       break;
     case STM_LIST:
-      display(T->ptr[0], indent); //��ʾ��һ�����?
-      display(T->ptr[1], indent); //��ʾʣ�����?
+      display(T->ptr[0], indent); 
+      display(T->ptr[1], indent); 
       break;
     case WHILE:
       printf("%*cwhile:", indent, ' ');
       printf("%*cLoop condition:\n", indent + 3, ' ');
-      display(T->ptr[0], indent + 6); //��ʾѭ������
+      display(T->ptr[0], indent + 6); 
       printf("%*cLoop body:\n", indent + 3, ' ');
-      display(T->ptr[1], indent + 6); //��ʾѭ����
+      display(T->ptr[1], indent + 6); 
       break;
     case FOR:
       printf("%*cfor:", indent, ' ');
       printf("%*cLoop condition\n", indent + 3, ' ');
-      display(T->ptr[0], indent + 6); //��ʾѭ������
+      display(T->ptr[0], indent + 6); 
       printf("%*cLoop body:\n", indent + 3, ' ');
-      display(T->ptr[1], indent + 6); //��ʾѭ����
+      display(T->ptr[1], indent + 6); 
       break;
     case CON_LIST:
 
@@ -136,27 +136,27 @@ void display(struct node *T, int indent)
     case IF_THEN:
       printf("%*cCondition statement(IF_THEN):\n", indent, ' ');
       printf("%*ccondition:\n", indent + 3, ' ');
-      display(T->ptr[0], indent + 6); //��ʾ����
+      display(T->ptr[0], indent + 6); 
       printf("%*cIF satement:\n", indent + 3, ' ');
-      display(T->ptr[1], indent + 6); //��ʾif�Ӿ�
+      display(T->ptr[1], indent + 6); 
       break;
     case IF_THEN_ELSE:
       printf("%*cCondition statement(IF_THEN_ELSE):\n", indent, ' ');
       printf("%*ccondition:\n", indent + 3, ' ');
-      display(T->ptr[0], indent + 6); //��ʾ����
+      display(T->ptr[0], indent + 6); 
       printf("%*cIF statement:\n", indent + 3, ' ');
-      display(T->ptr[1], indent + 6); //��ʾif�Ӿ�
+      display(T->ptr[1], indent + 6); 
       printf("%*cELSE statement:\n", indent + 3, ' ');
-      display(T->ptr[2], indent + 6); //��ʾelse�Ӿ�
+      display(T->ptr[2], indent + 6); 
       break;
     case DEF_LIST:
-      display(T->ptr[0], indent); //��ʾ�þֲ����������б��еĵ�һ��
-      display(T->ptr[1], indent); //��ʾ�����ֲ���������
+      display(T->ptr[0], indent); 
+      display(T->ptr[1], indent); 
       break;
     case VAR_DEF:
       printf("%*cLocal var list:\n", indent, ' ');
-      display(T->ptr[0], indent + 3); //��ʾ��������
-      display(T->ptr[1], indent + 3); //��ʾ�ö����ȫ��������?
+      display(T->ptr[0], indent + 3); 
+      display(T->ptr[1], indent + 3); 
       break;
     case DEC_LIST:
       printf("%*cvar name:\n", indent, ' ');
@@ -243,7 +243,7 @@ void display(struct node *T, int indent)
     case ARGS:
       i = 1;
       while (T)
-      { //ARGS��ʾʵ�ʲ������ʽ���н�㣬���һ������Ϊ��һ��ʵ�ʲ������ʽ���ڶ�������Ϊʣ�µġ�
+      { 
         struct node *T0 = T->ptr[0];
         printf("%*c%dth param expression:", indent, ' ', i++);
         display(T0, indent + 3);

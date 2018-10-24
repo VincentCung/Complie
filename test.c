@@ -71,10 +71,10 @@
 //   return 1;
 // }
 
-  char a[4][5];
-  int b[4];
-  int c;
-int main() {
-  int d;
-  d++;
+
+
+void main(int a) {
+  int c[5][2]={};
+  int i =1;
+  int test;
 }

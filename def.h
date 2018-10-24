@@ -104,6 +104,8 @@ struct symbol
   char alias[10]; //别名，为解决嵌套层次使用，使得每一个数据名称唯一
   char flag;      //符号标记，函数：'F'  变量：'V'   参数：'P'  临时变量：'T'
   char offset;    //外部变量和局部变量在其静态数据区或活动记录中的偏移量
+  int dimension; //数组维数
+  int arrayLimit[100]; //数组每一维的个数
                   //或函数活动记录大小，目标代码生成时使用
   //其它...
 };
@@ -129,3 +131,12 @@ void Exp(struct node *T);
 void objectCode(struct codenode *head);
 void yyerror(const char* fmt, ...);
 void display(struct node *,int);
+void semantic_error(int line, char *msg1, char *msg2);
+char *strcat0(char *s1, char *s2);
+char *newAlias();
+char *newLabel();
+char *newTemp();
+char *getTypeChar(enum node_kind src);
+int getWidth(enum node_kind src);
+enum node_kind getType(char *src);
+void setArrayAribute(struct node *T,int rtn);

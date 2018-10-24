@@ -29,7 +29,7 @@ extern FILE *yyin;
 %token <type_float> FLOAT         //指定ID的语义值是type_id，有词法分析得到的标识符字符串
 
 %token LP RP LC RC SEMI COMMA LM RM //用bison对该文件编译时，带参数-d，生成的exp.tab.h中给这些单词进行编码，可在lex.l中包含parser.tab.h使用这些单词种类码
-%token PLUS MINUS STAR DIV PER ASSIGNOP AND OR NOT IF ELSE WHILE RETURN DPLUS DMINUS FOR BREAK
+%token PLUS MINUS STAR DIV PER ASSIGNOP AND OR NOT IF ELSE WHILE RETURN DPLUS DMINUS FOR BREAK VOID
 %token PLUSASSIGN MINUSASSIGN MULTASSIGN DIVASSIGN PERASSIGN 
 
 %left ASSIGNOP PLUSASSIGN MINUSASSIGN MULTASSIGN DIVASSIGN PERASSIGN
@@ -46,16 +46,17 @@ extern FILE *yyin;
 
 %%
 
-program: ExtDefList    { display($1,0);semantic_Analysis0($1);}     /*显示语法树,语义分析*/
+program: ExtDefList    { /*display($1,0);*/semantic_Analysis0($1);}     /*显示语法树,语义分析*/
          ; 
 ExtDefList: {$$=NULL;}
           | ExtDef ExtDefList {$$=mknode(EXT_DEF_LIST,$1,$2,NULL,yylineno);}   //每一个EXTDEFLIST的结点，其第1棵子树对应一个外部变量声明或函数
           ;  
-ExtDef:   Specifier ExtDecList SEMI   {$$=mknode(EXT_VAR_DEF,$1,$2,NULL,yylineno);}   //该结点对应一个外部变量声明
-         |Specifier FuncDec CompSt    {$$=mknode(FUNC_DEF,$1,$2,$3,yylineno);}         //该结点对应一个函数定义
+ExtDef:    Specifier ExtDecList SEMI   {$$=mknode(EXT_VAR_DEF,$1,$2,NULL,yylineno);}   //该结点对应一个外部变量声明
+         | Specifier FuncDec CompSt    {$$=mknode(FUNC_DEF,$1,$2,$3,yylineno);}         //该结点对应一个函数定义
+         | VOID FuncDec CompSt    {$$=mknode(FUNC_DEF,NULL,$2,$3,yylineno);}         //该结点对应一个函数定义
          | error SEMI   {$$=NULL; }
          ;
-Specifier:  TYPE    {$$=mknode(TYPE,NULL,NULL,NULL,yylineno);strcpy($$->type_id,$1);$$->type=!strcmp($1,"int")?INT:FLOAT;}   
+Specifier:  TYPE    {$$=mknode(TYPE,NULL,NULL,NULL,yylineno);strcpy($$->type_id,$1);$$->type=getType($1);}   
            ;      
 ExtDecList:  VarDec      {$$=$1;}       /*每一个EXT_DECLIST的结点，其第一棵子树对应一个变量名(ID类型的结点),第二棵子树对应剩下的外部变量名*/
            | ArrayDec      {$$=$1;} 

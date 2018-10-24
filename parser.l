@@ -32,6 +32,7 @@ string (")(.|\n)*(")
 "int"        {strcpy(yylval.type_id,  yytext);return TYPE;}
 "float"      {strcpy(yylval.type_id,  yytext);return TYPE;}
 "char"			 {strcpy(yylval.type_id,  yytext);return TYPE;}
+"void"			 {return VOID;}
          
 "return"     {return RETURN;}
 "if"         {return IF;}
