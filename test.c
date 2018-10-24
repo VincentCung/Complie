@@ -75,4 +75,6 @@
   int b[4];
   int c;
 int main() {
+  int d;
+  d++;
 }

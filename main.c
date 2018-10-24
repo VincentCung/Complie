@@ -54,7 +54,7 @@ void display(struct node *T, int indent)
         display(T->ptr[0], indent + 3); //��ʾ���������б�
       }
       else
-        printf("%*cnoPamrm function:\n", indent + 3, ' ');
+        printf("%*cnoParam function.\n", indent + 3, ' ');
       break;
     case PARAM_LIST:
       display(T->ptr[0], indent); //������ʾȫ���������ͺ����ƣ�
@@ -80,14 +80,14 @@ void display(struct node *T, int indent)
       display(T->ptr[0], indent + 3);
       break;
     case COMP_STM:
-      printf("%*cComplete statement define part:", indent, ' ');
+      printf("%*cComplete statement define part:\n", indent, ' ');
       display(T->ptr[0], indent + 3); 
-      printf("%*cComplete statement state part:", indent + 3, ' ');
+      printf("%*cComplete statement state part:\n", indent, ' ');
       display(T->ptr[1], indent + 6); 
       break;
     case STM_LIST:
-      display(T->ptr[0], indent); //��ʾ��һ�����?
-      display(T->ptr[1], indent); //��ʾʣ�����?
+      display(T->ptr[0], indent); //��ʾ��һ�����?
+      display(T->ptr[1], indent); //��ʾʣ�����?
       break;
     case WHILE:
       printf("%*cwhile:", indent, ' ');
@@ -156,7 +156,7 @@ void display(struct node *T, int indent)
     case VAR_DEF:
       printf("%*cLocal var list:\n", indent, ' ');
       display(T->ptr[0], indent + 3); //��ʾ��������
-      display(T->ptr[1], indent + 3); //��ʾ�ö����ȫ��������?
+      display(T->ptr[1], indent + 3); //��ʾ�ö����ȫ��������?
       break;
     case DEC_LIST:
       printf("%*cvar name:\n", indent, ' ');
@@ -176,7 +176,7 @@ void display(struct node *T, int indent)
           {
             printf("%*c %s ASSIGNOP\n ", indent + 3, ' ', T0->ptr[0]->ptr[0]->type_id);
           }
-          //��ʾ��ʼ������?
+          //��ʾ��ʼ������?
           display(T0->ptr[0]->ptr[1], indent + strlen(T0->ptr[0]->ptr[0]->type_id) + 4);
           if (T0->ptr[0]->ptr[1] == NULL)
           {
