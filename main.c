@@ -16,7 +16,7 @@ struct node *mknode(int kind, struct node *first, struct node *second, struct no
 }
 
 void display(struct node *T, int indent)
-{ //�Գ����﷨�����ȸ�����
+{ 
   int i = 1;
   struct node *T0;
   if (T)
@@ -24,51 +24,51 @@ void display(struct node *T, int indent)
     switch (T->kind)
     {
     case EXT_DEF_LIST:
-      display(T->ptr[0], indent); //��ʾ���ⲿ�����б��еĵ�һ��
-      display(T->ptr[1], indent); //��ʾ���ⲿ�����б��е������ⲿ����
+      display(T->ptr[0], indent); 
+      display(T->ptr[1], indent); 
       break;
     case EXT_VAR_DEF:
-      printf("%*c�ⲿ�������壺\n", indent, ' ');
-      display(T->ptr[0], indent + 3); //��ʾ�ⲿ��������
-      printf("%*c��������\n", indent + 3, ' ');
+      printf("%*cExtern variable define:\n", indent, ' ');
+      display(T->ptr[0], indent + 3); 
+      printf("%*cvariable name:\n", indent + 3, ' ');
       display(T->ptr[1], indent + 6); //��ʾ�����б�
       break;
     case TYPE:
-      printf("%*c���ͣ� %s\n", indent, ' ', T->type_id);
+      printf("%*ctype:%s\n", indent, ' ', T->type_id);
       break;
     case EXT_DEC_LIST:
-      display(T->ptr[0], indent); //������ʾ�ⲿ��������
-      display(T->ptr[1], indent); //����������ͬ�ģ�����ʾ�﷨���˴��������Ժ����ƴ���ϲ�
+      display(T->ptr[0], indent); 
+      display(T->ptr[1], indent); 
       break;
     case FUNC_DEF:
-      printf("%*c�������壺\n", indent, ' ');
-      display(T->ptr[0], indent + 3); //��ʾ������������
-      display(T->ptr[1], indent + 3); //��ʾ�������Ͳ���
-      display(T->ptr[2], indent + 3); //��ʾ������
+      printf("%*cFunction define:\n", indent, ' ');
+      display(T->ptr[0], indent + 3); 
+      display(T->ptr[1], indent + 3); 
+      display(T->ptr[2], indent + 3); 
       break;
     case FUNC_DEC:
-      printf("%*c��������%s\n", indent, ' ', T->type_id);
+      printf("%*cFunction name:%s\n", indent, ' ', T->type_id);
       if (T->ptr[0])
       {
-        printf("%*c�����βΣ�\n", indent, ' ');
+        printf("%*cformal params:\n", indent, ' ');
         display(T->ptr[0], indent + 3); //��ʾ���������б�
       }
       else
-        printf("%*c�޲κ���\n", indent + 3, ' ');
+        printf("%*cnoPamrm function:\n", indent + 3, ' ');
       break;
     case PARAM_LIST:
       display(T->ptr[0], indent); //������ʾȫ���������ͺ����ƣ�
       display(T->ptr[1], indent);
       break;
     case PARAM_DEC:
-      printf("%*c���ͣ�%s, ��������%s\n", indent, ' ',
+      printf("%*ctype:%s,parameter name:%s\n", indent, ' ',
              T->ptr[0]->type == INT ? "int" : "float", T->ptr[1]->type_id);
       break;
     case EXP_STMT:
-      printf("%*c���ʽ��䣺\n", indent, ' ');
+      printf("%*cExpression statement:\n", indent, ' ');
       if (T->ptr[0] == NULL)
       {
-        printf("%*c�ձ��ʽ\n", indent + 3, ' ');
+        printf("%*cnull.", indent + 3, ' ');
       }
       else
       {
@@ -76,57 +76,57 @@ void display(struct node *T, int indent)
       }
       break;
     case RETURN:
-      printf("%*c������䣺\n", indent, ' ');
+      printf("%*cReturn statement:", indent, ' ');
       display(T->ptr[0], indent + 3);
       break;
     case COMP_STM:
-      printf("%*c������䣺\n", indent, ' ');
-      display(T->ptr[0], indent + 3); //��ʾ���岿��
-      printf("%*c����������䲿�֣�\n", indent + 3, ' ');
-      display(T->ptr[1], indent + 6); //��ʾ��䲿��
+      printf("%*cComplete statement define part:", indent, ' ');
+      display(T->ptr[0], indent + 3); 
+      printf("%*cComplete statement state part:", indent + 3, ' ');
+      display(T->ptr[1], indent + 6); 
       break;
     case STM_LIST:
-      display(T->ptr[0], indent); //��ʾ��һ�����
-      display(T->ptr[1], indent); //��ʾʣ�����
+      display(T->ptr[0], indent); //��ʾ��һ�����?
+      display(T->ptr[1], indent); //��ʾʣ�����?
       break;
     case WHILE:
-      printf("%*cwhileѭ����䣺\n", indent, ' ');
-      printf("%*cѭ��������\n", indent + 3, ' ');
+      printf("%*cwhile:", indent, ' ');
+      printf("%*cLoop condition:\n", indent + 3, ' ');
       display(T->ptr[0], indent + 6); //��ʾѭ������
-      printf("%*cѭ���壺\n", indent + 3, ' ');
+      printf("%*cLoop body:\n", indent + 3, ' ');
       display(T->ptr[1], indent + 6); //��ʾѭ����
       break;
     case FOR:
-      printf("%*cforѭ����䣺\n", indent, ' ');
-      printf("%*cѭ��������\n", indent + 3, ' ');
+      printf("%*cfor:", indent, ' ');
+      printf("%*cLoop condition\n", indent + 3, ' ');
       display(T->ptr[0], indent + 6); //��ʾѭ������
-      printf("%*cѭ���壺\n", indent + 3, ' ');
+      printf("%*cLoop body:\n", indent + 3, ' ');
       display(T->ptr[1], indent + 6); //��ʾѭ����
       break;
     case CON_LIST:
 
-      printf("%*c����һ��\n", indent, ' ');
+      printf("%*cCondition one:\n", indent, ' ');
       if (T->ptr[0] == NULL)
       {
-        printf("%*c�ձ��ʽ\n", indent + 3, ' ');
+        printf("%*cnull.", indent + 3, ' ');
       }
       else
       {
         display(T->ptr[0], indent + 3);
       }
-      printf("%*c��������\n", indent, ' ');
+      printf("%*cCondition two:\n", indent, ' ');
       if (T->ptr[1] == NULL)
       {
-        printf("%*c�ձ��ʽ\n", indent + 3, ' ');
+        printf("%*cnull.", indent + 3, ' ');
       }
       else
       {
         display(T->ptr[1], indent + 3);
       }
-      printf("%*c��������\n", indent, ' ');
+      printf("%*cCondition three:\n", indent, ' ');
       if (T->ptr[2] == NULL)
       {
-        printf("%*c�ձ��ʽ\n", indent + 3, ' ');
+        printf("%*cnull.", indent + 3, ' ');
       }
       else
       {
@@ -134,19 +134,19 @@ void display(struct node *T, int indent)
       }
       break;
     case IF_THEN:
-      printf("%*c�������(IF_THEN)��\n", indent, ' ');
-      printf("%*c������\n", indent + 3, ' ');
+      printf("%*cCondition statement(IF_THEN):\n", indent, ' ');
+      printf("%*ccondition:\n", indent + 3, ' ');
       display(T->ptr[0], indent + 6); //��ʾ����
-      printf("%*cIF�Ӿ䣺\n", indent + 3, ' ');
+      printf("%*cIF satement:\n", indent + 3, ' ');
       display(T->ptr[1], indent + 6); //��ʾif�Ӿ�
       break;
     case IF_THEN_ELSE:
-      printf("%*c�������(IF_THEN_ELSE)��\n", indent, ' ');
-      printf("%*c������\n", indent + 3, ' ');
+      printf("%*cCondition statement(IF_THEN_ELSE):\n", indent, ' ');
+      printf("%*ccondition:\n", indent + 3, ' ');
       display(T->ptr[0], indent + 6); //��ʾ����
-      printf("%*cIF�Ӿ䣺\n", indent + 3, ' ');
+      printf("%*cIF statement:\n", indent + 3, ' ');
       display(T->ptr[1], indent + 6); //��ʾif�Ӿ�
-      printf("%*cELSE�Ӿ䣺\n", indent + 3, ' ');
+      printf("%*cELSE statement:\n", indent + 3, ' ');
       display(T->ptr[2], indent + 6); //��ʾelse�Ӿ�
       break;
     case DEF_LIST:
@@ -154,12 +154,12 @@ void display(struct node *T, int indent)
       display(T->ptr[1], indent); //��ʾ�����ֲ���������
       break;
     case VAR_DEF:
-      printf("%*c�ֲ��������壺\n", indent, ' ');
+      printf("%*cLocal var list:\n", indent, ' ');
       display(T->ptr[0], indent + 3); //��ʾ��������
-      display(T->ptr[1], indent + 3); //��ʾ�ö����ȫ��������
+      display(T->ptr[1], indent + 3); //��ʾ�ö����ȫ��������?
       break;
     case DEC_LIST:
-      printf("%*cVAR_NAME��\n", indent, ' ');
+      printf("%*cvar name:\n", indent, ' ');
       T0 = T;
       while (T0)
       {
@@ -176,11 +176,11 @@ void display(struct node *T, int indent)
           {
             printf("%*c %s ASSIGNOP\n ", indent + 3, ' ', T0->ptr[0]->ptr[0]->type_id);
           }
-          //��ʾ��ʼ�����ʽ
+          //��ʾ��ʼ������?
           display(T0->ptr[0]->ptr[1], indent + strlen(T0->ptr[0]->ptr[0]->type_id) + 4);
           if (T0->ptr[0]->ptr[1] == NULL)
           {
-            printf("%*c�޳�ʼֵ\n", indent + 3, ' ');
+            printf("%*cinitial value:\n", indent + 3, ' ');
           }
         }
         else if (T0->ptr[0]->kind == ARR_ELE)
@@ -191,22 +191,22 @@ void display(struct node *T, int indent)
       }
       break;
     case ID:
-      printf("%*cID�� %s\n", indent, ' ', T->type_id);
+      printf("%*cID: %s\n", indent, ' ', T->type_id);
       break;
     case INT:
-      printf("%*cINT��%d\n", indent, ' ', T->type_int);
+      printf("%*cINT: %d\n", indent, ' ', T->type_int);
       break;
     case FLOAT:
-      printf("%*cFLAOT��%f\n", indent, ' ', T->type_float);
+      printf("%*cFLAOT: %f\n", indent, ' ', T->type_float);
       break;
     case CHAR:
       if (strlen(T->type_id) == 0)
       {
-        printf("%*cCHAR�����ַ�\n", indent, ' ', T->type_id);
+        printf("%*cCHAR: empty char\n", indent, ' ', T->type_id);
       }
       else
       {
-        printf("%*cCHAR��%s\n", indent, ' ', T->type_id);
+        printf("%*cCHAR: %s\n", indent, ' ', T->type_id);
       }
       break;
     case ASSIGNOP:
@@ -236,8 +236,8 @@ void display(struct node *T, int indent)
       display(T->ptr[0], indent + 3);
       break;
     case FUNC_CALL:
-      printf("%*c�������ã�\n", indent, ' ');
-      printf("%*c��������%s\n", indent + 3, ' ', T->type_id);
+      printf("%*cCall Function:\n", indent, ' ');
+      printf("%*cfunction name:%s\n", indent + 3, ' ', T->type_id);
       display(T->ptr[0], indent + 3);
       break;
     case ARGS:
@@ -245,12 +245,10 @@ void display(struct node *T, int indent)
       while (T)
       { //ARGS��ʾʵ�ʲ������ʽ���н�㣬���һ������Ϊ��һ��ʵ�ʲ������ʽ���ڶ�������Ϊʣ�µġ�
         struct node *T0 = T->ptr[0];
-        printf("%*c��%d��ʵ�ʲ������ʽ��\n", indent, ' ', i++);
+        printf("%*c%dth param expression:", indent, ' ', i++);
         display(T0, indent + 3);
         T = T->ptr[1];
       }
-      //                    printf("%*c��%d��ʵ�ʲ������ʽ��\n",indent,' ',i);
-      //                  display(T,indent+3);
       printf("\n");
       break;
     case DMINUS:
@@ -263,7 +261,7 @@ void display(struct node *T, int indent)
       while (T)
       {
         struct node *T0 = T->ptr[0];
-        printf("%*c��%dά��", indent, ' ', i++);
+        printf("%*c%dth dimension:", indent, ' ', i++);
         display(T0, indent);
         T = T->ptr[1];
       }
@@ -273,13 +271,13 @@ void display(struct node *T, int indent)
       printf(" %d\n", T->type_int);
       break;
     case ARR_ELE:
-      printf("%*c���飺%s\n", indent, ' ', T->type_id);
+      printf("%*cArray: %s\n", indent, ' ', T->type_id);
       display(T->ptr[0], indent + 3);
       break;
     case ARR_ACCESS:
-      printf("%*c��\n", indent, ' ');
+      printf("%*cTO:\n", indent, ' ');
       display(T->ptr[0], indent + 3);
-      printf("%*c����\n", indent, ' ');
+      printf("%*cAccess:\n", indent, ' ');
       display(T->ptr[1], indent + 3);
       break;
     case VAL_LIST:
@@ -287,7 +285,7 @@ void display(struct node *T, int indent)
       while (T)
       {
         struct node *T0 = T->ptr[0];
-        printf("%*c��%d��ֵ��\n", indent, ' ', i++);
+        printf("%*c%dth Value:\n", indent, ' ', i++);
         display(T0, indent + 3);
         T = T->ptr[1];
       }
