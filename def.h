@@ -35,9 +35,10 @@ enum node_kind
   JGE,
   EQ,
   NEQ,
-  ARRAY_LIST,
-  ARRAY_SUB,
-  ARRAY_ELE,
+  ARR_ACCESS,
+  ARR_LIST,
+  ARR_SUB,
+  ARR_ELE,
   CON_LIST,
   VAL_LIST,
 };

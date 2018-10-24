@@ -11,11 +11,12 @@ struct node *mknode(int kind, struct node *first, struct node *second, struct no
   T->place = 0;
   T->error = 0;
   T->dimension = 0;
+  T->num = 0;
   return T;
 }
 
 void display(struct node *T, int indent)
-{ //¶Ô³éÏóÓï·¨Ê÷µÄÏÈ¸ù±éÀú
+{ //ï¿½Ô³ï¿½ï¿½ï¿½ï¿½ï·¨ï¿½ï¿½ï¿½ï¿½ï¿½È¸ï¿½ï¿½ï¿½ï¿½ï¿½
   int i = 1;
   struct node *T0;
   if (T)
@@ -23,51 +24,51 @@ void display(struct node *T, int indent)
     switch (T->kind)
     {
     case EXT_DEF_LIST:
-      display(T->ptr[0], indent); //ÏÔÊ¾¸ÃÍâ²¿¶¨ÒåÁÐ±íÖÐµÄµÚÒ»¸ö
-      display(T->ptr[1], indent); //ÏÔÊ¾¸ÃÍâ²¿¶¨ÒåÁÐ±íÖÐµÄÆäËüÍâ²¿¶¨Òå
+      display(T->ptr[0], indent); //ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½â²¿ï¿½ï¿½ï¿½ï¿½ï¿½Ð±ï¿½ï¿½ÐµÄµï¿½Ò»ï¿½ï¿½
+      display(T->ptr[1], indent); //ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½â²¿ï¿½ï¿½ï¿½ï¿½ï¿½Ð±ï¿½ï¿½Ðµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½â²¿ï¿½ï¿½ï¿½ï¿½
       break;
     case EXT_VAR_DEF:
-      printf("%*cÍâ²¿±äÁ¿¶¨Òå£º\n", indent, ' ');
-      display(T->ptr[0], indent + 3); //ÏÔÊ¾Íâ²¿±äÁ¿ÀàÐÍ
-      printf("%*c±äÁ¿Ãû£º\n", indent + 3, ' ');
-      display(T->ptr[1], indent + 6); //ÏÔÊ¾±äÁ¿ÁÐ±í
+      printf("%*cï¿½â²¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½å£º\n", indent, ' ');
+      display(T->ptr[0], indent + 3); //ï¿½ï¿½Ê¾ï¿½â²¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+      printf("%*cï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½\n", indent + 3, ' ');
+      display(T->ptr[1], indent + 6); //ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½ï¿½Ð±ï¿½
       break;
     case TYPE:
-      printf("%*cÀàÐÍ£º %s\n", indent, ' ', T->type_id);
+      printf("%*cï¿½ï¿½ï¿½Í£ï¿½ %s\n", indent, ' ', T->type_id);
       break;
     case EXT_DEC_LIST:
-      display(T->ptr[0], indent); //ÒÀ´ÎÏÔÊ¾Íâ²¿±äÁ¿Ãû£¬
-      display(T->ptr[1], indent); //ºóÐø»¹ÓÐÏàÍ¬µÄ£¬½öÏÔÊ¾Óï·¨Ê÷´Ë´¦Àí´úÂë¿ÉÒÔºÍÀàËÆ´úÂëºÏ²¢
+      display(T->ptr[0], indent); //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¾ï¿½â²¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+      display(T->ptr[1], indent); //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¬ï¿½Ä£ï¿½ï¿½ï¿½ï¿½ï¿½Ê¾ï¿½ï·¨ï¿½ï¿½ï¿½Ë´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ôºï¿½ï¿½ï¿½ï¿½Æ´ï¿½ï¿½ï¿½Ï²ï¿½
       break;
     case FUNC_DEF:
-      printf("%*cº¯Êý¶¨Òå£º\n", indent, ' ');
-      display(T->ptr[0], indent + 3); //ÏÔÊ¾º¯Êý·µ»ØÀàÐÍ
-      display(T->ptr[1], indent + 3); //ÏÔÊ¾º¯ÊýÃûºÍ²ÎÊý
-      display(T->ptr[2], indent + 3); //ÏÔÊ¾º¯ÊýÌå
+      printf("%*cï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½å£º\n", indent, ' ');
+      display(T->ptr[0], indent + 3); //ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+      display(T->ptr[1], indent + 3); //ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í²ï¿½ï¿½ï¿½
+      display(T->ptr[2], indent + 3); //ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
       break;
     case FUNC_DEC:
-      printf("%*cº¯ÊýÃû£º%s\n", indent, ' ', T->type_id);
+      printf("%*cï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½%s\n", indent, ' ', T->type_id);
       if (T->ptr[0])
       {
-        printf("%*cº¯ÊýÐÎ²Î£º\n", indent, ' ');
-        display(T->ptr[0], indent + 3); //ÏÔÊ¾º¯Êý²ÎÊýÁÐ±í
+        printf("%*cï¿½ï¿½ï¿½ï¿½ï¿½Î²Î£ï¿½\n", indent, ' ');
+        display(T->ptr[0], indent + 3); //ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð±ï¿½
       }
       else
-        printf("%*cÎÞ²Îº¯Êý\n", indent + 3, ' ');
+        printf("%*cï¿½Þ²Îºï¿½ï¿½ï¿½\n", indent + 3, ' ');
       break;
     case PARAM_LIST:
-      display(T->ptr[0], indent); //ÒÀ´ÎÏÔÊ¾È«²¿²ÎÊýÀàÐÍºÍÃû³Æ£¬
+      display(T->ptr[0], indent); //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¾È«ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Íºï¿½ï¿½ï¿½ï¿½Æ£ï¿½
       display(T->ptr[1], indent);
       break;
     case PARAM_DEC:
-      printf("%*cÀàÐÍ£º%s, ²ÎÊýÃû£º%s\n", indent, ' ',
+      printf("%*cï¿½ï¿½ï¿½Í£ï¿½%s, ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½%s\n", indent, ' ',
              T->ptr[0]->type == INT ? "int" : "float", T->ptr[1]->type_id);
       break;
     case EXP_STMT:
-      printf("%*c±í´ïÊ½Óï¾ä£º\n", indent, ' ');
+      printf("%*cï¿½ï¿½ï¿½Ê½ï¿½ï¿½ä£º\n", indent, ' ');
       if (T->ptr[0] == NULL)
       {
-        printf("%*c¿Õ±í´ïÊ½\n", indent + 3, ' ');
+        printf("%*cï¿½Õ±ï¿½ï¿½Ê½\n", indent + 3, ' ');
       }
       else
       {
@@ -75,57 +76,57 @@ void display(struct node *T, int indent)
       }
       break;
     case RETURN:
-      printf("%*c·µ»ØÓï¾ä£º\n", indent, ' ');
+      printf("%*cï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ä£º\n", indent, ' ');
       display(T->ptr[0], indent + 3);
       break;
     case COMP_STM:
-      printf("%*c¸´ºÏÓï¾ä£º\n", indent, ' ');
-      display(T->ptr[0], indent + 3); //ÏÔÊ¾¶¨Òå²¿·Ö
-      printf("%*c¸´ºÏÓï¾äµÄÓï¾ä²¿·Ö£º\n", indent + 3, ' ');
-      display(T->ptr[1], indent + 6); //ÏÔÊ¾Óï¾ä²¿·Ö
+      printf("%*cï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ä£º\n", indent, ' ');
+      display(T->ptr[0], indent + 3); //ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½å²¿ï¿½ï¿½
+      printf("%*cï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ä²¿ï¿½Ö£ï¿½\n", indent + 3, ' ');
+      display(T->ptr[1], indent + 6); //ï¿½ï¿½Ê¾ï¿½ï¿½ä²¿ï¿½ï¿½
       break;
     case STM_LIST:
-      display(T->ptr[0], indent); //ÏÔÊ¾µÚÒ»ÌõÓï¾ä
-      display(T->ptr[1], indent); //ÏÔÊ¾Ê£ÏÂÓï¾ä
+      display(T->ptr[0], indent); //ï¿½ï¿½Ê¾ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½
+      display(T->ptr[1], indent); //ï¿½ï¿½Ê¾Ê£ï¿½ï¿½ï¿½ï¿½ï¿½
       break;
     case WHILE:
-      printf("%*cwhileÑ­»·Óï¾ä£º\n", indent, ' ');
-      printf("%*cÑ­»·Ìõ¼þ£º\n", indent + 3, ' ');
-      display(T->ptr[0], indent + 6); //ÏÔÊ¾Ñ­»·Ìõ¼þ
-      printf("%*cÑ­»·Ìå£º\n", indent + 3, ' ');
-      display(T->ptr[1], indent + 6); //ÏÔÊ¾Ñ­»·Ìå
+      printf("%*cwhileÑ­ï¿½ï¿½ï¿½ï¿½ä£º\n", indent, ' ');
+      printf("%*cÑ­ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½\n", indent + 3, ' ');
+      display(T->ptr[0], indent + 6); //ï¿½ï¿½Ê¾Ñ­ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+      printf("%*cÑ­ï¿½ï¿½ï¿½å£º\n", indent + 3, ' ');
+      display(T->ptr[1], indent + 6); //ï¿½ï¿½Ê¾Ñ­ï¿½ï¿½ï¿½ï¿½
       break;
     case FOR:
-      printf("%*cforÑ­»·Óï¾ä£º\n", indent, ' ');
-      printf("%*cÑ­»·Ìõ¼þ£º\n", indent + 3, ' ');
-      display(T->ptr[0], indent + 6); //ÏÔÊ¾Ñ­»·Ìõ¼þ
-      printf("%*cÑ­»·Ìå£º\n", indent + 3, ' ');
-      display(T->ptr[1], indent + 6); //ÏÔÊ¾Ñ­»·Ìå
+      printf("%*cforÑ­ï¿½ï¿½ï¿½ï¿½ä£º\n", indent, ' ');
+      printf("%*cÑ­ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½\n", indent + 3, ' ');
+      display(T->ptr[0], indent + 6); //ï¿½ï¿½Ê¾Ñ­ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+      printf("%*cÑ­ï¿½ï¿½ï¿½å£º\n", indent + 3, ' ');
+      display(T->ptr[1], indent + 6); //ï¿½ï¿½Ê¾Ñ­ï¿½ï¿½ï¿½ï¿½
       break;
     case CON_LIST:
 
-      printf("%*cÌõ¼þÒ»£º\n", indent, ' ');
+      printf("%*cï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½\n", indent, ' ');
       if (T->ptr[0] == NULL)
       {
-        printf("%*c¿Õ±í´ïÊ½\n", indent + 3, ' ');
+        printf("%*cï¿½Õ±ï¿½ï¿½Ê½\n", indent + 3, ' ');
       }
       else
       {
         display(T->ptr[0], indent + 3);
       }
-      printf("%*cÌõ¼þ¶þ£º\n", indent, ' ');
+      printf("%*cï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½\n", indent, ' ');
       if (T->ptr[1] == NULL)
       {
-        printf("%*c¿Õ±í´ïÊ½\n", indent + 3, ' ');
+        printf("%*cï¿½Õ±ï¿½ï¿½Ê½\n", indent + 3, ' ');
       }
       else
       {
         display(T->ptr[1], indent + 3);
       }
-      printf("%*cÌõ¼þÈý£º\n", indent, ' ');
+      printf("%*cï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½\n", indent, ' ');
       if (T->ptr[2] == NULL)
       {
-        printf("%*c¿Õ±í´ïÊ½\n", indent + 3, ' ');
+        printf("%*cï¿½Õ±ï¿½ï¿½Ê½\n", indent + 3, ' ');
       }
       else
       {
@@ -133,32 +134,32 @@ void display(struct node *T, int indent)
       }
       break;
     case IF_THEN:
-      printf("%*cÌõ¼þÓï¾ä(IF_THEN)£º\n", indent, ' ');
-      printf("%*cÌõ¼þ£º\n", indent + 3, ' ');
-      display(T->ptr[0], indent + 6); //ÏÔÊ¾Ìõ¼þ
-      printf("%*cIF×Ó¾ä£º\n", indent + 3, ' ');
-      display(T->ptr[1], indent + 6); //ÏÔÊ¾if×Ó¾ä
+      printf("%*cï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½(IF_THEN)ï¿½ï¿½\n", indent, ' ');
+      printf("%*cï¿½ï¿½ï¿½ï¿½ï¿½ï¿½\n", indent + 3, ' ');
+      display(T->ptr[0], indent + 6); //ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½
+      printf("%*cIFï¿½Ó¾ä£º\n", indent + 3, ' ');
+      display(T->ptr[1], indent + 6); //ï¿½ï¿½Ê¾ifï¿½Ó¾ï¿½
       break;
     case IF_THEN_ELSE:
-      printf("%*cÌõ¼þÓï¾ä(IF_THEN_ELSE)£º\n", indent, ' ');
-      printf("%*cÌõ¼þ£º\n", indent + 3, ' ');
-      display(T->ptr[0], indent + 6); //ÏÔÊ¾Ìõ¼þ
-      printf("%*cIF×Ó¾ä£º\n", indent + 3, ' ');
-      display(T->ptr[1], indent + 6); //ÏÔÊ¾if×Ó¾ä
-      printf("%*cELSE×Ó¾ä£º\n", indent + 3, ' ');
-      display(T->ptr[2], indent + 6); //ÏÔÊ¾else×Ó¾ä
+      printf("%*cï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½(IF_THEN_ELSE)ï¿½ï¿½\n", indent, ' ');
+      printf("%*cï¿½ï¿½ï¿½ï¿½ï¿½ï¿½\n", indent + 3, ' ');
+      display(T->ptr[0], indent + 6); //ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½
+      printf("%*cIFï¿½Ó¾ä£º\n", indent + 3, ' ');
+      display(T->ptr[1], indent + 6); //ï¿½ï¿½Ê¾ifï¿½Ó¾ï¿½
+      printf("%*cELSEï¿½Ó¾ä£º\n", indent + 3, ' ');
+      display(T->ptr[2], indent + 6); //ï¿½ï¿½Ê¾elseï¿½Ó¾ï¿½
       break;
     case DEF_LIST:
-      display(T->ptr[0], indent); //ÏÔÊ¾¸Ã¾Ö²¿±äÁ¿¶¨ÒåÁÐ±íÖÐµÄµÚÒ»¸ö
-      display(T->ptr[1], indent); //ÏÔÊ¾ÆäËü¾Ö²¿±äÁ¿¶¨Òå
+      display(T->ptr[0], indent); //ï¿½ï¿½Ê¾ï¿½Ã¾Ö²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð±ï¿½ï¿½ÐµÄµï¿½Ò»ï¿½ï¿½
+      display(T->ptr[1], indent); //ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½ï¿½Ö²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
       break;
     case VAR_DEF:
-      printf("%*c¾Ö²¿±äÁ¿¶¨Òå£º\n", indent, ' ');
-      display(T->ptr[0], indent + 3); //ÏÔÊ¾±äÁ¿ÀàÐÍ
-      display(T->ptr[1], indent + 3); //ÏÔÊ¾¸Ã¶¨ÒåµÄÈ«²¿±äÁ¿Ãû
+      printf("%*cï¿½Ö²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½å£º\n", indent, ' ');
+      display(T->ptr[0], indent + 3); //ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+      display(T->ptr[1], indent + 3); //ï¿½ï¿½Ê¾ï¿½Ã¶ï¿½ï¿½ï¿½ï¿½È«ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
       break;
     case DEC_LIST:
-      printf("%*cVAR_NAME£º\n", indent, ' ');
+      printf("%*cVAR_NAMEï¿½ï¿½\n", indent, ' ');
       T0 = T;
       while (T0)
       {
@@ -166,7 +167,7 @@ void display(struct node *T, int indent)
           printf("%*c %s\n", indent + 3, ' ', T0->ptr[0]->type_id);
         else if (T0->ptr[0]->kind == ASSIGNOP)
         {
-          if (T0->ptr[0]->ptr[0]->kind == ARRAY_ELE)
+          if (T0->ptr[0]->ptr[0]->kind == ARR_ELE)
           {
             display(T->ptr[0]->ptr[0], indent + 3);
             printf("%*c ASSIGNOP\n", indent + 3, ' ');
@@ -175,14 +176,14 @@ void display(struct node *T, int indent)
           {
             printf("%*c %s ASSIGNOP\n ", indent + 3, ' ', T0->ptr[0]->ptr[0]->type_id);
           }
-          //ÏÔÊ¾³õÊ¼»¯±í´ïÊ½
+          //ï¿½ï¿½Ê¾ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½ï¿½Ê½
           display(T0->ptr[0]->ptr[1], indent + strlen(T0->ptr[0]->ptr[0]->type_id) + 4);
           if (T0->ptr[0]->ptr[1] == NULL)
           {
-            printf("%*cÎÞ³õÊ¼Öµ\n", indent + 3, ' ');
+            printf("%*cï¿½Þ³ï¿½Ê¼Öµ\n", indent + 3, ' ');
           }
         }
-        else if (T0->ptr[0]->kind == ARRAY_ELE)
+        else if (T0->ptr[0]->kind == ARR_ELE)
         {
           display(T->ptr[0], indent + 3);
         }
@@ -190,22 +191,22 @@ void display(struct node *T, int indent)
       }
       break;
     case ID:
-      printf("%*cID£º %s\n", indent, ' ', T->type_id);
+      printf("%*cIDï¿½ï¿½ %s\n", indent, ' ', T->type_id);
       break;
     case INT:
-      printf("%*cINT£º%d\n", indent, ' ', T->type_int);
+      printf("%*cINTï¿½ï¿½%d\n", indent, ' ', T->type_int);
       break;
     case FLOAT:
-      printf("%*cFLAOT£º%f\n", indent, ' ', T->type_float);
+      printf("%*cFLAOTï¿½ï¿½%f\n", indent, ' ', T->type_float);
       break;
     case CHAR:
       if (strlen(T->type_id) == 0)
       {
-        printf("%*cCHAR£º¿Õ×Ö·û\n", indent, ' ', T->type_id);
+        printf("%*cCHARï¿½ï¿½ï¿½ï¿½ï¿½Ö·ï¿½\n", indent, ' ', T->type_id);
       }
       else
       {
-        printf("%*cCHAR£º%s\n", indent, ' ', T->type_id);
+        printf("%*cCHARï¿½ï¿½%s\n", indent, ' ', T->type_id);
       }
       break;
     case ASSIGNOP:
@@ -235,20 +236,20 @@ void display(struct node *T, int indent)
       display(T->ptr[0], indent + 3);
       break;
     case FUNC_CALL:
-      printf("%*cº¯Êýµ÷ÓÃ£º\n", indent, ' ');
-      printf("%*cº¯ÊýÃû£º%s\n", indent + 3, ' ', T->type_id);
+      printf("%*cï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ã£ï¿½\n", indent, ' ');
+      printf("%*cï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½%s\n", indent + 3, ' ', T->type_id);
       display(T->ptr[0], indent + 3);
       break;
     case ARGS:
       i = 1;
       while (T)
-      { //ARGS±íÊ¾Êµ¼Ê²ÎÊý±í´ïÊ½ÐòÁÐ½áµã£¬ÆäµÚÒ»¿Ã×ÓÊ÷ÎªÆäÒ»¸öÊµ¼Ê²ÎÊý±í´ïÊ½£¬µÚ¶þ¿Ã×ÓÊ÷ÎªÊ£ÏÂµÄ¡£
+      { //ARGSï¿½ï¿½Ê¾Êµï¿½Ê²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê½ï¿½ï¿½ï¿½Ð½ï¿½ã£¬ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Îªï¿½ï¿½Ò»ï¿½ï¿½Êµï¿½Ê²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê½ï¿½ï¿½ï¿½Ú¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÎªÊ£ï¿½ÂµÄ¡ï¿½
         struct node *T0 = T->ptr[0];
-        printf("%*cµÚ%d¸öÊµ¼Ê²ÎÊý±í´ïÊ½£º\n", indent, ' ', i++);
+        printf("%*cï¿½ï¿½%dï¿½ï¿½Êµï¿½Ê²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê½ï¿½ï¿½\n", indent, ' ', i++);
         display(T0, indent + 3);
         T = T->ptr[1];
       }
-      //                    printf("%*cµÚ%d¸öÊµ¼Ê²ÎÊý±í´ïÊ½£º\n",indent,' ',i);
+      //                    printf("%*cï¿½ï¿½%dï¿½ï¿½Êµï¿½Ê²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê½ï¿½ï¿½\n",indent,' ',i);
       //                  display(T,indent+3);
       printf("\n");
       break;
@@ -257,30 +258,36 @@ void display(struct node *T, int indent)
       printf("%*c%s\n", indent, ' ', T->type_id);
       display(T->ptr[0], indent + 3);
       break;
-    case ARRAY_LIST:
+    case ARR_LIST:
       i = 1;
       while (T)
       {
         struct node *T0 = T->ptr[0];
-        printf("%*cµÚ%dÎ¬£º", indent, ' ', i++);
+        printf("%*cï¿½ï¿½%dÎ¬ï¿½ï¿½", indent, ' ', i++);
         display(T0, indent);
         T = T->ptr[1];
       }
       printf("\n");
       break;
-    case ARRAY_SUB:
+    case ARR_SUB:
       printf(" %d\n", T->type_int);
       break;
-    case ARRAY_ELE:
-      printf("%*cÊý×é£º%s\n", indent, ' ', T->type_id);
+    case ARR_ELE:
+      printf("%*cï¿½ï¿½ï¿½é£º%s\n", indent, ' ', T->type_id);
       display(T->ptr[0], indent + 3);
+      break;
+    case ARR_ACCESS:
+      printf("%*cï¿½ï¿½\n", indent, ' ');
+      display(T->ptr[0], indent + 3);
+      printf("%*cï¿½ï¿½ï¿½ï¿½\n", indent, ' ');
+      display(T->ptr[1], indent + 3);
       break;
     case VAL_LIST:
       i = 1;
       while (T)
       {
         struct node *T0 = T->ptr[0];
-        printf("%*cµÚ%d¸öÖµ£º\n", indent, ' ', i++);
+        printf("%*cï¿½ï¿½%dï¿½ï¿½Öµï¿½ï¿½\n", indent, ' ', i++);
         display(T0, indent + 3);
         T = T->ptr[1];
       }

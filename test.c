@@ -71,8 +71,8 @@
 //   return 1;
 // }
 
-  char a[1];
+  char a[4][5];
+  int b[4];
+  int c;
 int main() {
-  int a[5][6];
-  int c = a[5][1];
 }

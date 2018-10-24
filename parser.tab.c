@@ -476,7 +476,7 @@ static const yytype_uint16 yyprhs[] =
      100,   103,   107,   110,   113,   115,   116,   119,   123,   125,
      129,   131,   135,   141,   143,   147,   151,   155,   159,   163,
      167,   171,   175,   179,   183,   187,   191,   195,   199,   202,
-     207,   210,   213,   216,   220,   223,   226,   229,   234,   238,
+     205,   208,   211,   214,   217,   220,   225,   229,   234,   238,
      240,   242,   244,   246,   248,   249,   253,   255,   259,   261,
      264,   266
 };
@@ -504,10 +504,10 @@ static const yytype_int8 yyrhs[] =
       -1,    65,    24,    65,    -1,    65,     5,    65,    -1,    65,
       17,    65,    -1,    65,    18,    65,    -1,    65,    39,    65,
       -1,    65,    20,    65,    -1,    65,    21,    65,    -1,    65,
-      30,    -1,    65,    15,    65,    16,    -1,    30,    65,    -1,
-      65,    31,    -1,    31,    65,    -1,     9,    65,    10,    -1,
-      18,    65,    -1,    17,    65,    -1,    25,    65,    -1,     4,
-       9,    68,    10,    -1,     4,     9,    10,    -1,    51,    -1,
+      30,    -1,    65,    31,    -1,    30,    65,    -1,    31,    65,
+      -1,    18,    65,    -1,    17,    65,    -1,    25,    65,    -1,
+       4,     9,    68,    10,    -1,     4,     9,    10,    -1,    65,
+      15,    65,    16,    -1,     9,    65,    10,    -1,    51,    -1,
       66,    -1,     3,    -1,     8,    -1,     7,    -1,    -1,    66,
       14,    67,    -1,    66,    -1,    65,    14,    68,    -1,    65,
       -1,    70,    69,    -1,    70,    -1,    15,     3,    16,    -1
@@ -581,8 +581,8 @@ static const yytype_uint8 yyr2[] =
        4,     0,     2,     1,     1,     3,     5,     7,     5,     5,
        2,     3,     2,     2,     1,     0,     2,     3,     1,     3,
        1,     3,     5,     1,     3,     3,     3,     3,     3,     3,
-       3,     3,     3,     3,     3,     3,     3,     3,     2,     4,
-       2,     2,     2,     3,     2,     2,     2,     4,     3,     1,
+       3,     3,     3,     3,     3,     3,     3,     3,     2,     2,
+       2,     2,     2,     2,     2,     4,     3,     4,     3,     1,
        1,     1,     1,     1,     0,     3,     1,     3,     1,     2,
        1,     3
 };
@@ -599,14 +599,14 @@ static const yytype_uint8 yydefact[] =
       81,    40,    43,     0,    38,    71,    13,    73,    72,     0,
       34,     0,     0,     0,     0,     0,     0,     0,     0,     0,
        0,    69,    24,     0,    21,    23,     0,    70,    36,    18,
-       0,     0,    37,     0,     0,     0,    65,    64,    66,     0,
-       0,     0,    60,    62,     0,    30,    20,    22,     0,    33,
-       0,     0,     0,     0,     0,     0,     0,     0,    58,    61,
-       0,     0,     0,     0,     0,     0,    41,    74,    39,    68,
-      78,     0,    63,     0,     0,    25,     0,     0,    52,     0,
+       0,     0,    37,     0,     0,     0,    63,    62,    64,     0,
+       0,     0,    60,    61,     0,    30,    20,    22,     0,    33,
+       0,     0,     0,     0,     0,     0,     0,     0,    58,    59,
+       0,     0,     0,     0,     0,     0,    41,    74,    39,    66,
+      78,     0,    68,     0,     0,    25,     0,     0,    52,     0,
       53,    54,    56,    57,    44,    50,    51,    45,    46,    47,
-      48,    49,    55,    76,     0,     0,    67,     0,     0,     0,
-      32,    59,    74,    42,    77,    26,    28,    29,    31,    75,
+      48,    49,    55,    76,     0,     0,    65,     0,     0,     0,
+      32,    67,    74,    42,    77,    26,    28,    29,    31,    75,
        0,    27
 };
 
@@ -1627,7 +1627,7 @@ yyreduce:
 
 /* Line 1455 of yacc.c  */
 #line 49 "parser.y"
-    { display((yyvsp[(1) - (1)].ptr),0);/*semantic_Analysis0($1);*/;}
+    { /*display($1,0);*/semantic_Analysis0((yyvsp[(1) - (1)].ptr));;}
     break;
 
   case 3:
@@ -1711,7 +1711,7 @@ yyreduce:
 
 /* Line 1455 of yacc.c  */
 #line 67 "parser.y"
-    {(yyval.ptr)=mknode(ARRAY_ELE,(yyvsp[(2) - (2)].ptr),NULL,NULL,yylineno);strcpy((yyval.ptr)->type_id,(yyvsp[(1) - (2)].type_id));;}
+    {(yyval.ptr)=mknode(ARR_ELE,(yyvsp[(2) - (2)].ptr),NULL,NULL,yylineno);strcpy((yyval.ptr)->type_id,(yyvsp[(1) - (2)].type_id));;}
     break;
 
   case 15:
@@ -2022,6 +2022,13 @@ yyreduce:
     {(yyval.ptr)=mknode(DPLUS,(yyvsp[(1) - (2)].ptr),NULL,NULL,yylineno);strcpy((yyval.ptr)->type_id,"DPLUS");;}
     break;
 
+  case 59:
+
+/* Line 1455 of yacc.c  */
+#line 125 "parser.y"
+    {(yyval.ptr)=mknode(DMINUS,(yyvsp[(1) - (2)].ptr),NULL,NULL,yylineno);strcpy((yyval.ptr)->type_id,"DMINUS");;}
+    break;
+
   case 60:
 
 /* Line 1455 of yacc.c  */
@@ -2033,56 +2040,56 @@ yyreduce:
 
 /* Line 1455 of yacc.c  */
 #line 127 "parser.y"
-    {(yyval.ptr)=mknode(DMINUS,(yyvsp[(1) - (2)].ptr),NULL,NULL,yylineno);strcpy((yyval.ptr)->type_id,"DMINUS");;}
+    {(yyval.ptr)=mknode(FDMINUS,(yyvsp[(2) - (2)].ptr),NULL,NULL,yylineno);strcpy((yyval.ptr)->type_id,"FDMINUS");;}
     break;
 
   case 62:
 
 /* Line 1455 of yacc.c  */
 #line 128 "parser.y"
-    {(yyval.ptr)=mknode(FDMINUS,(yyvsp[(2) - (2)].ptr),NULL,NULL,yylineno);strcpy((yyval.ptr)->type_id,"FDMINUS");;}
+    {(yyval.ptr)=mknode(UMINUS,(yyvsp[(2) - (2)].ptr),NULL,NULL,yylineno);strcpy((yyval.ptr)->type_id,"UMINUS");;}
     break;
 
   case 63:
 
 /* Line 1455 of yacc.c  */
 #line 129 "parser.y"
-    {(yyval.ptr)=(yyvsp[(2) - (3)].ptr);;}
+    {(yyval.ptr)=mknode(UPLUS,(yyvsp[(2) - (2)].ptr),NULL,NULL,yylineno);strcpy((yyval.ptr)->type_id,"UPLUS");;}
     break;
 
   case 64:
 
 /* Line 1455 of yacc.c  */
 #line 130 "parser.y"
-    {(yyval.ptr)=mknode(UMINUS,(yyvsp[(2) - (2)].ptr),NULL,NULL,yylineno);strcpy((yyval.ptr)->type_id,"UMINUS");;}
+    {(yyval.ptr)=mknode(NOT,(yyvsp[(2) - (2)].ptr),NULL,NULL,yylineno);strcpy((yyval.ptr)->type_id,"NOT");;}
     break;
 
   case 65:
 
 /* Line 1455 of yacc.c  */
 #line 131 "parser.y"
-    {(yyval.ptr)=mknode(UPLUS,(yyvsp[(2) - (2)].ptr),NULL,NULL,yylineno);strcpy((yyval.ptr)->type_id,"UPLUS");;}
+    {(yyval.ptr)=mknode(FUNC_CALL,(yyvsp[(3) - (4)].ptr),NULL,NULL,yylineno);strcpy((yyval.ptr)->type_id,(yyvsp[(1) - (4)].type_id));;}
     break;
 
   case 66:
 
 /* Line 1455 of yacc.c  */
 #line 132 "parser.y"
-    {(yyval.ptr)=mknode(NOT,(yyvsp[(2) - (2)].ptr),NULL,NULL,yylineno);strcpy((yyval.ptr)->type_id,"NOT");;}
+    {(yyval.ptr)=mknode(FUNC_CALL,NULL,NULL,NULL,yylineno);strcpy((yyval.ptr)->type_id,(yyvsp[(1) - (3)].type_id));;}
     break;
 
   case 67:
 
 /* Line 1455 of yacc.c  */
 #line 133 "parser.y"
-    {(yyval.ptr)=mknode(FUNC_CALL,(yyvsp[(3) - (4)].ptr),NULL,NULL,yylineno);strcpy((yyval.ptr)->type_id,(yyvsp[(1) - (4)].type_id));;}
+    {(yyval.ptr)=mknode(ARR_ACCESS,(yyvsp[(1) - (4)].ptr),(yyvsp[(3) - (4)].ptr),NULL,yylineno);strcpy((yyval.ptr)->type_id,"ARR");;}
     break;
 
   case 68:
 
 /* Line 1455 of yacc.c  */
 #line 134 "parser.y"
-    {(yyval.ptr)=mknode(FUNC_CALL,NULL,NULL,NULL,yylineno);strcpy((yyval.ptr)->type_id,(yyvsp[(1) - (3)].type_id));;}
+    {(yyval.ptr)=(yyvsp[(2) - (3)].ptr);;}
     break;
 
   case 69:
@@ -2159,27 +2166,27 @@ yyreduce:
 
 /* Line 1455 of yacc.c  */
 #line 149 "parser.y"
-    {(yyval.ptr)=mknode(ARRAY_LIST,(yyvsp[(1) - (2)].ptr),(yyvsp[(2) - (2)].ptr),NULL,yylineno);;}
+    {(yyval.ptr)=mknode(ARR_LIST,(yyvsp[(1) - (2)].ptr),(yyvsp[(2) - (2)].ptr),NULL,yylineno);;}
     break;
 
   case 80:
 
 /* Line 1455 of yacc.c  */
 #line 150 "parser.y"
-    {(yyval.ptr)=mknode(ARRAY_LIST,(yyvsp[(1) - (1)].ptr),NULL,NULL,yylineno);;}
+    {(yyval.ptr)=mknode(ARR_LIST,(yyvsp[(1) - (1)].ptr),NULL,NULL,yylineno);;}
     break;
 
   case 81:
 
 /* Line 1455 of yacc.c  */
 #line 152 "parser.y"
-    {(yyval.ptr)=mknode(ARRAY_SUB,NULL,NULL,NULL,yylineno);(yyval.ptr)->type_int=(yyvsp[(2) - (3)].type_int);(yyval.ptr)->type=INT;;}
+    {(yyval.ptr)=mknode(ARR_SUB,NULL,NULL,NULL,yylineno);(yyval.ptr)->type_int=(yyvsp[(2) - (3)].type_int);(yyval.ptr)->type=INT;;}
     break;
 
 
 
 /* Line 1455 of yacc.c  */
-#line 2183 "parser.tab.c"
+#line 2190 "parser.tab.c"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
