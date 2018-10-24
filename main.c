@@ -8,6 +8,9 @@ struct node *mknode(int kind, struct node *first, struct node *second, struct no
   T->ptr[1] = second;
   T->ptr[2] = third;
   T->pos = pos;
+  T->place = 0;
+  T->error = 0;
+  T->dimension = 0;
   return T;
 }
 

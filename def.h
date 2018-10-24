@@ -87,8 +87,12 @@ struct node
   int pos;    //语法单位所在位置行号
   int offset; //偏移量
   int width;  //占数据字节数
-  int num;
+  int num;    //变量个数
+  int error; //报错标志
+  int dimension; //数组维数
+  int arrayLimit[100]; //数组每一维的个数
 };
+
 
 struct symbol
 {                 //这里只列出了一个符号表项的部分属性，没考虑属性间的互斥

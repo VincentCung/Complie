@@ -226,6 +226,7 @@ void prnIR(struct codenode *head)
     h = h->next;
   } while (h != head);
 }
+
 void semantic_error(int line, char *msg1, char *msg2)
 {
   //这里可以只收集错误信息，最后在一次显示
@@ -297,18 +298,22 @@ void ext_var_list(struct node *T) //处理外部变量列表
   case EXT_DEC_LIST:
     T->ptr[0]->type = T->type;                //将类型属性向下传递变量结点
     T->ptr[0]->offset = T->offset;            //外部变量的偏移量向下传递
+    ext_var_list(T->ptr[0]);
+    T->error = T->ptr[0]->error;
     T->ptr[1]->type = T->type;                //将类型属性向下传递变量结点
     T->ptr[1]->offset = T->offset + T->width; //外部变量的偏移量向下传递 TODO: 数组长度空间变化
     T->ptr[1]->width = T->width;
-    ext_var_list(T->ptr[0]);
     ext_var_list(T->ptr[1]);
+    T->error = T->ptr[1]->error;
     T->num = T->ptr[1]->num + 1;
     break;
-  case ID:
   case ARRAY_ELE:
+  case ID:
     rtn = fillSymbolTable(T->type_id, newAlias(), LEV, T->type, 'V', T->offset); //最后一个变量名
-    if (rtn == -1)
+    if (rtn == -1){
+      T->error =1 ;
       semantic_error(T->pos, T->type_id, "变量重复定义");
+    }
     else
       T->place = rtn;
     T->num = 1;
@@ -317,17 +322,18 @@ void ext_var_list(struct node *T) //处理外部变量列表
 }
 
 //匹配参数个数类型
-int match_param(int i, struct node *T,int pos)
-{ 
+int match_param(int i, struct node *T, int pos)
+{
   int j, num = symbolTable.symbols[i].paramnum;
   int type1, type2;
-  if (num == 0 && T == NULL){
+  if (num == 0 && T == NULL)
+  {
     return 1;
   }
   for (j = 1; j <= num; j++)
   {
     if (!T)
-    { 
+    {
       semantic_error(pos, "", "函数调用参数太少");
       return 0;
     }
@@ -597,9 +603,9 @@ void Exp(struct node *T)
         T->width = width;
         T->code = NULL;
       }
-      match_param(rtn, T->ptr[0],T->pos); //处理所以参数的匹配
-        
-      T0 = T->ptr[0];//处理参数列表的中间代码
+      match_param(rtn, T->ptr[0], T->pos); //处理所以参数的匹配
+
+      T0 = T->ptr[0]; //处理参数列表的中间代码
       while (T0)
       {
         result.kind = ID;
@@ -648,39 +654,56 @@ void semantic_Analysis(struct node *T)
         break;
       T->ptr[0]->offset = T->offset;
       semantic_Analysis(T->ptr[0]); //访问外部定义列表中的第一个
+      if(T->ptr[0]->error) {
+        T->error =1; //父节点也需要break
+        break;
+      }
       T->code = T->ptr[0]->code;
       if (T->ptr[1])
       {
         T->ptr[1]->offset = T->ptr[0]->offset + T->ptr[0]->width;
         semantic_Analysis(T->ptr[1]); //访问该外部定义列表中的其它外部定义
+        if(T->ptr[1]->error) {
+          T->error = 1;
+          break;
+        }
         T->code = merge(2, T->code, T->ptr[1]->code);
       }
       break;
     case EXT_VAR_DEF: //处理外部说明,将第一个孩子(TYPE结点)中的类型送到第二个孩子的类型域
       T->type = T->ptr[1]->type = getType(T->ptr[0]->type_id);
       T->ptr[1]->offset = T->offset;                 //这个外部变量的偏移量向下传递
-      T->ptr[1]->width = getWidth(T->type);          //将一个变量的宽度向下传递
+      T->ptr[1]->width = getWidth(T->type);          //将一个变量的宽度向下传递 TODO:数组处理
       ext_var_list(T->ptr[1]);                       //处理外部变量说明中的标识符序列
+      T->error = T->ptr[1]->error;
       T->width = getWidth(T->type) * T->ptr[1]->num; //计算这个外部变量说明的宽度
       T->code = NULL;                                //这里假定外部变量不支持初始化
       break;
     case FUNC_DEF:                                   //填写函数定义信息到符号表
       T->ptr[1]->type = getType(T->ptr[0]->type_id); //获取函数返回类型送到含函数名、参数的结点
       T->width = 0;                                  //函数的宽度设置为0，不会对外部变量的地址分配产生影响
-      T->offset = DX;                                //设置局部变量在活动记录中的偏移量初值
-      semantic_Analysis(T->ptr[1]);                  //处理函数名和参数结点部分，这里不考虑用寄存器传递参数
-      T->offset += T->ptr[1]->width;                 //用形参单元宽度修改函数局部变量的起始偏移量
+      int tempOffset = T->offset;
+      T->offset = DX;                //设置局部变量在活动记录中的偏移量初值
+      semantic_Analysis(T->ptr[1]);  //处理函数名和参数结点部分，这里不考虑用寄存器传递参数
+      if(T->ptr[1]->error) {
+        T->error = 1;
+        break;
+      }
+      T->place = T->ptr[1]->place;
+      T->offset += T->ptr[1]->width; //用形参单元宽度修改函数局部变量的起始偏移量
       T->ptr[2]->offset = T->offset;
       strcpy(T->ptr[2]->Snext, newLabel()); //函数体语句执行结束后的位置属性
       semantic_Analysis(T->ptr[2]);         //处理函数体结点
       //计算活动记录大小,这里offset属性存放的是活动记录大小，不是偏移
       symbolTable.symbols[T->ptr[1]->place].offset = T->offset + T->ptr[2]->width;
       T->code = merge(3, T->ptr[1]->code, T->ptr[2]->code, genLabel(T->ptr[2]->Snext)); //函数体的代码作为函数的代码
+      T->offset = tempOffset;
       break;
     case FUNC_DEC:                                                         //根据返回类型，函数名填写符号表
       rtn = fillSymbolTable(T->type_id, newAlias(), LEV, T->type, 'F', 0); //函数不在数据区中分配单元，偏移量为0
       if (rtn == -1)
       {
+        T->error = 1;
         semantic_error(T->pos, T->type_id, "函数重复定义");
         break;
       }
@@ -941,6 +964,7 @@ void semantic_Analysis(struct node *T)
     case PLUS:
     case MINUS:
     case STAR:
+    case PER:
     case DIV:
     case NOT:
     case UMINUS:
@@ -963,5 +987,6 @@ void semantic_Analysis0(struct node *T)
   symbol_scope_TX.top = 1;
   T->offset = 0; //外部变量在数据区的偏移量
   semantic_Analysis(T);
+  printf("%d",T->error);
   //prnIR(T->code);
 }

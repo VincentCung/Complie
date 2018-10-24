@@ -48,7 +48,7 @@
 //   return 1;
 // }
 // int a, b, c;
-int m, n;
+// int m, n;
 // int fibo(int a)
 // {
 //   if (a == 1 || a == 2)
@@ -71,10 +71,8 @@ int m, n;
 //   return 1;
 // }
 
+  char a[1];
 int main() {
-  write(m,n);
+  int a[5][6];
+  int c = a[5][1];
 }
-
-// int main() {
-//   char a = '';
-// }
