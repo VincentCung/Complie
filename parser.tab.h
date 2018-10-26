@@ -77,9 +77,8 @@
      MULT = 293,
      FDMINUS = 294,
      FDPLUS = 295,
-     UPLUS = 296,
-     UMINUS = 297,
-     LOWER_THEN_ELSE = 298
+     UMINUS = 296,
+     LOWER_THEN_ELSE = 297
    };
 #endif
 
@@ -100,7 +99,7 @@ typedef union YYSTYPE
 
 
 /* Line 1676 of yacc.c  */
-#line 104 "parser.tab.h"
+#line 103 "parser.tab.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */

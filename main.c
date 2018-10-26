@@ -227,7 +227,6 @@ void display(struct node *T, int indent)
       display(T->ptr[1], indent + 3);
       break;
     case NOT:
-    case UPLUS:
     case UMINUS:
     case FDPLUS:
     case FDMINUS:

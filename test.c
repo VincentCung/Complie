@@ -74,5 +74,9 @@
 
 
 void main(int a,int b) {
-  write(b,a);
+  //a = b=b;
+  int c[5] = {1,2,3};
+  int d=1;
+  int e;
+   
 }
