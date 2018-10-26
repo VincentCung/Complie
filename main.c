@@ -12,6 +12,7 @@ struct node *mknode(int kind, struct node *first, struct node *second, struct no
   T->error = 0;
   T->dimension = 0;
   T->num = 0;
+  T->Sbreak = 0;
   return T;
 }
 
@@ -214,7 +215,6 @@ void display(struct node *T, int indent)
     case MINUSASSIGN:
     case MULTASSIGN:
     case DIVASSIGN:
-    case PERASSIGN:
     case AND:
     case OR:
     case RELOP:
@@ -222,7 +222,6 @@ void display(struct node *T, int indent)
     case MINUS:
     case MULT:
     case DIV:
-    case PER:
       printf("%*c%s\n", indent, ' ', T->type_id);
       display(T->ptr[0], indent + 3);
       display(T->ptr[1], indent + 3);

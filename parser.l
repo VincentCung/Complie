@@ -19,7 +19,7 @@ typedef union {
 id   [A-Za-z][A-Za-z0-9]*  
 int    [0-9]+
 float  ([0-9]*\.[0-9]+)|([0-9]+\.)
-char   (')(.)*(')
+char   (')(.)(')
 string (")(.|\n)*(")
 
 %%
@@ -49,12 +49,10 @@ string (")(.|\n)*(")
 "-="		{return MINUSASSIGN;}
 "*="		{return MULTASSIGN;}
 "/="		{return DIVASSIGN;}
-"%="		{return PERASSIGN;}
 "++"		{return DPLUS;}
 "--"    {return DMINUS;}
 "="			{return ASSIGNOP;}
 "+"			{return PLUS;}
-"%"			{return PER;}
 "-"			{return MINUS;}
 "*"			{return MULT;}
 "/"			{return DIV;}

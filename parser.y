@@ -18,26 +18,26 @@ extern FILE *yyin;
 	struct node *ptr;
 };
 
-//  %type ¶¨Òå·ÇÖÕ½á·ûµÄÓïÒåÖµÀàÐÍ
+//  %type ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Õ½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Öµï¿½ï¿½ï¿½ï¿½
 %type  <ptr> program ExtDefList ExtDef Specifier ExtDecList FuncDec CompSt VarList VarDec 
 %type  <ptr> ParamDec Stmt StmList DefList Def DecList Dec Exp Args 
 %type  <ptr> ArrayChild ArrayList ArrayDec ConList ExpStmt Value ValueList
 
-//% token ¶¨ÒåÖÕ½á·ûµÄÓïÒåÖµÀàÐÍ
-%token <type_int> INT              //Ö¸¶¨INTµÄÓïÒåÖµÊÇtype_int£¬ÓÐ´Ê·¨·ÖÎöµÃµ½µÄÊýÖµ
-%token <type_id> ID RELOP TYPE CHAR  //Ö¸¶¨ID,RELOP µÄÓïÒåÖµÊÇtype_id£¬ÓÐ´Ê·¨·ÖÎöµÃµ½µÄ±êÊ¶·û×Ö·û´®
-%token <type_float> FLOAT         //Ö¸¶¨IDµÄÓïÒåÖµÊÇtype_id£¬ÓÐ´Ê·¨·ÖÎöµÃµ½µÄ±êÊ¶·û×Ö·û´®
+//% token ï¿½ï¿½ï¿½ï¿½ï¿½Õ½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Öµï¿½ï¿½ï¿½ï¿½
+%token <type_int> INT              //Ö¸ï¿½ï¿½INTï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Öµï¿½ï¿½type_intï¿½ï¿½ï¿½Ð´Ê·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ãµï¿½ï¿½ï¿½ï¿½ï¿½Öµ
+%token <type_id> ID RELOP TYPE CHAR  //Ö¸ï¿½ï¿½ID,RELOP ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Öµï¿½ï¿½type_idï¿½ï¿½ï¿½Ð´Ê·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ãµï¿½ï¿½Ä±ï¿½Ê¶ï¿½ï¿½ï¿½Ö·ï¿½ï¿½ï¿½
+%token <type_float> FLOAT         //Ö¸ï¿½ï¿½IDï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Öµï¿½ï¿½type_idï¿½ï¿½ï¿½Ð´Ê·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ãµï¿½ï¿½Ä±ï¿½Ê¶ï¿½ï¿½ï¿½Ö·ï¿½ï¿½ï¿½
 
-%token LP RP LC RC SEMI COMMA LM RM //ÓÃbison¶Ô¸ÃÎÄ¼þ±àÒëÊ±£¬´ø²ÎÊý-d£¬Éú³ÉµÄexp.tab.hÖÐ¸øÕâÐ©µ¥´Ê½øÐÐ±àÂë£¬¿ÉÔÚlex.lÖÐ°üº¬parser.tab.hÊ¹ÓÃÕâÐ©µ¥´ÊÖÖÀàÂë
-%token PLUS MINUS STAR DIV PER ASSIGNOP AND OR NOT IF ELSE WHILE RETURN DPLUS DMINUS FOR BREAK VOID
-%token PLUSASSIGN MINUSASSIGN MULTASSIGN DIVASSIGN PERASSIGN 
+%token LP RP LC RC SEMI COMMA LM RM //ï¿½ï¿½bisonï¿½Ô¸ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½-dï¿½ï¿½ï¿½ï¿½ï¿½Éµï¿½exp.tab.hï¿½Ð¸ï¿½ï¿½ï¿½Ð©ï¿½ï¿½ï¿½Ê½ï¿½ï¿½Ð±ï¿½ï¿½ë£¬ï¿½ï¿½ï¿½ï¿½lex.lï¿½Ð°ï¿½ï¿½ï¿½parser.tab.hÊ¹ï¿½ï¿½ï¿½ï¿½Ð©ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+%token PLUS MINUS STAR DIV  ASSIGNOP AND OR NOT IF ELSE WHILE RETURN DPLUS DMINUS FOR BREAK VOID
+%token PLUSASSIGN MINUSASSIGN MULTASSIGN DIVASSIGN 
 
-%left ASSIGNOP PLUSASSIGN MINUSASSIGN MULTASSIGN DIVASSIGN PERASSIGN
+%right ASSIGNOP PLUSASSIGN MINUSASSIGN MULTASSIGN DIVASSIGN 
 %left OR
 %left AND
 %left RELOP
 %left PLUS MINUS
-%left MULT DIV PER
+%left MULT DIV 
 %right UMINUS UPLUS NOT FDPLUS FDMINUS DPLUS DMINUS
 %left LM RM
 
@@ -46,29 +46,29 @@ extern FILE *yyin;
 
 %%
 
-program: ExtDefList    { /*display($1,0);*/semantic_Analysis0($1);}     /*ÏÔÊ¾Óï·¨Ê÷,ÓïÒå·ÖÎö*/
+program: ExtDefList    { /*display($1,0);*/semantic_Analysis0($1);}     /*ï¿½ï¿½Ê¾ï¿½ï·¨ï¿½ï¿½,ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½*/
          ; 
 ExtDefList: {$$=NULL;}
-          | ExtDef ExtDefList {$$=mknode(EXT_DEF_LIST,$1,$2,NULL,yylineno);}   //Ã¿Ò»¸öEXTDEFLISTµÄ½áµã£¬ÆäµÚ1¿Ã×ÓÊ÷¶ÔÓ¦Ò»¸öÍâ²¿±äÁ¿ÉùÃ÷»òº¯Êý
+          | ExtDef ExtDefList {$$=mknode(EXT_DEF_LIST,$1,$2,NULL,yylineno);}   //Ã¿Ò»ï¿½ï¿½EXTDEFLISTï¿½Ä½ï¿½ã£¬ï¿½ï¿½ï¿½1ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó¦Ò»ï¿½ï¿½ï¿½â²¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
           ;  
-ExtDef:    Specifier ExtDecList SEMI   {$$=mknode(EXT_VAR_DEF,$1,$2,NULL,yylineno);}   //¸Ã½áµã¶ÔÓ¦Ò»¸öÍâ²¿±äÁ¿ÉùÃ÷
-         | Specifier FuncDec CompSt    {$$=mknode(FUNC_DEF,$1,$2,$3,yylineno);}         //¸Ã½áµã¶ÔÓ¦Ò»¸öº¯Êý¶¨Òå
-         | VOID FuncDec CompSt    {$$=mknode(FUNC_DEF,NULL,$2,$3,yylineno);}         //¸Ã½áµã¶ÔÓ¦Ò»¸öº¯Êý¶¨Òå
+ExtDef:    Specifier ExtDecList SEMI   {$$=mknode(EXT_VAR_DEF,$1,$2,NULL,yylineno);}   //ï¿½Ã½ï¿½ï¿½ï¿½Ó¦Ò»ï¿½ï¿½ï¿½â²¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+         | Specifier FuncDec CompSt    {$$=mknode(FUNC_DEF,$1,$2,$3,yylineno);}         //ï¿½Ã½ï¿½ï¿½ï¿½Ó¦Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+         | VOID FuncDec CompSt    {$$=mknode(FUNC_DEF,NULL,$2,$3,yylineno);}         //ï¿½Ã½ï¿½ï¿½ï¿½Ó¦Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
          | error SEMI   {$$=NULL; }
          ;
 Specifier:  TYPE    {$$=mknode(TYPE,NULL,NULL,NULL,yylineno);strcpy($$->type_id,$1);$$->type=getType($1);}   
            ;      
-ExtDecList:  VarDec      {$$=$1;}       /*Ã¿Ò»¸öEXT_DECLISTµÄ½áµã£¬ÆäµÚÒ»¿Ã×ÓÊ÷¶ÔÓ¦Ò»¸ö±äÁ¿Ãû(IDÀàÐÍµÄ½áµã),µÚ¶þ¿Ã×ÓÊ÷¶ÔÓ¦Ê£ÏÂµÄÍâ²¿±äÁ¿Ãû*/
+ExtDecList:  VarDec      {$$=$1;}       /*Ã¿Ò»ï¿½ï¿½EXT_DECLISTï¿½Ä½ï¿½ã£¬ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó¦Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½(IDï¿½ï¿½ï¿½ÍµÄ½ï¿½ï¿½),ï¿½Ú¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó¦Ê£ï¿½Âµï¿½ï¿½â²¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½*/
            | ArrayDec      {$$=$1;} 
            | VarDec COMMA ExtDecList {$$=mknode(EXT_DEC_LIST,$1,$3,NULL,yylineno);}
            | ArrayDec COMMA ExtDecList {$$=mknode(EXT_DEC_LIST,$1,$3,NULL,yylineno);}
            ;  
-VarDec:  ID          {$$=mknode(ID,NULL,NULL,NULL,yylineno);strcpy($$->type_id,$1);}   //ID½áµã£¬±êÊ¶·û·ûºÅ´®´æ·Å½áµãµÄtype_id
+VarDec:  ID          {$$=mknode(ID,NULL,NULL,NULL,yylineno);strcpy($$->type_id,$1);}   //IDï¿½ï¿½ã£¬ï¿½ï¿½Ê¶ï¿½ï¿½ï¿½ï¿½ï¿½Å´ï¿½ï¿½ï¿½Å½ï¿½ï¿½ï¿½type_id
         ;
 ArrayDec: ID ArrayList {$$=mknode(ARR_ELE,$2,NULL,NULL,yylineno);strcpy($$->type_id,$1);}        
         ;
-FuncDec: ID LP VarList RP   {$$=mknode(FUNC_DEC,$3,NULL,NULL,yylineno);strcpy($$->type_id,$1);}//º¯ÊýÃû´æ·ÅÔÚ$$->type_id
-	|ID LP  RP   {$$=mknode(FUNC_DEC,NULL,NULL,NULL,yylineno);strcpy($$->type_id,$1);}//º¯ÊýÃû´æ·ÅÔÚ$$->type_id
+FuncDec: ID LP VarList RP   {$$=mknode(FUNC_DEC,$3,NULL,NULL,yylineno);strcpy($$->type_id,$1);}//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½$$->type_id
+	|ID LP  RP   {$$=mknode(FUNC_DEC,NULL,NULL,NULL,yylineno);strcpy($$->type_id,$1);}//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½$$->type_id
         ;  
 VarList: ParamDec  {$$=mknode(PARAM_LIST,$1,NULL,NULL,yylineno);}
         | ParamDec COMMA  VarList  {$$=mknode(PARAM_LIST,$1,$3,NULL,yylineno);}
@@ -81,7 +81,7 @@ StmList: {$$=NULL; }
         | Stmt StmList  {$$=mknode(STM_LIST,$1,$2,NULL,yylineno);}
         ;
 Stmt:  ExpStmt {$$=$1;}
-      | CompSt      {$$=$1;}      //¸´ºÏÓï¾ä½áµãÖ±½Ó×îÎªÓï¾ä½áµã£¬²»ÔÙÉú³ÉÐÂµÄ½áµã
+      | CompSt      {$$=$1;}      //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö±ï¿½ï¿½ï¿½ï¿½Îªï¿½ï¿½ï¿½ï¿½ã£¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÂµÄ½ï¿½ï¿½
       | RETURN Exp SEMI   {$$=mknode(RETURN,$2,NULL,NULL,yylineno);}
       | IF LP Exp RP Stmt %prec LOWER_THEN_ELSE   {$$=mknode(IF_THEN,$3,$5,NULL,yylineno);}
       | IF LP Exp RP Stmt ELSE Stmt   {$$=mknode(IF_THEN_ELSE,$3,$5,$7,yylineno);}
@@ -98,30 +98,28 @@ ExpStmt: Exp SEMI {$$=mknode(EXP_STMT,$1,NULL,NULL,yylineno);}
 DefList: {$$=NULL; }
         | Def DefList {$$=mknode(DEF_LIST,$1,$2,NULL,yylineno);}
         ;
-Def:    Specifier DecList SEMI {$$=mknode(VAR_DEF,$1,$2,NULL,yylineno);} //ÉùÃ÷Óï¾ä
+Def:    Specifier DecList SEMI {$$=mknode(VAR_DEF,$1,$2,NULL,yylineno);} //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         ;
-DecList: Dec  {$$=mknode(DEC_LIST,$1,NULL,NULL,yylineno);} //ÉùÃ÷±í
+DecList: Dec  {$$=mknode(DEC_LIST,$1,NULL,NULL,yylineno);} //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
        | Dec COMMA DecList  {$$=mknode(DEC_LIST,$1,$3,NULL,yylineno);}
 	   ;
-Dec:     VarDec  {$$=$1;} //µ¥¸öÉùÃ÷±í´ïÊ½
+Dec:     VarDec  {$$=$1;} //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê½
        | VarDec ASSIGNOP Exp  {$$=mknode(ASSIGNOP,$1,$3,NULL,yylineno);strcpy($$->type_id,"ASSIGNOP");}
        | ArrayDec ASSIGNOP LC ValueList RC {$$=mknode(ASSIGNOP,$1,$4,NULL,yylineno);strcpy($$->type_id,"ASSIGNOP");}
-       | ArrayDec {$$=$1;} //µ¥¸öÊý×éÉùÃ÷
+       | ArrayDec {$$=$1;} //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
        ;
-Exp:    Exp ASSIGNOP Exp {$$=mknode(ASSIGNOP,$1,$3,NULL,yylineno);strcpy($$->type_id,"ASSIGNOP");}//$$½áµãtype_id¿ÕÖÃÎ´ÓÃ£¬ÕýºÃ´æ·ÅÔËËã·û
+Exp:    Exp ASSIGNOP Exp {$$=mknode(ASSIGNOP,$1,$3,NULL,yylineno);strcpy($$->type_id,"ASSIGNOP");}//$$ï¿½ï¿½ï¿½type_idï¿½ï¿½ï¿½ï¿½Î´ï¿½Ã£ï¿½ï¿½ï¿½ï¿½Ã´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
       | Exp PLUSASSIGN Exp {$$=mknode(PLUSASSIGN,$1,$3,NULL,yylineno);strcpy($$->type_id,"PLUSASSIGN");}
       | Exp MINUSASSIGN Exp {$$=mknode(MINUSASSIGN,$1,$3,NULL,yylineno);strcpy($$->type_id,"MINUSASSIGN");}
       | Exp MULTASSIGN Exp {$$=mknode(MULTASSIGN,$1,$3,NULL,yylineno);strcpy($$->type_id,"MULTASSIGN");}
       | Exp DIVASSIGN Exp {$$=mknode(DIVASSIGN,$1,$3,NULL,yylineno);strcpy($$->type_id,"DIVASSIGN");}
-      | Exp PERASSIGN Exp {$$=mknode(PERASSIGN,$1,$3,NULL,yylineno);strcpy($$->type_id,"PERASSIGN");}
       | Exp AND Exp   {$$=mknode(AND,$1,$3,NULL,yylineno);strcpy($$->type_id,"AND");}
       | Exp OR Exp    {$$=mknode(OR,$1,$3,NULL,yylineno);strcpy($$->type_id,"OR");}
-      | Exp RELOP Exp {$$=mknode(RELOP,$1,$3,NULL,yylineno);strcpy($$->type_id,$2);}  //´Ê·¨·ÖÎö¹ØÏµÔËËã·ûºÅ×ÔÉíÖµ±£´æÔÚ$2ÖÐ
+      | Exp RELOP Exp {$$=mknode(RELOP,$1,$3,NULL,yylineno);strcpy($$->type_id,$2);}  //ï¿½Ê·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ïµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Öµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½$2ï¿½ï¿½
       | Exp PLUS Exp  {$$=mknode(PLUS,$1,$3,NULL,yylineno);strcpy($$->type_id,"PLUS");}
       | Exp MINUS Exp {$$=mknode(MINUS,$1,$3,NULL,yylineno);strcpy($$->type_id,"MINUS");}
       | Exp MULT Exp  {$$=mknode(MULT,$1,$3,NULL,yylineno);strcpy($$->type_id,"MULT");}
       | Exp DIV Exp   {$$=mknode(DIV,$1,$3,NULL,yylineno);strcpy($$->type_id,"DIV");}
-      | Exp PER Exp   {$$=mknode(PER,$1,$3,NULL,yylineno);strcpy($$->type_id,"PER");}
       | Exp DPLUS     {$$=mknode(DPLUS,$1,NULL,NULL,yylineno);strcpy($$->type_id,"DPLUS");}
       | Exp DMINUS     {$$=mknode(DMINUS,$1,NULL,NULL,yylineno);strcpy($$->type_id,"DMINUS");}
       | DPLUS Exp %prec FDPLUS    {$$=mknode(FDPLUS,$2,NULL,NULL,yylineno);strcpy($$->type_id,"FDPLUS");}

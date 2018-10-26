@@ -57,31 +57,29 @@
      MINUS = 273,
      STAR = 274,
      DIV = 275,
-     PER = 276,
-     ASSIGNOP = 277,
-     AND = 278,
-     OR = 279,
-     NOT = 280,
-     IF = 281,
-     ELSE = 282,
-     WHILE = 283,
-     RETURN = 284,
-     DPLUS = 285,
-     DMINUS = 286,
-     FOR = 287,
-     BREAK = 288,
-     VOID = 289,
-     PLUSASSIGN = 290,
-     MINUSASSIGN = 291,
-     MULTASSIGN = 292,
-     DIVASSIGN = 293,
-     PERASSIGN = 294,
-     MULT = 295,
-     FDMINUS = 296,
-     FDPLUS = 297,
-     UPLUS = 298,
-     UMINUS = 299,
-     LOWER_THEN_ELSE = 300
+     ASSIGNOP = 276,
+     AND = 277,
+     OR = 278,
+     NOT = 279,
+     IF = 280,
+     ELSE = 281,
+     WHILE = 282,
+     RETURN = 283,
+     DPLUS = 284,
+     DMINUS = 285,
+     FOR = 286,
+     BREAK = 287,
+     VOID = 288,
+     PLUSASSIGN = 289,
+     MINUSASSIGN = 290,
+     MULTASSIGN = 291,
+     DIVASSIGN = 292,
+     MULT = 293,
+     FDMINUS = 294,
+     FDPLUS = 295,
+     UPLUS = 296,
+     UMINUS = 297,
+     LOWER_THEN_ELSE = 298
    };
 #endif
 
@@ -102,7 +100,7 @@ typedef union YYSTYPE
 
 
 /* Line 1676 of yacc.c  */
-#line 106 "parser.tab.h"
+#line 104 "parser.tab.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */

@@ -45,7 +45,7 @@ enum node_kind
 #define MAXLENGTH 1000     //定义符号表的大小
 #define DX 3 * sizeof(int) //活动记录控制信息需要的单元数
 #define FLOAT_LENGTH 8
-#define CHAR_LENGTH 2 
+#define CHAR_LENGTH 1
 #define INT_LENGTH 4
 
 struct opn
@@ -89,6 +89,7 @@ struct node
   int offset; //偏移量
   int width;  //占数据字节数
   int num;    //变量个数
+  int Sbreak;
   int error; //报错标志
   int dimension; //数组维数
   int arrayLimit[100]; //数组每一维的个数
