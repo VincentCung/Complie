@@ -102,7 +102,7 @@ enum node_kind getType(char *src)
 void setArrayAribute(struct node *T, int rtn)
 {
   struct node *T0 = T->ptr[0];
-  while (T0->ptr[1])
+  while (T0)
   {
     if (T0->ptr[0]->type_int <= 0)
     {
@@ -111,12 +111,6 @@ void setArrayAribute(struct node *T, int rtn)
     }
     T->arrayLimit[T->dimension++] = T0->ptr[0]->type_int;
     T0 = T0->ptr[1];
-  }
-  T->arrayLimit[T->dimension++] = T0->ptr[0]->type_int;
-  if (T0->ptr[0]->type_int <= 0)
-  {
-    semantic_error(T->pos, T->type_id, "set bound is invalid.");
-    T->error = 1;
   }
   T->num = 1;
   int num = T->dimension;
@@ -375,17 +369,19 @@ void local_var_list(struct node *T)
   T->code = NULL;
   T->ptr[1]->type = T->ptr[0]->type; //确定变量序列各变量类型
   struct node *T0 = T->ptr[1];       //T0为变量名列表子树根指针，对ID、ASSIGNOP类结点在登记到符号表，作为局部变量
+  struct node *T1;
   T0->offset = T->offset;
   T->width = 0;
   int width = getWidth(T->ptr[1]->type); //一个变量宽度
   while (T0)
-  {                              //处理所以DEC_LIST结点
-    T0->ptr[0]->type = T0->type; //类型属性向下传递
-    if (T0->ptr[1])
-      T0->ptr[1]->type = T0->type;
+  {                                  //处理所以DEC_LIST结点
+    T0->ptr[0]->type = T0->type;     //类型属性向下传递
     T0->ptr[0]->offset = T0->offset; //类型属性向下传递
     if (T0->ptr[1])
+    {
+      T0->ptr[1]->type = T0->type;
       T0->ptr[1]->offset = T0->offset + width * T0->num;
+    }
     if (T0->ptr[0]->kind == ID)
     {
       rtn = fillSymbolTable(T0->ptr[0]->type_id, newAlias(), LEV, T0->ptr[0]->type, 'V', T->offset + T->width); //此处偏移量未计算，暂时为0
@@ -409,11 +405,11 @@ void local_var_list(struct node *T)
       }
       else
         T0->ptr[0]->place = rtn;
-      setArrayAribute(T0->ptr[0],rtn);
+      setArrayAribute(T0->ptr[0], rtn);
       T0->num = T0->ptr[0]->num;
-      T->width += width*T0->num;
+      T->width += width * T0->num;
     }
-    else if (T0->ptr[0]->kind == ASSIGNOP&&T0->ptr[0]->ptr[0]->kind == ID)
+    else if (T0->ptr[0]->kind == ASSIGNOP && T0->ptr[0]->ptr[0]->kind == ID)
     {
       rtn = fillSymbolTable(T0->ptr[0]->ptr[0]->type_id, newAlias(), LEV, T0->ptr[0]->type, 'V', T->offset + T->width); //此处偏移量未计算，暂时为0
       if (rtn == -1)
@@ -435,7 +431,7 @@ void local_var_list(struct node *T)
       T->num = T0->ptr[0]->ptr[0]->num;
       T->width += width + T0->ptr[0]->ptr[1]->width;
     }
-    else if (T0->ptr[0]->kind == ASSIGNOP&&T0->ptr[0]->ptr[0]->kind == ARR_ELE)
+    else if (T0->ptr[0]->kind == ASSIGNOP && T0->ptr[0]->ptr[0]->kind == ARR_ELE)
     {
       rtn = fillSymbolTable(T0->ptr[0]->ptr[0]->type_id, newAlias(), LEV, T0->ptr[0]->type, 'A', T->offset + T->width); //此处偏移量未计算，暂时为0
       if (rtn == -1)
@@ -445,8 +441,24 @@ void local_var_list(struct node *T)
       }
       else
       {
-        setArrayAribute(T0->ptr[0]->ptr[0],rtn);
+        setArrayAribute(T0->ptr[0]->ptr[0], rtn);
         T0->ptr[0]->place = rtn;
+        T1 = T0->ptr[0]->ptr[1];
+        while (T1)
+        {
+          if (T1->ptr[0]->type != T0->type)
+          {
+            T->error = 1;
+            semantic_error(T0->ptr[0]->ptr[0]->pos, T0->ptr[0]->ptr[0]->type_id, "define invalid type variable.");
+          }
+          T0->ptr[0]->ptr[1]->num++;
+          T1 = T1->ptr[1];
+        }
+        if (T0->ptr[0]->ptr[1]&&T0->ptr[0]->ptr[1]->num > T0->ptr[0]->ptr[0]->num)
+        {
+          T->error = 1;
+          semantic_error(T0->ptr[0]->ptr[0]->pos, T0->ptr[0]->ptr[0]->type_id, "too much variables.");
+        }
         //T0->ptr[0]->ptr[1]->offset = T->offset + T->width + width*T0->ptr[0]->ptr[0]->num;
         // opn1.kind = ID;
         // strcpy(opn1.id, symbolTable.symbols[T0->ptr[0]->ptr[1]->place].alias);
@@ -454,9 +466,9 @@ void local_var_list(struct node *T)
         // strcpy(result.id, symbolTable.symbols[T0->ptr[0]->place].alias);
         // T->code = merge(3, T->code, T0->ptr[0]->ptr[1]->code, genIR(ASSIGNOP, opn1, opn2, result));
       }
-      
+
       T->num = T0->ptr[0]->ptr[0]->num;
-      T->width += width*T->num ;
+      T->width += width * T->num;
     }
     T0 = T0->ptr[1];
   }
@@ -532,7 +544,7 @@ void boolExp(struct node *T)
       if (rtn == -1)
         semantic_error(T->pos, T->type_id, "变量未定义");
       if (symbolTable.symbols[rtn].flag == 'F')
-        semantic_error(T->pos, T->type_id, "是函数名，类型不匹配");
+        semantic_error(T->pos, T->type_id, "is a function,type doesn't match.");
       else
       {
         opn1.kind = ID;
@@ -624,9 +636,9 @@ void Exp(struct node *T)
     case ID: //查符号表，获得符号表中的位置，类型送type
       rtn = searchSymbolTable(T->type_id);
       if (rtn == -1)
-        semantic_error(T->pos, T->type_id, "变量未定义");
+        semantic_error(T->pos, T->type_id, "variable hasn't defined.");
       if (symbolTable.symbols[rtn].flag == 'F')
-        semantic_error(T->pos, T->type_id, "是函数名，类型不匹配");
+        semantic_error(T->pos, T->type_id, "is a function,type doesn't match.");
       else
       {
         T->place = rtn; //结点保存变量在符号表中的位置

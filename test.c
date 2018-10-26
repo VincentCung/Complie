@@ -74,7 +74,7 @@
 
 
 void main(int a) {
-  int c[5][2]={};
+  int c[5][2]={2.5};
   int i =1;
   int test;
 }
