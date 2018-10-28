@@ -23,7 +23,7 @@ extern FILE *yyin;
 %type  <ptr> ParamDec Stmt StmList DefList Def DecList Dec Exp Args 
 %type  <ptr> ArrayChild ArrayList ArrayDec ConList ExpStmt Value ValueList
 
-//% token �����ս��������ֵ����?
+//% token �����ս��������ֵ����?
 %token <type_int> INT              //ָ��INT������ֵ��type_int���дʷ������õ�����ֵ
 %token <type_id> ID RELOP TYPE CHAR  //ָ��ID,RELOP ������ֵ��type_id���дʷ������õ��ı�ʶ���ַ���
 %token <type_float> FLOAT         //ָ��ID������ֵ��type_id���дʷ������õ��ı�ʶ���ַ���
@@ -65,7 +65,7 @@ ExtDecList:  VarDec      {$$=$1;}
            ;  
 VarDec:  ID          {$$=mknode(ID,NULL,NULL,NULL,yylineno);strcpy($$->type_id,$1);}  
         ;
-ArrayDec: ID ArrayList {$$=mknode(ARR_ELE,$2,NULL,NULL,yylineno);strcpy($$->type_id,$1);}        
+ArrayDec: ID ArrayList {$$=mknode(ARR_INIT,$2,NULL,NULL,yylineno);strcpy($$->type_id,$1);}        
         ;
 FuncDec: ID LP VarList RP   {$$=mknode(FUNC_DEC,$3,NULL,NULL,yylineno);strcpy($$->type_id,$1);}
 	|ID LP  RP   {$$=mknode(FUNC_DEC,NULL,NULL,NULL,yylineno);strcpy($$->type_id,$1);}

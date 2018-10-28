@@ -1697,7 +1697,7 @@ yyreduce:
 
 /* Line 1455 of yacc.c  */
 #line 68 "parser.y"
-    {(yyval.ptr)=mknode(ARR_ELE,(yyvsp[(2) - (2)].ptr),NULL,NULL,yylineno);strcpy((yyval.ptr)->type_id,(yyvsp[(1) - (2)].type_id));;}
+    {(yyval.ptr)=mknode(ARR_INIT,(yyvsp[(2) - (2)].ptr),NULL,NULL,yylineno);strcpy((yyval.ptr)->type_id,(yyvsp[(1) - (2)].type_id));;}
     break;
 
   case 16:

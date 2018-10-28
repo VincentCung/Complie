@@ -12,7 +12,7 @@ struct node *mknode(int kind, struct node *first, struct node *second, struct no
   T->error = 0;
   T->dimension = 0;
   T->num = 0;
-  T->Sbreak = 0;
+  strcpy(T->Sbreak,"");
   return T;
 }
 
@@ -168,7 +168,7 @@ void display(struct node *T, int indent)
           printf("%*c %s\n", indent + 3, ' ', T0->ptr[0]->type_id);
         else if (T0->ptr[0]->kind == ASSIGNOP)
         {
-          if (T0->ptr[0]->ptr[0]->kind == ARR_ELE)
+          if (T0->ptr[0]->ptr[0]->kind == ARR_INIT)
           {
             display(T->ptr[0]->ptr[0], indent + 3);
             printf("%*c ASSIGNOP\n", indent + 3, ' ');
@@ -184,7 +184,7 @@ void display(struct node *T, int indent)
             printf("%*cinitial value:\n", indent + 3, ' ');
           }
         }
-        else if (T0->ptr[0]->kind == ARR_ELE)
+        else if (T0->ptr[0]->kind == ARR_INIT)
         {
           display(T->ptr[0], indent + 3);
         }
@@ -268,7 +268,7 @@ void display(struct node *T, int indent)
     case ARR_SUB:
       printf(" %d\n", T->type_int);
       break;
-    case ARR_ELE:
+    case ARR_INIT:
       printf("%*cArray: %s\n", indent, ' ', T->type_id);
       display(T->ptr[0], indent + 3);
       break;

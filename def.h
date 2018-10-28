@@ -38,7 +38,7 @@ enum node_kind
   ARR_ACCESS,
   ARR_LIST,
   ARR_SUB,
-  ARR_ELE,
+  ARR_INIT,
   CON_LIST,
   VAL_LIST,
 };
@@ -82,6 +82,7 @@ struct node
   int place;                  //表示结点对应的变量或运算结果符号表的位置序号
   char Etrue[15], Efalse[15]; //对布尔表达式的翻译时，真假转移目标的标号
   char Snext[15];             //该结点对饮语句执行后的下一条语句位置标号
+  char Sbreak[15];
   struct codenode *code;      //该结点中间代码链表头指针
   char op[10];
   int type;   //结点对应值的类型
@@ -89,7 +90,6 @@ struct node
   int offset; //偏移量
   int width;  //占数据字节数
   int num;    //变量个数
-  int Sbreak;
   int error; //报错标志
   int dimension; //数组维数
   int arrayLimit[100]; //数组每一维的个数
