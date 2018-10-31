@@ -45,15 +45,21 @@ void objectCode(struct codenode *head)
             break;
         case PLUS:
         case MINUS:
-        case STAR:
+        case MULT:
         case DIV:
-            fprintf(fp, "  lw $t1, %d($sp)\n", h->opn1.offset);
-            fprintf(fp, "  lw $t2, %d($sp)\n", h->opn2.offset);
+            if (h->opn1.kind == INT)
+                fprintf(fp, "  li $t1, %d\n", h->opn1.const_int);
+            else
+                fprintf(fp, "  lw $t1, %d($sp)\n", h->opn1.offset);
+            if (h->opn2.kind == INT)
+                fprintf(fp, "  li $t2, %d\n", h->opn2.const_int);
+            else
+                fprintf(fp, "  lw $t2, %d($sp)\n", h->opn2.offset);
             if (h->op == PLUS)
                 fprintf(fp, "  add $t3,$t1,$t2\n");
             else if (h->op == MINUS)
                 fprintf(fp, "  sub $t3,$t1,$t2\n");
-            else if (h->op == STAR)
+            else if (h->op == MULT)
                 fprintf(fp, "  mul $t3,$t1,$t2\n");
             else
             {
@@ -102,8 +108,8 @@ void objectCode(struct codenode *head)
             if (!strcmp(h->opn1.id, "read"))
             { //���⴦��read
                 fprintf(fp, "  addi $sp, $sp, -4\n");
-                fprintf(fp, "  sw $ra,0($sp)\n"); //����ص�ַ
-                fprintf(fp, "  jal read\n");      //����ص�ַ
+                fprintf(fp, "  sw $ra,0($sp)\n"); //����ص��?
+                fprintf(fp, "  jal read\n");      //����ص��?
                 fprintf(fp, "  lw $ra,0($sp)\n"); //�ָ����ص�ַ
                 fprintf(fp, "  addi $sp, $sp, 4\n");
                 fprintf(fp, "  sw $v0, %d($sp)\n", h->result.offset);
@@ -120,12 +126,12 @@ void objectCode(struct codenode *head)
                 break;
             }
 
-            for (p = h, i = 0; i < symbolTable.symbols[h->opn1.offset].paramnum; i++) //��λ����һ��ʵ�εĽ��
+            for (p = h, i = 0; i < symbolTable.symbols[h->opn1.offset].paramnum; i++) //��λ����һ��ʵ�εĽ��?
                 p = p->prior;
             //�����¼�ռ�
-            fprintf(fp, "  move $t0,$sp\n"); //���浱ǰ������sp��$t0�У�Ϊ��ȡʵ�α��ʽ��ֵ
+            fprintf(fp, "  move $t0,$sp\n"); //���浱ǰ������sp��$t0�У�Ϊ��ȡʵ�α��ʽ���?
             fprintf(fp, "  addi $sp, $sp, -%d\n", symbolTable.symbols[h->opn1.offset].offset);
-            fprintf(fp, "  sw $ra,0($sp)\n"); //����ص�ַ
+            fprintf(fp, "  sw $ra,0($sp)\n"); //����ص��?
             i = h->opn1.offset + 1;           //��һ���βα����ڷ��ű��λ�����
             while (symbolTable.symbols[i].flag == 'P')
             {

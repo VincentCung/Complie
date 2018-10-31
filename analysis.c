@@ -1,10 +1,10 @@
 #include "def.h"
 
-int LEV = 0; //²ãºÅ
+int LEV = 0; //ï¿½ï¿½ï¿½
 
 void semantic_error(int line, char *msg1, char *msg2)
 {
-  //ÕâÀï¿ÉÒÔÖ»ÊÕ¼¯´íÎóÐÅÏ¢£¬×îºóÔÚÒ»´ÎÏÔÊ¾
+  //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö»ï¿½Õ¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½Ê¾
   printf("Error type C at Line %d :%s %s\n", line, msg1, msg2);
 }
 
@@ -217,7 +217,7 @@ void mergeLogicOp(struct node *T, struct codenode *in, char *label, int originVa
   T->code = merge(3, T->code, genIR(ASSIGNOP, opn1, opn2, result), genLabel(label));
 }
 
-//Éú³ÉÒ»ÌõTAC´úÂëµÄ½áµã×é³ÉµÄË«ÏòÑ­»·Á´±í£¬·µ»ØÍ·Ö¸Õë
+//ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½TACï¿½ï¿½ï¿½ï¿½Ä½ï¿½ï¿½ï¿½ï¿½Éµï¿½Ë«ï¿½ï¿½Ñ­ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í·Ö¸ï¿½ï¿½
 struct codenode *genIR(int op, struct opn opn1, struct opn opn2, struct opn result)
 {
   struct codenode *h = (struct codenode *)malloc(sizeof(struct codenode));
@@ -229,7 +229,7 @@ struct codenode *genIR(int op, struct opn opn1, struct opn opn2, struct opn resu
   return h;
 }
 
-//Éú³ÉÒ»Ìõ±êºÅÓï¾ä£¬·µ»ØÍ·Ö¸Õë
+//ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ä£¬ï¿½ï¿½ï¿½ï¿½Í·Ö¸ï¿½ï¿½
 struct codenode *genLabel(char *label)
 {
   struct codenode *h = (struct codenode *)malloc(sizeof(struct codenode));
@@ -239,7 +239,7 @@ struct codenode *genLabel(char *label)
   return h;
 }
 
-//Éú³ÉGOTOÓï¾ä£¬·µ»ØÍ·Ö¸Õë
+//ï¿½ï¿½ï¿½ï¿½GOTOï¿½ï¿½ä£¬ï¿½ï¿½ï¿½ï¿½Í·Ö¸ï¿½ï¿½
 struct codenode *genGoto(char *label)
 {
   struct codenode *h = (struct codenode *)malloc(sizeof(struct codenode));
@@ -249,7 +249,7 @@ struct codenode *genGoto(char *label)
   return h;
 }
 
-//ºÏ²¢¶à¸öÖÐ¼ä´úÂëµÄË«ÏòÑ­»·Á´±í£¬Ê×Î²ÏàÁ¬
+//ï¿½Ï²ï¿½ï¿½ï¿½ï¿½ï¿½Ð¼ï¿½ï¿½ï¿½ï¿½ï¿½Ë«ï¿½ï¿½Ñ­ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Î²ï¿½ï¿½ï¿½ï¿½
 struct codenode *merge(int num, ...)
 {
   struct codenode *h1, *h2, *p, *t1, *t2;
@@ -275,7 +275,7 @@ struct codenode *merge(int num, ...)
   return h1;
 }
 
-//Êä³öÖÐ¼ä´úÂë
+//ï¿½ï¿½ï¿½ï¿½Ð¼ï¿½ï¿½ï¿½ï¿½
 void prnIR(struct codenode *head)
 {
   char opnstr1[32], opnstr2[32], resultstr[32];
@@ -312,10 +312,10 @@ void prnIR(struct codenode *head)
       break;
     case PLUS:
     case MINUS:
-    case STAR:
+    case MULT:
     case DIV:
       printf("  %s := %s %c %s\n", resultstr, opnstr1,
-             h->op == PLUS ? '+' : h->op == MINUS ? '-' : h->op == STAR ? '*' : '/', opnstr2);
+             h->op == PLUS ? '+' : h->op == MINUS ? '-' : h->op == MULT ? '*' : '/', opnstr2);
       break;
     case FUNCTION:
       printf("\nFUNCTION %s :\n", h->result.id);
@@ -386,28 +386,28 @@ int searchSymbolTable(char *name)
 
 int fillSymbolTable(char *name, char *alias, int level, int type, char flag, int offset)
 {
-  //Ê×ÏÈ¸ù¾Ýname²é·ûºÅ±í£¬²»ÄÜÖØ¸´¶¨Òå ÖØ¸´¶¨Òå·µ»Ø-1
+  //ï¿½ï¿½ï¿½È¸ï¿½ï¿½ï¿½nameï¿½ï¿½ï¿½ï¿½Å±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ø¸ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ø¸ï¿½ï¿½ï¿½ï¿½å·µï¿½ï¿½-1
   int i;
-  /*·ûºÅ²éÖØ£¬¿¼ÂÇÍâ²¿±äÁ¿ÉùÃ÷Ç°ÓÐº¯Êý¶¨Òå£¬
-    ÆäÐÎ²ÎÃû»¹ÔÚ·ûºÅ±íÖÐ£¬ÕâÊ±µÄÍâ²¿±äÁ¿ÓëÇ°º¯ÊýµÄÐÎ²ÎÖØÃûÊÇÔÊÐíµÄ*/
+  /*ï¿½ï¿½ï¿½Å²ï¿½ï¿½Ø£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½â²¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç°ï¿½Ðºï¿½ï¿½ï¿½ï¿½ï¿½ï¿½å£¬
+    ï¿½ï¿½ï¿½Î²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú·ï¿½ï¿½Å±ï¿½ï¿½Ð£ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½â²¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Î²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½*/
   for (i = symbolTable.index - 1; symbolTable.symbols[i].level == level || (level == 0 && i >= 0); i--)
   {
     if (level == 0 && symbolTable.symbols[i].level == 1)
-      continue; //Íâ²¿±äÁ¿ºÍÐÎ²Î²»±Ø±È½ÏÖØÃû
+      continue; //ï¿½â²¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Î²Î²ï¿½ï¿½Ø±È½ï¿½ï¿½ï¿½ï¿½ï¿½
     if (!strcmp(symbolTable.symbols[i].name, name))
       return -1;
   }
-  //ÌîÐ´·ûºÅ±íÄÚÈÝ
+  //ï¿½ï¿½Ð´ï¿½ï¿½ï¿½Å±ï¿½ï¿½ï¿½ï¿½ï¿½
   strcpy(symbolTable.symbols[symbolTable.index].name, name);
   strcpy(symbolTable.symbols[symbolTable.index].alias, alias);
   symbolTable.symbols[symbolTable.index].level = level;
   symbolTable.symbols[symbolTable.index].type = type;
   symbolTable.symbols[symbolTable.index].flag = flag;
   symbolTable.symbols[symbolTable.index].offset = offset;
-  return symbolTable.index++; //·µ»ØµÄÊÇ·ûºÅÔÚ·ûºÅ±íÖÐµÄÎ»ÖÃÐòºÅ£¬ÖÐ¼ä´úÂëÉú³ÉÊ±¿ÉÓÃÐòºÅÈ¡µ½·ûºÅ±ðÃû
+  return symbolTable.index++; //ï¿½ï¿½ï¿½Øµï¿½ï¿½Ç·ï¿½ï¿½ï¿½ï¿½Ú·ï¿½ï¿½Å±ï¿½ï¿½Ðµï¿½Î»ï¿½ï¿½ï¿½ï¿½Å£ï¿½ï¿½Ð¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½ï¿½Å±ï¿½ï¿½ï¿½
 }
 
-//ÌîÐ´ÁÙÊ±±äÁ¿µ½·ûºÅ±í£¬·µ»ØÁÙÊ±±äÁ¿ÔÚ·ûºÅ±íÖÐµÄÎ»ÖÃ
+//ï¿½ï¿½Ð´ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½ï¿½Ú·ï¿½ï¿½Å±ï¿½ï¿½Ðµï¿½Î»ï¿½ï¿½
 int fill_Temp(char *name, int level, int type, char flag, int offset)
 {
   strcpy(symbolTable.symbols[symbolTable.index].name, "");
@@ -416,28 +416,28 @@ int fill_Temp(char *name, int level, int type, char flag, int offset)
   symbolTable.symbols[symbolTable.index].type = type;
   symbolTable.symbols[symbolTable.index].flag = flag;
   symbolTable.symbols[symbolTable.index].offset = offset;
-  return symbolTable.index++; //·µ»ØµÄÊÇÁÙÊ±±äÁ¿ÔÚ·ûºÅ±íÖÐµÄÎ»ÖÃÐòºÅ
+  return symbolTable.index++; //ï¿½ï¿½ï¿½Øµï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½ï¿½Ú·ï¿½ï¿½Å±ï¿½ï¿½Ðµï¿½Î»ï¿½ï¿½ï¿½ï¿½ï¿½
 }
 
-void ext_var_list(struct node *T) //´¦ÀíÍâ²¿±äÁ¿ÁÐ±í
+void ext_var_list(struct node *T) //ï¿½ï¿½ï¿½ï¿½ï¿½â²¿ï¿½ï¿½ï¿½ï¿½ï¿½Ð±ï¿½
 {
   int rtn, num = 1;
   switch (T->kind)
   {
   case EXT_DEC_LIST:
-    T->ptr[0]->type = T->type;     //½«ÀàÐÍÊôÐÔÏòÏÂ´«µÝ±äÁ¿½áµã
-    T->ptr[0]->offset = T->offset; //Íâ²¿±äÁ¿µÄÆ«ÒÆÁ¿ÏòÏÂ´«µÝ
+    T->ptr[0]->type = T->type;     //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â´ï¿½ï¿½Ý±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+    T->ptr[0]->offset = T->offset; //ï¿½â²¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ«ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â´ï¿½ï¿½ï¿½
     ext_var_list(T->ptr[0]);
     T->error = T->ptr[0]->error ? T->ptr[0]->error : T->error;
-    T->ptr[1]->type = T->type;                //½«ÀàÐÍÊôÐÔÏòÏÂ´«µÝ±äÁ¿½áµã
-    T->ptr[1]->offset = T->offset + T->width; //Íâ²¿±äÁ¿µÄÆ«ÒÆÁ¿ÏòÏÂ´«µÝ
+    T->ptr[1]->type = T->type;                //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â´ï¿½ï¿½Ý±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+    T->ptr[1]->offset = T->offset + T->width; //ï¿½â²¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ«ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â´ï¿½ï¿½ï¿½
     T->ptr[1]->width = T->width;
     ext_var_list(T->ptr[1]);
     T->error = T->ptr[1]->error ? T->ptr[1]->error : T->error;
     T->num = T->ptr[1]->num + T->ptr[0]->num;
     break;
   case ARR_INIT:
-    rtn = fillSymbolTable(T->type_id, newAlias(), LEV, T->type, 'A', T->offset); //×îºóÒ»¸ö±äÁ¿Ãû
+    rtn = fillSymbolTable(T->type_id, newAlias(), LEV, T->type, 'A', T->offset); //ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     if (rtn == -1)
     {
       T->error = 1;
@@ -450,7 +450,7 @@ void ext_var_list(struct node *T) //´¦ÀíÍâ²¿±äÁ¿ÁÐ±í
     setArrayAribute(T, rtn);
     break;
   case ID:
-    rtn = fillSymbolTable(T->type_id, newAlias(), LEV, T->type, 'V', T->offset); //×îºóÒ»¸ö±äÁ¿Ãû
+    rtn = fillSymbolTable(T->type_id, newAlias(), LEV, T->type, 'V', T->offset); //ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     if (rtn == -1)
     {
       T->error = 1;
@@ -469,17 +469,17 @@ void local_var_list(struct node *T)
 {
   int num, rtn;
   struct opn opn1, opn2, result;
-  struct node *T0 = T->ptr[1]; //T0Îª±äÁ¿ÃûÁÐ±í×ÓÊ÷¸ùÖ¸Õë£¬¶ÔID¡¢ASSIGNOPÀà½áµãÔÚµÇ¼Çµ½·ûºÅ±í£¬×÷Îª¾Ö²¿±äÁ¿
+  struct node *T0 = T->ptr[1]; //T0Îªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö¸ï¿½ë£¬ï¿½ï¿½IDï¿½ï¿½ASSIGNOPï¿½ï¿½ï¿½ï¿½ï¿½ÚµÇ¼Çµï¿½ï¿½ï¿½ï¿½Å±ï¿½ï¿½ï¿½Îªï¿½Ö²ï¿½ï¿½ï¿½ï¿½ï¿½
   struct node *T1;
-  int width = getWidth(T->ptr[0]->type); //Ò»¸ö±äÁ¿¿í¶È
+  int width = getWidth(T->ptr[0]->type); //Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
   T->code = NULL;
-  T->ptr[1]->type = T->ptr[0]->type; //È·¶¨±äÁ¿ÐòÁÐ¸÷±äÁ¿ÀàÐÍ
+  T->ptr[1]->type = T->ptr[0]->type; //È·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
   T->width = 0;
   T0->offset = T->offset;
   while (T0)
-  {                                  //´¦ÀíËùÒÔDEC_LIST½áµã
-    T0->ptr[0]->type = T0->type;     //ÀàÐÍÊôÐÔÏòÏÂ´«µÝ
-    T0->ptr[0]->offset = T0->offset; //ÀàÐÍÊôÐÔÏòÏÂ´«µÝ
+  {                                  //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½DEC_LISTï¿½ï¿½ï¿½
+    T0->ptr[0]->type = T0->type;     //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â´ï¿½ï¿½ï¿½
+    T0->ptr[0]->offset = T0->offset; //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â´ï¿½ï¿½ï¿½
     if (T0->ptr[1])
     {
       T0->ptr[1]->type = T0->type;
@@ -487,7 +487,7 @@ void local_var_list(struct node *T)
     }
     if (T0->ptr[0]->kind == ID)
     {
-      rtn = fillSymbolTable(T0->ptr[0]->type_id, newAlias(), LEV, T0->ptr[0]->type, 'V', T->offset + T->width); //´Ë´¦Æ«ÒÆÁ¿Î´¼ÆËã£¬ÔÝÊ±Îª0
+      rtn = fillSymbolTable(T0->ptr[0]->type_id, newAlias(), LEV, T0->ptr[0]->type, 'V', T->offset + T->width); //ï¿½Ë´ï¿½Æ«ï¿½ï¿½ï¿½ï¿½Î´ï¿½ï¿½ï¿½ã£¬ï¿½ï¿½Ê±Îª0
       if (rtn == -1)
       {
         T->error = 1;
@@ -500,7 +500,7 @@ void local_var_list(struct node *T)
     }
     else if (T0->ptr[0]->kind == ARR_INIT)
     {
-      rtn = fillSymbolTable(T0->ptr[0]->type_id, newAlias(), LEV, T0->ptr[0]->type, 'A', T->offset + T->width); //´Ë´¦Æ«ÒÆÁ¿Î´¼ÆËã£¬ÔÝÊ±Îª0
+      rtn = fillSymbolTable(T0->ptr[0]->type_id, newAlias(), LEV, T0->ptr[0]->type, 'A', T->offset + T->width); //ï¿½Ë´ï¿½Æ«ï¿½ï¿½ï¿½ï¿½Î´ï¿½ï¿½ï¿½ã£¬ï¿½ï¿½Ê±Îª0
       if (rtn == -1)
       {
         T->error = 1;
@@ -514,7 +514,7 @@ void local_var_list(struct node *T)
     }
     else if (T0->ptr[0]->kind == ASSIGNOP && T0->ptr[0]->ptr[0]->kind == ID)
     {
-      rtn = fillSymbolTable(T0->ptr[0]->ptr[0]->type_id, newAlias(), LEV, T0->ptr[0]->type, 'V', T->offset + T->width); //´Ë´¦Æ«ÒÆÁ¿Î´¼ÆËã£¬ÔÝÊ±Îª0
+      rtn = fillSymbolTable(T0->ptr[0]->ptr[0]->type_id, newAlias(), LEV, T0->ptr[0]->type, 'V', T->offset + T->width); //ï¿½Ë´ï¿½Æ«ï¿½ï¿½ï¿½ï¿½Î´ï¿½ï¿½ï¿½ã£¬ï¿½ï¿½Ê±Îª0
       if (rtn == -1)
       {
         T->error = 1;
@@ -526,10 +526,10 @@ void local_var_list(struct node *T)
         T0->ptr[0]->ptr[1]->offset = T->offset + T->width + width;
         Exp(T0->ptr[0]->ptr[1]);
         T->error = T0->ptr[0]->ptr[1]->error ? T0->ptr[0]->ptr[1]->error : T->error;
-        opn1.kind = ID;
         strcpy(opn1.id, symbolTable.symbols[T0->ptr[0]->ptr[1]->place].alias);
-        result.kind = ID;
+        setOpn(&opn1,ID,T0->ptr[0]->type,symbolTable.symbols[T0->ptr[0]->ptr[1]->place].offset);
         strcpy(result.id, symbolTable.symbols[T0->ptr[0]->place].alias);
+        setOpn(&result,ID,T0->ptr[0]->type,symbolTable.symbols[T0->ptr[0]->place].offset);
         T->code = merge(3, T->code, T0->ptr[0]->ptr[1]->code, genIR(ASSIGNOP, opn1, opn2, result));
       }
       T->num = T0->ptr[0]->ptr[0]->num;
@@ -537,7 +537,7 @@ void local_var_list(struct node *T)
     }
     else if (T0->ptr[0]->kind == ASSIGNOP && T0->ptr[0]->ptr[0]->kind == ARR_INIT)
     {
-      rtn = fillSymbolTable(T0->ptr[0]->ptr[0]->type_id, newAlias(), LEV, T0->ptr[0]->type, 'A', T->offset + T->width); //´Ë´¦Æ«ÒÆÁ¿Î´¼ÆËã£¬ÔÝÊ±Îª0
+      rtn = fillSymbolTable(T0->ptr[0]->ptr[0]->type_id, newAlias(), LEV, T0->ptr[0]->type, 'A', T->offset + T->width); //ï¿½Ë´ï¿½Æ«ï¿½ï¿½ï¿½ï¿½Î´ï¿½ï¿½ï¿½ã£¬ï¿½ï¿½Ê±Îª0
       if (rtn == -1)
       {
         T->error = 1;
@@ -580,7 +580,7 @@ void local_var_list(struct node *T)
   }
 }
 
-//Æ¥Åä²ÎÊý¸öÊýÀàÐÍ
+//Æ¥ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 int match_param(int i, struct node *T, struct node *parent)
 {
   int j, num = symbolTable.symbols[i].paramnum;
@@ -598,7 +598,7 @@ int match_param(int i, struct node *T, struct node *parent)
       semantic_error(parent->pos, "", "function's parameters are too few.");
       return 0;
     }
-    type1 = symbolTable.symbols[i + j].type; //ÐÎ²ÎÀàÐÍ
+    type1 = symbolTable.symbols[i + j].type; //ï¿½Î²ï¿½ï¿½ï¿½ï¿½ï¿½
     type2 = T->ptr[0]->type;
     if (type1 != type2)
     {
@@ -609,14 +609,14 @@ int match_param(int i, struct node *T, struct node *parent)
     T = T->ptr[1];
   }
   if (T)
-  { //num¸ö²ÎÊýÒÑ¾­Æ¥ÅäÍê£¬»¹ÓÐÊµ²Î±í´ïÊ½
+  { //numï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ñ¾ï¿½Æ¥ï¿½ï¿½ï¿½ê£¬ï¿½ï¿½ï¿½ï¿½Êµï¿½Î±ï¿½ï¿½Ê½
     parent->error = 1;
     semantic_error(parent->pos, "", "function's parameters are too many.");
     return 0;
   }
   return 1;
 }
-//²¼¶û±í´ïÊ½£¬²Î¿¼ÎÄÏ×[2]p84µÄË¼Ïë
+//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê½ï¿½ï¿½ï¿½Î¿ï¿½ï¿½ï¿½ï¿½ï¿½[2]p84ï¿½ï¿½Ë¼ï¿½ï¿½
 void boolExp(struct node *T)
 {
   struct opn opn1, opn2, result;
@@ -645,7 +645,7 @@ void boolExp(struct node *T)
         T->code = genGoto(T->Etrue);
       else
         T->code = genGoto(T->Efalse);
-    case ID: //²é·ûºÅ±í£¬»ñµÃ·ûºÅ±íÖÐµÄÎ»ÖÃ£¬ÀàÐÍËÍtype
+    case ID: //ï¿½ï¿½ï¿½ï¿½Å±ï¿½ï¿½ï¿½Ã·ï¿½ï¿½Å±ï¿½ï¿½Ðµï¿½Î»ï¿½Ã£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½type
       rtn = searchSymbolTable(T->type_id);
       if (rtn == -1)
       {
@@ -671,7 +671,7 @@ void boolExp(struct node *T)
       }
       T->width = 0;
       break;
-    case RELOP: //´¦Àí¹ØÏµÔËËã±í´ïÊ½,2¸ö²Ù×÷Êý¶¼°´»ù±¾±í´ïÊ½´¦Àí
+    case RELOP: //ï¿½ï¿½ï¿½ï¿½ï¿½Ïµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê½,2ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê½ï¿½ï¿½ï¿½ï¿½
       T->ptr[0]->offset = T->ptr[1]->offset = T->offset;
       Exp(T->ptr[0]);
       T->error = T->ptr[0]->error ? T->ptr[0]->error : T->error;
@@ -728,7 +728,7 @@ void boolExp(struct node *T)
     }
   }
 }
-//´¦Àí»ù±¾±í´ïÊ½£¬²Î¿¼ÎÄÏ×[2]p82µÄË¼Ïë
+//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê½ï¿½ï¿½ï¿½Î¿ï¿½ï¿½ï¿½ï¿½ï¿½[2]p82ï¿½ï¿½Ë¼ï¿½ï¿½
 void Exp(struct node *T)
 {
   int rtn, num, width;
@@ -740,7 +740,7 @@ void Exp(struct node *T)
   {
     switch (T->kind)
     {
-    case ID: //²é·ûºÅ±í£¬»ñµÃ·ûºÅ±íÖÐµÄÎ»ÖÃ£¬ÀàÐÍËÍtype
+    case ID: //ï¿½ï¿½ï¿½ï¿½Å±ï¿½ï¿½ï¿½Ã·ï¿½ï¿½Å±ï¿½ï¿½Ðµï¿½Î»ï¿½Ã£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½type
       rtn = searchSymbolTable(T->type_id);
       if (rtn == -1)
       {
@@ -759,17 +759,17 @@ void Exp(struct node *T)
       }
       else
       {
-        T->place = rtn; //½áµã±£´æ±äÁ¿ÔÚ·ûºÅ±íÖÐµÄÎ»ÖÃ
-        T->code = NULL; //±êÊ¶·û²»ÐèÒªÉú³ÉTAC
+        T->place = rtn; //ï¿½ï¿½ã±£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú·ï¿½ï¿½Å±ï¿½ï¿½Ðµï¿½Î»ï¿½ï¿½
+        T->code = NULL; //ï¿½ï¿½Ê¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½TAC
         T->type = symbolTable.symbols[rtn].type;
         T->offset = symbolTable.symbols[rtn].offset;
-        T->width = 0; //Î´ÔÙÊ¹ÓÃÐÂµ¥Ôª
+        T->width = 0; //Î´ï¿½ï¿½Ê¹ï¿½ï¿½ï¿½Âµï¿½Ôª
       }
       break;
     case INT:
     case FLOAT:
     case CHAR:
-      T->place = fill_Temp(newTemp(), LEV, T->type, 'T', T->offset); //Îª¸¡µã³£Á¿Éú³ÉÒ»¸öÁÙÊ±±äÁ¿
+      T->place = fill_Temp(newTemp(), LEV, T->type, 'T', T->offset); //Îªï¿½ï¿½ï¿½ã³£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½
       opn1.kind = T->type;
       setCodeVal(&opn1, T, T->type);
       strcpy(result.id, symbolTable.symbols[T->place].alias);
@@ -785,7 +785,7 @@ void Exp(struct node *T)
       }
       else
       {
-        Exp(T->ptr[0]); //´¦Àí×óÖµ£¬ÀýÖÐ½öÎª±äÁ¿
+        Exp(T->ptr[0]); //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Öµï¿½ï¿½ï¿½ï¿½ï¿½Ð½ï¿½Îªï¿½ï¿½ï¿½ï¿½
         T->error = T->ptr[0]->error ? T->ptr[0]->error : T->error;
         T->ptr[1]->offset = T->offset;
         Exp(T->ptr[1]);
@@ -799,7 +799,7 @@ void Exp(struct node *T)
         T->place = fill_Temp(newTemp(), LEV, T->type, 'T', T->offset + T->ptr[1]->width);
         T->width = T->ptr[1]->width + getWidth(T->type);
         T->code = merge(2, T->ptr[0]->code, T->ptr[1]->code);
-        strcpy(opn1.id, symbolTable.symbols[T->ptr[1]->place].alias); //ÓÒÖµÒ»¶¨ÊÇ¸ö±äÁ¿»òÁÙÊ±±äÁ¿
+        strcpy(opn1.id, symbolTable.symbols[T->ptr[1]->place].alias); //ï¿½ï¿½ÖµÒ»ï¿½ï¿½ï¿½Ç¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½
         setOpn(&opn1, ID, T->ptr[1]->type, symbolTable.symbols[T->ptr[1]->place].offset);
         strcpy(result.id, symbolTable.symbols[T->ptr[0]->place].alias);
         setOpn(&result, ID, T->ptr[1]->type, symbolTable.symbols[T->ptr[0]->place].offset);
@@ -845,12 +845,12 @@ void Exp(struct node *T)
         strcpy(result.id, symbolTable.symbols[rtn].alias);
         setOpn(&result, ID, T->type, symbolTable.symbols[rtn].offset);
         T->code = merge(2, T->code, genIR(getOpFromAssign(T->kind), opn1, opn2, result));
-        strcpy(opn1.id, symbolTable.symbols[rtn].alias); //ÓÒÖµÒ»¶¨ÊÇ¸ö±äÁ¿»òÁÙÊ±±äÁ¿
+        strcpy(opn1.id, symbolTable.symbols[rtn].alias); //ï¿½ï¿½ÖµÒ»ï¿½ï¿½ï¿½Ç¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½
         opn1.offset = symbolTable.symbols[rtn].offset;
         strcpy(result.id, symbolTable.symbols[T->ptr[0]->place].alias);
         result.offset = symbolTable.symbols[T->ptr[0]->place].offset;
         T->code = merge(2, T->code, genIR(ASSIGNOP, opn1, opn2, result));
-        strcpy(opn1.id, symbolTable.symbols[T->ptr[0]->place].alias); //ÓÒÖµÒ»¶¨ÊÇ¸ö±äÁ¿»òÁÙÊ±±äÁ¿
+        strcpy(opn1.id, symbolTable.symbols[T->ptr[0]->place].alias); //ï¿½ï¿½ÖµÒ»ï¿½ï¿½ï¿½Ç¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½
         setOpn(&opn1, ID, T->ptr[0]->type, symbolTable.symbols[T->ptr[0]->place].offset);
         strcpy(result.id, symbolTable.symbols[T->place].alias);
         setOpn(&result, ID, T->type, symbolTable.symbols[T->place].offset);
@@ -912,7 +912,7 @@ void Exp(struct node *T)
       break;
     case PLUS:
     case MINUS:
-    case STAR:
+    case MULT:
     case DIV:
       T->ptr[0]->offset = T->offset;
       Exp(T->ptr[0]);
@@ -940,7 +940,7 @@ void Exp(struct node *T)
     case NOT:
       T->type = INT;
       T->ptr[0]->offset = T->offset;
-      Exp(T->ptr[0]); //´¦Àí×óÖµ£¬ÀýÖÐ½öÎª±äÁ¿
+      Exp(T->ptr[0]); //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Öµï¿½ï¿½ï¿½ï¿½ï¿½Ð½ï¿½Îªï¿½ï¿½ï¿½ï¿½
       T->error = T->ptr[0]->error ? T->ptr[0]->error : T->error;
       if (T->ptr[0]->type != INT)
       {
@@ -960,7 +960,7 @@ void Exp(struct node *T)
       break;
     case UMINUS:
       T->ptr[0]->offset = T->offset;
-      Exp(T->ptr[0]); //´¦Àí×óÖµ£¬ÀýÖÐ½öÎª±äÁ¿
+      Exp(T->ptr[0]); //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Öµï¿½ï¿½ï¿½ï¿½ï¿½Ð½ï¿½Îªï¿½ï¿½ï¿½ï¿½
       T->error = T->ptr[0]->error ? T->ptr[0]->error : T->error;
       T->type = T->ptr[0]->type;
       T->place = fill_Temp(newTemp(), LEV, T->type, 'T', T->offset + T->ptr[0]->width);
@@ -1071,7 +1071,7 @@ void Exp(struct node *T)
         break;
       }
       break;
-    case FUNC_CALL: //¸ù¾ÝT->type_id²é³öº¯ÊýµÄ¶¨Òå£¬Èç¹ûÓïÑÔÖÐÔö¼ÓÁËÊµÑé½Ì²ÄµÄread£¬writeÐèÒªµ¥¶À´¦ÀíÒ»ÏÂ
+    case FUNC_CALL: //ï¿½ï¿½ï¿½ï¿½T->type_idï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¶ï¿½ï¿½å£¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Êµï¿½ï¿½Ì²Äµï¿½readï¿½ï¿½writeï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½
       rtn = searchSymbolTable(T->type_id);
       if (rtn == -1)
       {
@@ -1086,13 +1086,13 @@ void Exp(struct node *T)
         break;
       }
       T->type = symbolTable.symbols[rtn].type;
-      width = getWidth(T->type); //´æ·Åº¯Êý·µ»ØÖµµÄµ¥Êý×Ö½ÚÊý
+      width = getWidth(T->type); //ï¿½ï¿½Åºï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Öµï¿½Äµï¿½ï¿½ï¿½ï¿½Ö½ï¿½ï¿½ï¿½
       if (T->ptr[0])
       {
         T->ptr[0]->offset = T->offset;
-        Exp(T->ptr[0]); //´¦ÀíËùÓÐÊµ²Î±í´ïÊ½ÇóÖµ£¬¼°ÀàÐÍ
+        Exp(T->ptr[0]); //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Êµï¿½Î±ï¿½ï¿½Ê½ï¿½ï¿½Öµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         T->error = T->ptr[0]->error ? T->ptr[0]->error : T->error;
-        T->width = T->ptr[0]->width + width; //ÀÛ¼ÓÉÏ¼ÆËãÊµ²ÎÊ¹ÓÃÁÙÊ±±äÁ¿µÄµ¥ÔªÊý
+        T->width = T->ptr[0]->width + width; //ï¿½Û¼ï¿½ï¿½Ï¼ï¿½ï¿½ï¿½Êµï¿½ï¿½Ê¹ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½ï¿½Äµï¿½Ôªï¿½ï¿½
         T->code = T->ptr[0]->code;
       }
       else
@@ -1100,8 +1100,8 @@ void Exp(struct node *T)
         T->width = width;
         T->code = NULL;
       }
-      match_param(rtn, T->ptr[0], T); //´¦ÀíËùÒÔ²ÎÊýµÄÆ¥Åä
-      T0 = T->ptr[0];                 //´¦Àí²ÎÊýÁÐ±íµÄÖÐ¼ä´úÂë
+      match_param(rtn, T->ptr[0], T); //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô²ï¿½ï¿½ï¿½ï¿½ï¿½Æ¥ï¿½ï¿½
+      T0 = T->ptr[0];                 //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð±ï¿½ï¿½ï¿½Ð¼ï¿½ï¿½ï¿½ï¿½
       while (T0)
       {
         result.kind = ID;
@@ -1112,14 +1112,14 @@ void Exp(struct node *T)
       }
       T->place = fill_Temp(newTemp(), LEV, T->type, 'T', T->offset + T->width - width);
       opn1.kind = ID;
-      strcpy(opn1.id, T->type_id); //±£´æº¯ÊýÃû
-      opn1.offset = rtn;           //ÕâÀïoffsetÓÃÒÔ±£´æº¯Êý¶¨ÒåÈë¿Ú,ÔÚÄ¿±ê´úÂëÉú³ÉÊ±£¬ÄÜ»ñÈ¡ÏàÓ¦ÐÅÏ¢
+      strcpy(opn1.id, T->type_id); //ï¿½ï¿½ï¿½æº¯ï¿½ï¿½ï¿½ï¿½
+      opn1.offset = rtn;           //ï¿½ï¿½ï¿½ï¿½offsetï¿½ï¿½ï¿½Ô±ï¿½ï¿½æº¯ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½,ï¿½ï¿½Ä¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½Ü»ï¿½È¡ï¿½ï¿½Ó¦ï¿½ï¿½Ï¢
       result.kind = ID;
       strcpy(result.id, symbolTable.symbols[T->place].alias);
       result.offset = symbolTable.symbols[T->place].offset;
-      T->code = merge(2, T->code, genIR(CALL, opn1, opn2, result)); //Éú³Éº¯Êýµ÷ÓÃÖÐ¼ä´úÂë
+      T->code = merge(2, T->code, genIR(CALL, opn1, opn2, result)); //ï¿½ï¿½ï¿½Éºï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð¼ï¿½ï¿½ï¿½ï¿½
       break;
-    case ARGS: //´Ë´¦½ö´¦Àí¸÷Êµ²Î±í´ïÊ½µÄÇóÖµµÄ´úÂëÐòÁÐ£¬²»Éú³ÉARGµÄÊµ²ÎÏµÁÐ
+    case ARGS: //ï¿½Ë´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Êµï¿½Î±ï¿½ï¿½Ê½ï¿½ï¿½ï¿½ï¿½Öµï¿½Ä´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ARGï¿½ï¿½Êµï¿½ï¿½Ïµï¿½ï¿½
       T->ptr[0]->offset = T->offset;
       Exp(T->ptr[0]);
       T->error = T->ptr[0]->error ? T->ptr[0]->error : T->error;
@@ -1139,7 +1139,7 @@ void Exp(struct node *T)
 }
 
 void semantic_Analysis(struct node *T)
-{ //¶Ô³éÏóÓï·¨Ê÷µÄÏÈ¸ù±éÀú,°´displayµÄ¿ØÖÆ½á¹¹ÐÞ¸ÄÍê³É·ûºÅ±í¹ÜÀíºÍÓïÒå¼ì²éºÍTACÉú³É£¨Óï¾ä²¿·Ö£©
+{ //ï¿½Ô³ï¿½ï¿½ï¿½ï¿½ï·¨ï¿½ï¿½ï¿½ï¿½ï¿½È¸ï¿½ï¿½ï¿½ï¿½ï¿½,ï¿½ï¿½displayï¿½Ä¿ï¿½ï¿½Æ½á¹¹ï¿½Þ¸ï¿½ï¿½ï¿½É·ï¿½ï¿½Å±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½TACï¿½ï¿½ï¿½É£ï¿½ï¿½ï¿½ä²¿ï¿½Ö£ï¿½
   int rtn, num, width, tempOffset;
   struct node *T0;
   struct opn opn1, opn2, result;
@@ -1151,50 +1151,50 @@ void semantic_Analysis(struct node *T)
       if (!T->ptr[0])
         break;
       T->ptr[0]->offset = T->offset;
-      semantic_Analysis(T->ptr[0]); //·ÃÎÊÍâ²¿¶¨ÒåÁÐ±íÖÐµÄµÚÒ»¸ö
+      semantic_Analysis(T->ptr[0]); //ï¿½ï¿½ï¿½ï¿½ï¿½â²¿ï¿½ï¿½ï¿½ï¿½ï¿½Ð±ï¿½ï¿½ÐµÄµï¿½Ò»ï¿½ï¿½
       T->error = T->ptr[0]->error ? T->ptr[0]->error : T->error;
       T->code = T->ptr[0]->code;
       if (T->ptr[1])
       {
         T->ptr[1]->offset = T->ptr[0]->offset + T->ptr[0]->width;
-        semantic_Analysis(T->ptr[1]); //·ÃÎÊ¸ÃÍâ²¿¶¨ÒåÁÐ±íÖÐµÄÆäËüÍâ²¿¶¨Òå
+        semantic_Analysis(T->ptr[1]); //ï¿½ï¿½ï¿½Ê¸ï¿½ï¿½â²¿ï¿½ï¿½ï¿½ï¿½ï¿½Ð±ï¿½ï¿½Ðµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½â²¿ï¿½ï¿½ï¿½ï¿½
         T->error = T->ptr[1]->error ? T->ptr[1]->error : T->error;
         T->code = merge(2, T->code, T->ptr[1]->code);
       }
       break;
-    case EXT_VAR_DEF: //´¦ÀíÍâ²¿ËµÃ÷,½«µÚÒ»¸öº¢×Ó(TYPE½áµã)ÖÐµÄÀàÐÍËÍµ½µÚ¶þ¸öº¢×ÓµÄÀàÐÍÓò
+    case EXT_VAR_DEF: //ï¿½ï¿½ï¿½ï¿½ï¿½â²¿Ëµï¿½ï¿½,ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½(TYPEï¿½ï¿½ï¿½)ï¿½Ðµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Íµï¿½ï¿½Ú¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Óµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
       T->type = T->ptr[1]->type = getType(T->ptr[0]->type_id);
-      T->ptr[1]->offset = T->offset;        //Õâ¸öÍâ²¿±äÁ¿µÄÆ«ÒÆÁ¿ÏòÏÂ´«µÝ
-      T->ptr[1]->width = getWidth(T->type); //½«Ò»¸ö±äÁ¿µÄ¿í¶ÈÏòÏÂ´«µÝ
-      ext_var_list(T->ptr[1]);              //´¦ÀíÍâ²¿±äÁ¿ËµÃ÷ÖÐµÄ±êÊ¶·ûÐòÁÐ
+      T->ptr[1]->offset = T->offset;        //ï¿½ï¿½ï¿½ï¿½â²¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ«ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â´ï¿½ï¿½ï¿½
+      T->ptr[1]->width = getWidth(T->type); //ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¿ï¿½ï¿½ï¿½ï¿½ï¿½Â´ï¿½ï¿½ï¿½
+      ext_var_list(T->ptr[1]);              //ï¿½ï¿½ï¿½ï¿½ï¿½â²¿ï¿½ï¿½ï¿½ï¿½Ëµï¿½ï¿½ï¿½ÐµÄ±ï¿½Ê¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
       T->error = T->ptr[1]->error ? T->ptr[1]->error : T->error;
-      T->width = getWidth(T->type) * T->ptr[1]->num; //¼ÆËãÕâ¸öÍâ²¿±äÁ¿ËµÃ÷µÄ¿í¶È
-      T->code = NULL;                                //ÕâÀï¼Ù¶¨Íâ²¿±äÁ¿²»Ö§³Ö³õÊ¼»¯
+      T->width = getWidth(T->type) * T->ptr[1]->num; //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½â²¿ï¿½ï¿½ï¿½ï¿½Ëµï¿½ï¿½ï¿½Ä¿ï¿½ï¿½
+      T->code = NULL;                                //ï¿½ï¿½ï¿½ï¿½Ù¶ï¿½ï¿½â²¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö§ï¿½Ö³ï¿½Ê¼ï¿½ï¿½
       break;
-    case FUNC_DEF: //ÌîÐ´º¯Êý¶¨ÒåÐÅÏ¢µ½·ûºÅ±í
+    case FUNC_DEF: //ï¿½ï¿½Ð´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢ï¿½ï¿½ï¿½ï¿½ï¿½Å±ï¿½
       if (T->ptr[0])
-        T->ptr[1]->type = T->ptr[0]->type; //»ñÈ¡º¯Êý·µ»ØÀàÐÍËÍµ½º¬º¯ÊýÃû¡¢²ÎÊýµÄ½áµã
+        T->ptr[1]->type = T->ptr[0]->type; //ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Íµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä½ï¿½ï¿½
       else
         T->ptr[1]->type = VOID;
-      T->width = 0; //º¯ÊýµÄ¿í¶ÈÉèÖÃÎª0£¬²»»á¶ÔÍâ²¿±äÁ¿µÄµØÖ··ÖÅä²úÉúÓ°Ïì
+      T->width = 0; //ï¿½ï¿½ï¿½ï¿½ï¿½Ä¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Îª0ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½â²¿ï¿½ï¿½ï¿½ï¿½ï¿½Äµï¿½Ö·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó°ï¿½ï¿½
       tempOffset = T->offset;
-      T->offset = DX;               //ÉèÖÃ¾Ö²¿±äÁ¿ÔÚ»î¶¯¼ÇÂ¼ÖÐµÄÆ«ÒÆÁ¿³õÖµ
-      semantic_Analysis(T->ptr[1]); //´¦Àíº¯ÊýÃûºÍ²ÎÊý½áµã²¿·Ö£¬ÕâÀï²»¿¼ÂÇÓÃ¼Ä´æÆ÷´«µÝ²ÎÊý
+      T->offset = DX;               //ï¿½ï¿½ï¿½Ã¾Ö²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú»î¶¯ï¿½ï¿½Â¼ï¿½Ðµï¿½Æ«ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Öµ
+      semantic_Analysis(T->ptr[1]); //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í²ï¿½ï¿½ï¿½ï¿½ï¿½ã²¿ï¿½Ö£ï¿½ï¿½ï¿½ï¿½ï²»ï¿½ï¿½ï¿½ï¿½ï¿½Ã¼Ä´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý²ï¿½ï¿½ï¿½
       T->error = T->ptr[1]->error ? T->ptr[1]->error : T->error;
       T->place = T->ptr[1]->place;
-      T->offset += T->ptr[1]->width; //ÓÃÐÎ²Îµ¥Ôª¿í¶ÈÐÞ¸Äº¯Êý¾Ö²¿±äÁ¿µÄÆðÊ¼Æ«ÒÆÁ¿
+      T->offset += T->ptr[1]->width; //ï¿½ï¿½ï¿½Î²Îµï¿½Ôªï¿½ï¿½ï¿½ï¿½Þ¸Äºï¿½ï¿½ï¿½ï¿½Ö²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¼Æ«ï¿½ï¿½ï¿½ï¿½
       T->ptr[2]->offset = T->offset;
-      strcpy(T->ptr[2]->Snext, newLabel()); //º¯ÊýÌåÓï¾äÖ´ÐÐ½áÊøºóµÄÎ»ÖÃÊôÐÔ
+      strcpy(T->ptr[2]->Snext, newLabel()); //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö´ï¿½Ð½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Î»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
       T->ptr[2]->error = T->error;
-      semantic_Analysis(T->ptr[2]); //´¦Àíº¯ÊýÌå½áµã
+      semantic_Analysis(T->ptr[2]); //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
       T->error = T->ptr[2]->error ? T->ptr[2]->error : T->error;
-      //¼ÆËã»î¶¯¼ÇÂ¼´óÐ¡,ÕâÀïoffsetÊôÐÔ´æ·ÅµÄÊÇ»î¶¯¼ÇÂ¼´óÐ¡£¬²»ÊÇÆ«ÒÆ
+      //ï¿½ï¿½ï¿½ï¿½î¶¯ï¿½ï¿½Â¼ï¿½ï¿½Ð¡,ï¿½ï¿½ï¿½ï¿½offsetï¿½ï¿½ï¿½Ô´ï¿½Åµï¿½ï¿½Ç»î¶¯ï¿½ï¿½Â¼ï¿½ï¿½Ð¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ«ï¿½ï¿½
       symbolTable.symbols[T->ptr[1]->place].offset = T->offset + T->ptr[2]->width;
-      T->code = merge(3, T->ptr[1]->code, T->ptr[2]->code, genLabel(T->ptr[2]->Snext)); //º¯ÊýÌåµÄ´úÂë×÷Îªº¯ÊýµÄ´úÂë
+      T->code = merge(3, T->ptr[1]->code, T->ptr[2]->code, genLabel(T->ptr[2]->Snext)); //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä´ï¿½ï¿½ï¿½ï¿½ï¿½Îªï¿½ï¿½ï¿½ï¿½ï¿½Ä´ï¿½ï¿½ï¿½
       T->offset = tempOffset;
       break;
-    case FUNC_DEC:                                                         //¸ù¾Ý·µ»ØÀàÐÍ£¬º¯ÊýÃûÌîÐ´·ûºÅ±í
-      rtn = fillSymbolTable(T->type_id, newAlias(), LEV, T->type, 'F', 0); //º¯Êý²»ÔÚÊý¾ÝÇøÖÐ·ÖÅäµ¥Ôª£¬Æ«ÒÆÁ¿Îª0
+    case FUNC_DEC:                                                         //ï¿½ï¿½ï¿½Ý·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð´ï¿½ï¿½ï¿½Å±ï¿½
+      rtn = fillSymbolTable(T->type_id, newAlias(), LEV, T->type, 'F', 0); //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð·ï¿½ï¿½äµ¥Ôªï¿½ï¿½Æ«ï¿½ï¿½ï¿½ï¿½Îª0
       if (rtn == -1)
       {
         T->error = 1;
@@ -1206,21 +1206,21 @@ void semantic_Analysis(struct node *T)
       result.kind = ID;
       strcpy(result.id, T->type_id);
       result.offset = rtn;
-      T->code = genIR(FUNCTION, opn1, opn2, result); //Éú³ÉÖÐ¼ä´úÂë£ºFUNCTION º¯ÊýÃû
-      T->offset = DX;                                //ÉèÖÃÐÎÊ½²ÎÊýÔÚ»î¶¯¼ÇÂ¼ÖÐµÄÆ«ÒÆÁ¿³õÖµ
+      T->code = genIR(FUNCTION, opn1, opn2, result); //ï¿½ï¿½ï¿½ï¿½ï¿½Ð¼ï¿½ï¿½ï¿½ë£ºFUNCTION ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+      T->offset = DX;                                //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê½ï¿½ï¿½ï¿½ï¿½ï¿½Ú»î¶¯ï¿½ï¿½Â¼ï¿½Ðµï¿½Æ«ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Öµ
       if (T->ptr[0])
-      { //ÅÐ¶ÏÊÇ·ñÓÐ²ÎÊý
+      { //ï¿½Ð¶ï¿½ï¿½Ç·ï¿½ï¿½Ð²ï¿½ï¿½ï¿½
         T->ptr[0]->offset = T->offset;
-        semantic_Analysis(T->ptr[0]); //´¦Àíº¯Êý²ÎÊýÁÐ±í
+        semantic_Analysis(T->ptr[0]); //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð±ï¿½
         T->error = T->ptr[0]->error ? T->ptr[0]->error : T->error;
         T->width = T->ptr[0]->width;
         symbolTable.symbols[rtn].paramnum = T->ptr[0]->num;
-        T->code = merge(2, T->code, T->ptr[0]->code); //Á¬½Óº¯ÊýÃûºÍ²ÎÊý´úÂëÐòÁÐ
+        T->code = merge(2, T->code, T->ptr[0]->code); //ï¿½ï¿½ï¿½Óºï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
       }
       else
         symbolTable.symbols[rtn].paramnum = 0, T->width = 0;
       break;
-    case PARAM_LIST: //´¦Àíº¯ÊýÐÎÊ½²ÎÊýÁÐ±í
+    case PARAM_LIST: //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê½ï¿½ï¿½ï¿½ï¿½ï¿½Ð±ï¿½
       T->ptr[0]->offset = T->offset;
       semantic_Analysis(T->ptr[0]);
       T->error = T->ptr[0]->error ? T->ptr[0]->error : T->error;
@@ -1229,9 +1229,9 @@ void semantic_Analysis(struct node *T)
         T->ptr[1]->offset = T->offset + T->ptr[0]->width;
         semantic_Analysis(T->ptr[1]);
         T->error = T->ptr[1]->error ? T->ptr[1]->error : T->error;
-        T->num = T->ptr[0]->num + T->ptr[1]->num;             //Í³¼Æ²ÎÊý¸öÊý
-        T->width = T->ptr[0]->width + T->ptr[1]->width;       //ÀÛ¼Ó²ÎÊýµ¥Ôª¿í¶È
-        T->code = merge(2, T->ptr[0]->code, T->ptr[1]->code); //Á¬½Ó²ÎÊý´úÂë
+        T->num = T->ptr[0]->num + T->ptr[1]->num;             //Í³ï¿½Æ²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+        T->width = T->ptr[0]->width + T->ptr[1]->width;       //ï¿½Û¼Ó²ï¿½ï¿½ï¿½ï¿½ï¿½Ôªï¿½ï¿½ï¿½
+        T->code = merge(2, T->ptr[0]->code, T->ptr[1]->code); //ï¿½ï¿½ï¿½Ó²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
       }
       else
       {
@@ -1250,24 +1250,24 @@ void semantic_Analysis(struct node *T)
       else
       {
         T->ptr[1]->place = rtn;
-        T->num = 1;                           //²ÎÊý¸öÊý¼ÆËãµÄ³õÊ¼Öµ
-        T->width = getWidth(T->ptr[0]->type); //²ÎÊý¿í¶È
+        T->num = 1;                           //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä³ï¿½Ê¼Öµ
+        T->width = getWidth(T->ptr[0]->type); //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         result.kind = ID;
         strcpy(result.id, symbolTable.symbols[rtn].alias);
         result.offset = T->offset;
-        T->code = genIR(PARAM, opn1, opn2, result); //Éú³É£ºFUNCTION º¯ÊýÃû
+        T->code = genIR(PARAM, opn1, opn2, result); //ï¿½ï¿½ï¿½É£ï¿½FUNCTION ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
       }
       break;
     case COMP_STM:
       LEV++;
-      //ÉèÖÃ²ãºÅ¼Ó1£¬²¢ÇÒ±£´æ¸Ã²ã¾Ö²¿±äÁ¿ÔÚ·ûºÅ±íÖÐµÄÆðÊ¼Î»ÖÃÔÚsymbol_scope_TX
+      //ï¿½ï¿½ï¿½Ã²ï¿½Å¼ï¿½1ï¿½ï¿½ï¿½ï¿½ï¿½Ò±ï¿½ï¿½ï¿½Ã²ï¿½Ö²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú·ï¿½ï¿½Å±ï¿½ï¿½Ðµï¿½ï¿½ï¿½Ê¼Î»ï¿½ï¿½ï¿½ï¿½symbol_scope_TX
       symbol_scope_TX.TX[symbol_scope_TX.top++] = symbolTable.index;
       T->width = 0;
       T->code = NULL;
       if (T->ptr[0])
       {
         T->ptr[0]->offset = T->offset;
-        semantic_Analysis(T->ptr[0]); //´¦Àí¸Ã²ãµÄ¾Ö²¿±äÁ¿DEF_LIST
+        semantic_Analysis(T->ptr[0]); //ï¿½ï¿½ï¿½ï¿½Ã²ï¿½Ä¾Ö²ï¿½ï¿½ï¿½ï¿½ï¿½DEF_LIST
         T->error = T->ptr[0]->error ? T->ptr[0]->error : T->error;
         T->width += T->ptr[0]->width;
         T->code = T->ptr[0]->code;
@@ -1276,25 +1276,25 @@ void semantic_Analysis(struct node *T)
       {
         strcpy(T->ptr[1]->Sbreak, T->Sbreak);
         T->ptr[1]->offset = T->offset + T->width;
-        strcpy(T->ptr[1]->Snext, T->Snext); //S.nextÊôÐÔÏòÏÂ´«µÝ
-        semantic_Analysis(T->ptr[1]);       //´¦Àí¸´ºÏÓï¾äµÄÓï¾äÐòÁÐ
+        strcpy(T->ptr[1]->Snext, T->Snext); //S.nextï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â´ï¿½ï¿½ï¿½
+        semantic_Analysis(T->ptr[1]);       //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         T->error = T->ptr[1]->error ? T->ptr[1]->error : T->error;
         T->width += T->ptr[1]->width;
         T->code = merge(2, T->code, T->ptr[1]->code);
       }
       if (!T->error)
       {
-        prn_symbol(); //cÔÚÍË³öÒ»¸ö·ûºÏÓï¾äÇ°ÏÔÊ¾µÄ·ûºÅ±í
+        prn_symbol(); //cï¿½ï¿½ï¿½Ë³ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç°ï¿½ï¿½Ê¾ï¿½Ä·ï¿½ï¿½Å±ï¿½
       }
-      LEV--;                                                         //³ö¸´ºÏÓï¾ä£¬²ãºÅ¼õ1
-      symbolTable.index = symbol_scope_TX.TX[--symbol_scope_TX.top]; //É¾³ý¸Ã×÷ÓÃÓòÖÐµÄ·ûºÅ
+      LEV--;                                                         //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ä£¬ï¿½ï¿½Å¼ï¿½1
+      symbolTable.index = symbol_scope_TX.TX[--symbol_scope_TX.top]; //É¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÐµÄ·ï¿½ï¿½ï¿½
       break;
     case DEF_LIST:
       T->code = NULL;
       if (T->ptr[0])
       {
         T->ptr[0]->offset = T->offset;
-        semantic_Analysis(T->ptr[0]); //´¦ÀíÒ»¸ö¾Ö²¿±äÁ¿¶¨Òå
+        semantic_Analysis(T->ptr[0]); //ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½Ö²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         T->error = T->ptr[0]->error ? T->ptr[0]->error : T->error;
         T->code = T->ptr[0]->code;
         T->width = T->ptr[0]->width;
@@ -1302,13 +1302,13 @@ void semantic_Analysis(struct node *T)
       if (T->ptr[1])
       {
         T->ptr[1]->offset = T->offset + T->ptr[0]->width;
-        semantic_Analysis(T->ptr[1]); //´¦ÀíÊ£ÏÂµÄ¾Ö²¿±äÁ¿¶¨Òå
+        semantic_Analysis(T->ptr[1]); //ï¿½ï¿½ï¿½ï¿½Ê£ï¿½ÂµÄ¾Ö²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         T->error = T->ptr[1]->error ? T->ptr[1]->error : T->error;
         T->code = merge(2, T->code, T->ptr[1]->code);
         T->width += T->ptr[1]->width;
       }
       break;
-    case VAR_DEF: //´¦ÀíÒ»¸ö¾Ö²¿±äÁ¿¶¨Òå,½«µÚÒ»¸öº¢×Ó(TYPE½áµã)ÖÐµÄÀàÐÍËÍµ½µÚ¶þ¸öº¢×ÓµÄÀàÐÍÓò
+    case VAR_DEF: //ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½Ö²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½,ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½(TYPEï¿½ï¿½ï¿½)ï¿½Ðµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Íµï¿½ï¿½Ú¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Óµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
       local_var_list(T);
       break;
     case STM_LIST:
@@ -1317,10 +1317,10 @@ void semantic_Analysis(struct node *T)
         T->code = NULL;
         T->width = 0;
         break;
-      }              //¿ÕÓï¾äÐòÁÐ
-      if (T->ptr[1]) //2ÌõÒÔÉÏÓï¾äÁ¬½Ó£¬Éú³ÉÐÂ±êºÅ×÷ÎªµÚÒ»ÌõÓï¾ä½áÊøºóµ½´ïµÄÎ»ÖÃ
+      }              //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+      if (T->ptr[1]) //2ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â±ï¿½ï¿½ï¿½ï¿½Îªï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½óµ½´ï¿½ï¿½Î»ï¿½ï¿½
         strcpy(T->ptr[0]->Snext, newLabel());
-      else //Óï¾äÐòÁÐ½öÓÐÒ»ÌõÓï¾ä£¬S.nextÊôÐÔÏòÏÂ´«µÝ
+      else //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ä£¬S.nextï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â´ï¿½ï¿½ï¿½
         strcpy(T->ptr[0]->Snext, T->Snext);
       T->ptr[0]->offset = T->offset;
       strcpy(T->ptr[0]->Sbreak, T->Sbreak);
@@ -1331,49 +1331,49 @@ void semantic_Analysis(struct node *T)
       if (T->ptr[1])
       {
         strcpy(T->ptr[1]->Sbreak, T->Sbreak);
-        strcpy(T->ptr[1]->Snext, T->Snext); //2ÌõÒÔÉÏÓï¾äÁ¬½Ó,S.nextÊôÐÔÏòÏÂ´«µÝ
-        T->ptr[1]->offset = T->offset;      //Ë³Ðò½á¹¹¹²Ïíµ¥Ôª·½Ê½
-        // T->ptr[1]->offset = T->offset + T->ptr[0]->width; //Ë³Ðò½á¹¹Ë³Ðò·ÖÅäµ¥Ôª·½Ê½
+        strcpy(T->ptr[1]->Snext, T->Snext); //2ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½,S.nextï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â´ï¿½ï¿½ï¿½
+        T->ptr[1]->offset = T->offset;      //Ë³ï¿½ï¿½á¹¹ï¿½ï¿½ï¿½ï¿½Ôªï¿½ï¿½Ê½
+        // T->ptr[1]->offset = T->offset + T->ptr[0]->width; //Ë³ï¿½ï¿½á¹¹Ë³ï¿½ï¿½ï¿½ï¿½äµ¥Ôªï¿½ï¿½Ê½
         semantic_Analysis(T->ptr[1]);
         T->error = T->ptr[1]->error ? T->ptr[1]->error : T->error;
-        //ÐòÁÐÖÐµÚ1ÌõÎª±í´ïÊ½Óï¾ä£¬·µ»ØÓï¾ä£¬¸´ºÏÓï¾äÊ±£¬µÚ2ÌõÇ°²»ÐèÒª±êºÅ
+        //ï¿½ï¿½ï¿½ï¿½ï¿½Ðµï¿½1ï¿½ï¿½Îªï¿½ï¿½ï¿½Ê½ï¿½ï¿½ä£¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ä£¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½2ï¿½ï¿½Ç°ï¿½ï¿½ï¿½ï¿½Òªï¿½ï¿½ï¿½
         if (T->ptr[0]->kind == RETURN || T->ptr[0]->kind == EXP_STMT || T->ptr[0]->kind == COMP_STM)
           T->code = merge(2, T->code, T->ptr[1]->code);
         else
           T->code = merge(3, T->code, genLabel(T->ptr[0]->Snext), T->ptr[1]->code);
         if (T->ptr[1]->width > T->width)
-          T->width = T->ptr[1]->width; //Ë³Ðò½á¹¹¹²Ïíµ¥Ôª·½Ê½
-                                       //T->width+=T->ptr[1]->width;//Ë³Ðò½á¹¹Ë³Ðò·ÖÅäµ¥Ôª·½Ê½
+          T->width = T->ptr[1]->width; //Ë³ï¿½ï¿½á¹¹ï¿½ï¿½ï¿½ï¿½Ôªï¿½ï¿½Ê½
+                                       //T->width+=T->ptr[1]->width;//Ë³ï¿½ï¿½á¹¹Ë³ï¿½ï¿½ï¿½ï¿½äµ¥Ôªï¿½ï¿½Ê½
       }
       break;
     case IF_THEN:
-      strcpy(T->ptr[0]->Etrue, newLabel()); //ÉèÖÃÌõ¼þÓï¾äÕæ¼Ù×ªÒÆÎ»ÖÃ
+      strcpy(T->ptr[0]->Etrue, newLabel()); //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×ªï¿½ï¿½Î»ï¿½ï¿½
       strcpy(T->ptr[0]->Efalse, T->Snext);
       T->ptr[0]->offset = T->ptr[1]->offset = T->offset;
       boolExp(T->ptr[0]);
       T->error = T->ptr[0]->error ? T->ptr[0]->error : T->error;
       T->width = T->ptr[0]->width;
       strcpy(T->ptr[1]->Snext, T->Snext);
-      semantic_Analysis(T->ptr[1]); //if×Ó¾ä
+      semantic_Analysis(T->ptr[1]); //ifï¿½Ó¾ï¿½
       T->error = T->ptr[1]->error ? T->ptr[1]->error : T->error;
       if (T->width < T->ptr[1]->width)
         T->width = T->ptr[1]->width;
       T->code = merge(3, T->ptr[0]->code, genLabel(T->ptr[0]->Etrue), T->ptr[1]->code);
-      break; //¿ØÖÆÓï¾ä¶¼»¹Ã»ÓÐ´¦ÀíoffsetºÍwidthÊôÐÔ
+      break; //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ä¶¼ï¿½ï¿½Ã»ï¿½Ð´ï¿½ï¿½ï¿½offsetï¿½ï¿½widthï¿½ï¿½ï¿½ï¿½
     case IF_THEN_ELSE:
-      strcpy(T->ptr[0]->Etrue, newLabel()); //ÉèÖÃÌõ¼þÓï¾äÕæ¼Ù×ªÒÆÎ»ÖÃ
+      strcpy(T->ptr[0]->Etrue, newLabel()); //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×ªï¿½ï¿½Î»ï¿½ï¿½
       strcpy(T->ptr[0]->Efalse, newLabel());
       T->ptr[0]->offset = T->ptr[1]->offset = T->ptr[2]->offset = T->offset;
-      boolExp(T->ptr[0]); //Ìõ¼þ£¬Òªµ¥¶À°´¶ÌÂ·´úÂë´¦Àí
+      boolExp(T->ptr[0]); //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â·ï¿½ï¿½ï¿½ë´¦ï¿½ï¿½
       T->error = T->ptr[0]->error ? T->ptr[0]->error : T->error;
       T->width = T->ptr[0]->width;
       strcpy(T->ptr[1]->Snext, T->Snext);
-      semantic_Analysis(T->ptr[1]); //if×Ó¾ä
+      semantic_Analysis(T->ptr[1]); //ifï¿½Ó¾ï¿½
       T->error = T->ptr[1]->error ? T->ptr[1]->error : T->error;
       if (T->width < T->ptr[1]->width)
         T->width = T->ptr[1]->width;
       strcpy(T->ptr[2]->Snext, T->Snext);
-      semantic_Analysis(T->ptr[2]); //else×Ó¾ä
+      semantic_Analysis(T->ptr[2]); //elseï¿½Ó¾ï¿½
       T->error = T->ptr[2]->error ? T->ptr[2]->error : T->error;
 
       if (T->width < T->ptr[2]->width)
@@ -1382,15 +1382,15 @@ void semantic_Analysis(struct node *T)
                       genGoto(T->Snext), genLabel(T->ptr[0]->Efalse), T->ptr[2]->code);
       break;
     case WHILE:
-      strcpy(T->ptr[0]->Etrue, newLabel()); //×Ó½áµã¼Ì³ÐÊôÐÔµÄ¼ÆËã
+      strcpy(T->ptr[0]->Etrue, newLabel()); //ï¿½Ó½ï¿½ï¿½Ì³ï¿½ï¿½ï¿½ï¿½ÔµÄ¼ï¿½ï¿½ï¿½
       strcpy(T->ptr[0]->Efalse, T->Snext);
       T->ptr[0]->offset = T->ptr[1]->offset = T->offset;
-      boolExp(T->ptr[0]); //Ñ­»·Ìõ¼þ£¬Òªµ¥¶À°´¶ÌÂ·´úÂë´¦Àí
+      boolExp(T->ptr[0]); //Ñ­ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â·ï¿½ï¿½ï¿½ë´¦ï¿½ï¿½
       T->error = T->ptr[0]->error ? T->ptr[0]->error : T->error;
       T->width = T->ptr[0]->width;
       strcpy(T->ptr[1]->Snext, newLabel());
       strcpy(T->ptr[1]->Sbreak, T->Snext);
-      semantic_Analysis(T->ptr[1]); //Ñ­»·Ìå
+      semantic_Analysis(T->ptr[1]); //Ñ­ï¿½ï¿½ï¿½ï¿½
       T->error = T->ptr[1]->error ? T->ptr[1]->error : T->error;
       if (T->width < T->ptr[1]->width)
         T->width = T->ptr[1]->width;
@@ -1418,7 +1418,7 @@ void semantic_Analysis(struct node *T)
       strcpy(T0->ptr[1]->Etrue, newLabel());
       strcpy(T0->ptr[1]->Efalse, T->Snext);
       T0->ptr[1]->offset = T->offset;
-      boolExp(T0->ptr[1]); //Ñ­»·Ìõ¼þ£¬Òªµ¥¶À°´¶ÌÂ·´úÂë´¦Àí
+      boolExp(T0->ptr[1]); //Ñ­ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â·ï¿½ï¿½ï¿½ë´¦ï¿½ï¿½
       T->error = T0->ptr[1]->error ? T0->ptr[1]->error : T->error;
       if (T->width < T0->ptr[1]->width)
         T->width = T0->ptr[1]->width;
@@ -1512,7 +1512,7 @@ void semantic_Analysis(struct node *T)
     case RELOP:
     case PLUS:
     case MINUS:
-    case STAR:
+    case MULT:
     case DIV:
     case NOT:
     case UMINUS:
@@ -1522,7 +1522,7 @@ void semantic_Analysis(struct node *T)
     case FDMINUS:
     case ARR_ACCESS:
     case FUNC_CALL:
-      Exp(T); //´¦Àí»ù±¾±í´ïÊ½
+      Exp(T); //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê½
       break;
     }
   }
@@ -1532,17 +1532,18 @@ void semantic_Analysis0(struct node *T)
 {
   symbolTable.index = 0;
   fillSymbolTable("read", "", 0, INT, 'F', 4);
-  symbolTable.symbols[0].paramnum = 0; //readµÄÐÎ²Î¸öÊý
+  symbolTable.symbols[0].paramnum = 0; //readï¿½ï¿½ï¿½Î²Î¸ï¿½ï¿½ï¿½
   fillSymbolTable("write", "", 0, INT, 'F', 4);
   fillSymbolTable("x", "", 1, INT, 'P', DX);
   symbolTable.symbols[1].paramnum = 1;
-  symbol_scope_TX.TX[0] = 0; //Íâ²¿±äÁ¿ÔÚ·ûºÅ±íÖÐµÄÆðÊ¼ÐòºÅÎª0
+  symbol_scope_TX.TX[0] = 0; //ï¿½â²¿ï¿½ï¿½ï¿½ï¿½ï¿½Ú·ï¿½ï¿½Å±ï¿½ï¿½Ðµï¿½ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½Îª0
   symbol_scope_TX.top = 1;
-  T->offset = 0; //Íâ²¿±äÁ¿ÔÚÊý¾ÝÇøµÄÆ«ÒÆÁ¿
+  T->offset = 0; //ï¿½â²¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ«ï¿½ï¿½ï¿½ï¿½
   semantic_Analysis(T);
   printf("%d", T->error);
   if (!T->error)
   {
     prnIR(T->code);
+    objectCode(T->code);
   }
 }
