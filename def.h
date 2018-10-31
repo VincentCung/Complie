@@ -42,82 +42,82 @@ enum node_kind
   CON_LIST,
   VAL_LIST,
 };
-#define MAXLENGTH 1000     //¶¨Òå·ûºÅ±íµÄ´óÐ¡
-#define DX 3 * sizeof(int) //»î¶¯¼ÇÂ¼¿ØÖÆÐÅÏ¢ÐèÒªµÄµ¥ÔªÊý
+#define MAXLENGTH 1000     //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å±ï¿½Ä´ï¿½Ð¡
+#define DX 3 * sizeof(int) //ï¿½î¶¯ï¿½ï¿½Â¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢ï¿½ï¿½Òªï¿½Äµï¿½Ôªï¿½ï¿½
 #define FLOAT_LENGTH 8
 #define CHAR_LENGTH 1
 #define INT_LENGTH 4
 
 struct opn
 {
-  int kind; //±êÊ¶²Ù×÷µÄÀàÐÍ
-  int type; //±êÊ¶²Ù×÷ÊýµÄÀàÐÍ
+  int kind; //ï¿½ï¿½Ê¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+  int type; //ï¿½ï¿½Ê¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
   union {
-    int const_int;     //Õû³£ÊýÖµ£¬Á¢¼´Êý
-    float const_float; //¸¡µã³£ÊýÖµ£¬Á¢¼´Êý
-    char const_char;   //×Ö·û³£ÊýÖµ£¬Á¢¼´Êý
-    char id[33];       //±äÁ¿»òÁÙÊ±±äÁ¿µÄ±ðÃû»ò±êºÅ×Ö·û´®
+    int const_int;     //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Öµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+    float const_float; //ï¿½ï¿½ï¿½ã³£ï¿½ï¿½Öµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+    char const_char;   //ï¿½Ö·ï¿½ï¿½ï¿½ï¿½ï¿½Öµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+    char id[33];       //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½ï¿½Ä±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö·ï¿½ï¿½ï¿½
   };
-  int level;  //±äÁ¿µÄ²ãºÅ£¬0±íÊ¾ÊÇÈ«¾Ö±äÁ¿£¬Êý¾Ý±£´æÔÚ¾²Ì¬Êý¾ÝÇø
-  int offset; //±äÁ¿µ¥ÔªÆ«ÒÆÁ¿£¬»òº¯ÊýÔÚ·ûºÅ±íµÄ¶¨ÒåÎ»ÖÃÐòºÅ£¬Ä¿±ê´úÂëÉú³ÉÊ±ÓÃ
+  int level;  //ï¿½ï¿½ï¿½ï¿½ï¿½Ä²ï¿½Å£ï¿½0ï¿½ï¿½Ê¾ï¿½ï¿½È«ï¿½Ö±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý±ï¿½ï¿½ï¿½ï¿½Ú¾ï¿½Ì¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+  int offset; //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÔªÆ«ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú·ï¿½ï¿½Å±ï¿½Ä¶ï¿½ï¿½ï¿½Î»ï¿½ï¿½ï¿½ï¿½Å£ï¿½Ä¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½
 };
 
 struct codenode
-{                                //ÈýµØÖ·TAC´úÂë½áµã,²ÉÓÃË«ÏòÑ­»·Á´±í´æ·ÅÖÐ¼äÓïÑÔ´úÂë
-  int op;                        //TAC´úÂëµÄÔËËã·ûÖÖÀà
-  struct opn opn1, opn2, result; //2¸ö²Ù×÷ÊýºÍÔËËã½á¹û
+{                                //ï¿½ï¿½ï¿½ï¿½Ö·TACï¿½ï¿½ï¿½ï¿½ï¿½ï¿½,ï¿½ï¿½ï¿½ï¿½Ë«ï¿½ï¿½Ñ­ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð¼ï¿½ï¿½ï¿½ï¿½Ô´ï¿½ï¿½ï¿½
+  int op;                        //TACï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+  struct opn opn1, opn2, result; //2ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
   struct codenode *next, *prior;
 };
 
 struct node
-{                      //ÒÔÏÂ¶Ô½áµãÊôÐÔ¶¨ÒåÃ»ÓÐ¿¼ÂÇ´æ´¢Ð§ÂÊ£¬Ö»ÊÇ¼òµ¥µØÁÐ³öÒªÓÃµ½µÄÒ»Ð©ÊôÐÔ
-  enum node_kind kind; //½áµãÀàÐÍ
+{                      //ï¿½ï¿½ï¿½Â¶Ô½ï¿½ï¿½ï¿½ï¿½ï¿½Ô¶ï¿½ï¿½ï¿½Ã»ï¿½Ð¿ï¿½ï¿½Ç´æ´¢Ð§ï¿½Ê£ï¿½Ö»ï¿½Ç¼òµ¥µï¿½ï¿½Ð³ï¿½Òªï¿½Ãµï¿½ï¿½ï¿½Ò»Ð©ï¿½ï¿½ï¿½ï¿½
+  enum node_kind kind; //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
   union {
-    char type_id[33]; //ÓÉ±êÊ¶·ûÉú³ÉµÄÒ¶½áµã
-    int type_int;     //ÓÉÕû³£ÊýÉú³ÉµÄÒ¶½áµã
-    float type_float; //ÓÉ¸¡µã³£ÊýÉú³ÉµÄÒ¶½áµã
+    char type_id[33]; //ï¿½É±ï¿½Ê¶ï¿½ï¿½ï¿½ï¿½ï¿½Éµï¿½Ò¶ï¿½ï¿½ï¿½
+    int type_int;     //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Éµï¿½Ò¶ï¿½ï¿½ï¿½
+    float type_float; //ï¿½É¸ï¿½ï¿½ã³£ï¿½ï¿½ï¿½ï¿½ï¿½Éµï¿½Ò¶ï¿½ï¿½ï¿½
   };
-  struct node *ptr[3];        //×ÓÊ÷Ö¸Õë£¬ÓÉkindÈ·¶¨ÓÐ¶àÉÙ¿Ã×ÓÊ÷
-  int level;                  //²ãºÅ
-  int place;                  //±íÊ¾½áµã¶ÔÓ¦µÄ±äÁ¿»òÔËËã½á¹û·ûºÅ±íµÄÎ»ÖÃÐòºÅ
-  char Etrue[15], Efalse[15]; //¶Ô²¼¶û±í´ïÊ½µÄ·­ÒëÊ±£¬Õæ¼Ù×ªÒÆÄ¿±êµÄ±êºÅ
-  char Snext[15];             //¸Ã½áµã¶ÔÒûÓï¾äÖ´ÐÐºóµÄÏÂÒ»ÌõÓï¾äÎ»ÖÃ±êºÅ
+  struct node *ptr[3];        //ï¿½ï¿½ï¿½ï¿½Ö¸ï¿½ë£¬ï¿½ï¿½kindÈ·ï¿½ï¿½ï¿½Ð¶ï¿½ï¿½Ù¿ï¿½ï¿½ï¿½ï¿½ï¿½
+  int level;                  //ï¿½ï¿½ï¿½
+  int place;                  //ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½Ó¦ï¿½Ä±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å±ï¿½ï¿½Î»ï¿½ï¿½ï¿½ï¿½ï¿½
+  char Etrue[15], Efalse[15]; //ï¿½Ô²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê½ï¿½Ä·ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½ï¿½×ªï¿½ï¿½Ä¿ï¿½ï¿½Ä±ï¿½ï¿½
+  char Snext[15];             //ï¿½Ã½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö´ï¿½Ðºï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½Î»ï¿½Ã±ï¿½ï¿½
   char Sbreak[15];
-  struct codenode *code;      //¸Ã½áµãÖÐ¼ä´úÂëÁ´±íÍ·Ö¸Õë
+  struct codenode *code;      //ï¿½Ã½ï¿½ï¿½ï¿½Ð¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í·Ö¸ï¿½ï¿½
   char op[10];
-  int type;   //½áµã¶ÔÓ¦ÖµµÄÀàÐÍ
-  int pos;    //Óï·¨µ¥Î»ËùÔÚÎ»ÖÃÐÐºÅ
-  int offset; //Æ«ÒÆÁ¿
-  int width;  //Õ¼Êý¾Ý×Ö½ÚÊý
-  int num;    //±äÁ¿¸öÊý
-  int error; //±¨´í±êÖ¾
-  int dimension; //Êý×éÎ¬Êý
-  int arrayLimit[100]; //Êý×éÃ¿Ò»Î¬µÄ¸öÊý
+  int type;   //ï¿½ï¿½ï¿½ï¿½Ó¦Öµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+  int pos;    //ï¿½ï·¨ï¿½ï¿½Î»ï¿½ï¿½ï¿½ï¿½Î»ï¿½ï¿½ï¿½Ðºï¿½
+  int offset; //Æ«ï¿½ï¿½ï¿½ï¿½
+  int width;  //Õ¼ï¿½ï¿½ï¿½ï¿½ï¿½Ö½ï¿½ï¿½ï¿½
+  int num;    //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+  int error; //ï¿½ï¿½ï¿½ï¿½ï¿½Ö¾
+  int dimension; //ï¿½ï¿½ï¿½ï¿½Î¬ï¿½ï¿½
+  int arrayLimit[100]; //ï¿½ï¿½ï¿½ï¿½Ã¿Ò»Î¬ï¿½Ä¸ï¿½ï¿½ï¿½
 };
 
 
 struct symbol
-{                 //ÕâÀïÖ»ÁÐ³öÁËÒ»¸ö·ûºÅ±íÏîµÄ²¿·ÖÊôÐÔ£¬Ã»¿¼ÂÇÊôÐÔ¼äµÄ»¥³â
-  char name[33];  //±äÁ¿»òº¯ÊýÃû
-  int level;      //²ãºÅ£¬Íâ²¿±äÁ¿Ãû»òº¯ÊýÃû²ãºÅÎª0£¬ÐÎ²ÎÃûÎª1£¬Ã¿µ½1¸ö¸´ºÏÓï¾ä²ãºÅ¼Ó1£¬ÍË³ö¼õ1
-  int type;       //±äÁ¿ÀàÐÍ»òº¯Êý·µ»ØÖµÀàÐÍ
-  int paramnum;   //ÐÎÊ½²ÎÊý¸öÊý
-  char alias[10]; //±ðÃû£¬Îª½â¾öÇ¶Ì×²ã´ÎÊ¹ÓÃ£¬Ê¹µÃÃ¿Ò»¸öÊý¾ÝÃû³ÆÎ¨Ò»
-  char flag;      //·ûºÅ±ê¼Ç£¬º¯Êý£º'F'  ±äÁ¿£º'V'   ²ÎÊý£º'P'  ÁÙÊ±±äÁ¿£º'T'
-  char offset;    //Íâ²¿±äÁ¿ºÍ¾Ö²¿±äÁ¿ÔÚÆä¾²Ì¬Êý¾ÝÇø»ò»î¶¯¼ÇÂ¼ÖÐµÄÆ«ÒÆÁ¿
-  int dimension; //Êý×éÎ¬Êý
-  int arrayLimit[100]; //Êý×éÃ¿Ò»Î¬µÄ¸öÊý
-                  //»òº¯Êý»î¶¯¼ÇÂ¼´óÐ¡£¬Ä¿±ê´úÂëÉú³ÉÊ±Ê¹ÓÃ
-  //ÆäËü...
+{                 //ï¿½ï¿½ï¿½ï¿½Ö»ï¿½Ð³ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½Å±ï¿½ï¿½ï¿½Ä²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô£ï¿½Ã»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô¼ï¿½Ä»ï¿½ï¿½ï¿½
+  char name[33];  //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+  int level;      //ï¿½ï¿½Å£ï¿½ï¿½â²¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Îª0ï¿½ï¿½ï¿½Î²ï¿½ï¿½ï¿½Îª1ï¿½ï¿½Ã¿ï¿½ï¿½1ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å¼ï¿½1ï¿½ï¿½ï¿½Ë³ï¿½ï¿½ï¿½1
+  int type;       //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Öµï¿½ï¿½ï¿½ï¿½
+  int paramnum;   //ï¿½ï¿½Ê½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+  char alias[10]; //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Îªï¿½ï¿½ï¿½Ç¶ï¿½×²ï¿½ï¿½Ê¹ï¿½Ã£ï¿½Ê¹ï¿½ï¿½Ã¿Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Î¨Ò»
+  char flag;      //ï¿½ï¿½ï¿½Å±ï¿½Ç£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½'F'  ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½'V'   ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½'P'  ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½'T'
+  char offset;    //ï¿½â²¿ï¿½ï¿½ï¿½ï¿½ï¿½Í¾Ö²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ä¾²Ì¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½î¶¯ï¿½ï¿½Â¼ï¿½Ðµï¿½Æ«ï¿½ï¿½ï¿½ï¿½
+  int dimension; //ï¿½ï¿½ï¿½ï¿½Î¬ï¿½ï¿½
+  int arrayLimit[100]; //ï¿½ï¿½ï¿½ï¿½Ã¿Ò»Î¬ï¿½Ä¸ï¿½ï¿½ï¿½
+                  //ï¿½ï¿½ï¿½ï¿½ï¿½î¶¯ï¿½ï¿½Â¼ï¿½ï¿½Ð¡ï¿½ï¿½Ä¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±Ê¹ï¿½ï¿½
+  //ï¿½ï¿½ï¿½ï¿½...
 };
-//·ûºÅ±í£¬ÊÇÒ»¸öË³ÐòÕ»£¬index³õÖµÎª0
+//ï¿½ï¿½ï¿½Å±ï¿½ï¿½ï¿½Ò»ï¿½ï¿½Ë³ï¿½ï¿½Õ»ï¿½ï¿½indexï¿½ï¿½ÖµÎª0
 struct symboltable
 {
   struct symbol symbols[MAXLENGTH];
   int index;
 } symbolTable;
 
-/*µ±Ç°×÷ÓÃÓòµÄ·ûºÅÔÚ·ûºÅ±íµÄÆðÊ¼Î»ÖÃÐòºÅ,ÕâÊÇÒ»¸öÕ»½á¹¹£¬/Ã¿µ½´ïÒ»¸ö¸´ºÏÓï¾ä£¬½«·ûºÅ±íµÄindexÖµ½øÕ»£¬Àë¿ª¸´ºÏÓï¾äÊ±£¬È¡ÆäÍËÕ»ÖµÐÞ¸Ä·ûºÅ±íµÄindexÖµ£¬Íê³ÉÉ¾³ý¸Ã¸´ºÏÓï¾äÖÐµÄËùÓÐ±äÁ¿ºÍÁÙÊ±±äÁ¿*/
+/*ï¿½ï¿½Ç°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä·ï¿½ï¿½ï¿½ï¿½Ú·ï¿½ï¿½Å±ï¿½ï¿½ï¿½ï¿½Ê¼Î»ï¿½ï¿½ï¿½ï¿½ï¿½,ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½Õ»ï¿½á¹¹ï¿½ï¿½/Ã¿ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ä£¬ï¿½ï¿½ï¿½ï¿½ï¿½Å±ï¿½ï¿½indexÖµï¿½ï¿½Õ»ï¿½ï¿½ï¿½ë¿ªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½Õ»Öµï¿½Þ¸Ä·ï¿½ï¿½Å±ï¿½ï¿½indexÖµï¿½ï¿½ï¿½ï¿½ï¿½É¾ï¿½ï¿½ï¿½Ã¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ðµï¿½ï¿½ï¿½ï¿½Ð±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½*/
 struct symbol_scope_begin
 {
   int TX[30];

@@ -1,4 +1,8 @@
 //条件语句不能加数组访问
+//条件语句不能直接单值
+//main 需要 return 0
+//仅支持一维数组
+
 // int main ()
 // {
 //   int i = 5;
@@ -64,3 +68,13 @@
 //   }
 //   return 1;
 // }
+
+int main()
+{
+  int arr[3] = {1,2,3},i;
+  for(i=0;i<3;i++)
+  {
+    write(arr[i]);
+  }
+  return 0 ;
+}

@@ -43,6 +43,18 @@ void objectCode(struct codenode *head)
             }
             fprintf(fp, "  sw $t3, %d($sp)\n", h->result.offset);
             break;
+        case ARR_INIT:
+            fprintf(fp, "  li $t3, %d\n", h->opn2.const_int);
+            fprintf(fp, "  sw $t3, %d($sp)\n", h->result.offset + 4 * (h->opn2.const_int-1));
+            break;
+        case ARR_ACCESS:
+            fprintf(fp, "  lw $t2, %d($sp)\n",h->opn2.offset);
+            fprintf(fp, "  mul $t2, $t2 ,4\n");
+            fprintf(fp, "  addi $t1, $sp,%d\n",h->opn1.offset);
+            fprintf(fp, "  add $t1, $t1,$t2\n");
+            fprintf(fp, "  lw $t3, 0($t1)\n");
+            fprintf(fp, "  sw $t3, %d($sp)\n", h->result.offset);
+            break;
         case PLUS:
         case MINUS:
         case MULT:
@@ -126,7 +138,7 @@ void objectCode(struct codenode *head)
                 break;
             }
 
-            for (p = h, i = 0; i < symbolTable.symbols[h->opn1.offset].paramnum; i++) //��λ����һ��ʵ�εĽ��?
+            for (p = h, i = 0; i < symbolTable.symbols[h->opn1.offset].paramnum; i++) //��λ����һ��ʵ�εĽ��??
                 p = p->prior;
             //�����¼�ռ�
             fprintf(fp, "  move $t0,$sp\n"); //���浱ǰ������sp��$t0�У�Ϊ��ȡʵ�α��ʽ���?
