@@ -46,7 +46,7 @@ extern FILE *yyin;
 
 %%
 
-program: ExtDefList    { /*display($1,0);*/semantic_Analysis0($1);}     
+program: ExtDefList    { display($1,0);semantic_Analysis0($1);}     
          ; 
 ExtDefList: {$$=NULL;}
           | ExtDef ExtDefList {$$=mknode(EXT_DEF_LIST,$1,$2,NULL,yylineno);}   

@@ -1606,7 +1606,7 @@ yyreduce:
 
 /* Line 1455 of yacc.c  */
 #line 49 "parser.y"
-    { /*display($1,0);*/semantic_Analysis0((yyvsp[(1) - (1)].ptr));;}
+    { display((yyvsp[(1) - (1)].ptr),0);semantic_Analysis0((yyvsp[(1) - (1)].ptr));;}
     break;
 
   case 3:

@@ -1,17 +1,9 @@
+
+
 //条件语句不能加数组访问
 //条件语句不能直接单值
 //main 需要 return 0
 //仅支持一维数组
-
-// int main ()
-// {
-//   int i = 5;
-//   for(;i>0;i--)
-//   {
-//     write(i);
-//   }
-//   return 0;
-// }
 
 // int main()
 // {
@@ -23,11 +15,11 @@
 //     write(b);
 //     a = b;
 //     b= c;
-   
 //   }
 //   return 0;
 // }
 
+// float test;
 // int fact(int n)
 // {
 //   if(n == 1)
@@ -35,7 +27,6 @@
 //   else 
 //     return (n*fact(n-1));
 // }
-
 // int main()
 // {
 //   int m,result;
@@ -49,32 +40,35 @@
 // }
 
 
-// int fibo(int a) 
-// {
-//   if (a==1|| a==2) return 1;
-//   return fibo(a-1) + fibo(a-2);
-// }
-// int main() 
-// {
-//   int m,n,i;
-//   int j = 1; 
-//   m = read();
-//   i = 1;
-//   while(i<=m)
-//   {
-//     n = fibo(i);
-//     write(n);
-//     i = i+1;
-//   }
-//   return 1;
-// }
-
-int main()
+int a,b,c;
+float m,n[3];
+int fibo(int a) 
 {
-  int arr[3] = {1,2,3},i;
-  for(i=0;i<3;i++)
-  {
-    write(arr[i]);
-  }
-  return 0 ;
+  if (a==1|| a==2) return 1;
+  return fibo(a-1) + fibo(a-2);
 }
+int main() //main function define
+{
+  int m,n,i;
+  m = read();
+  i = 1;
+  while(i<=m)
+  {
+    n = fibo(i);
+    write(n);
+    i = i+1;
+  }
+  return 1;
+}
+
+// int main()
+// {
+//   int arr[3] = {3,2,1},i,max=-1;
+//   for(i=0;i<3;i++)
+//   {
+//     if(max<arr[i])
+//       max = arr[i];
+//   }
+//   write(max);
+//   return 0 ;
+// }

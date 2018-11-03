@@ -1,435 +1,18 @@
 #include "def.h"
 
-int LEV = 0; //���
+int LEV = 0; 
 
-void semantic_error(int line, char *msg1, char *msg2)
-{
-  //�������ֻ�ռ�������Ϣ�������һ����ʾ
-  printf("Error type C at Line %d :%s %s\n", line, msg1, msg2);
-}
-
-char *strcat0(char *s1, char *s2)
-{
-  static char result[10];
-  strcpy(result, s1);
-  strcat(result, s2);
-  return result;
-}
-
-char *newAlias()
-{
-  static int no = 1;
-  char s[10];
-  itoa(no++, s, 10);
-  return strcat0("v", s);
-}
-
-char *newLabel()
-{
-  static int no = 1;
-  char s[10];
-  itoa(no++, s, 10);
-  return strcat0("label", s);
-}
-
-char *newTemp()
-{
-  static int no = 1;
-  char s[10];
-  itoa(no++, s, 10);
-  return strcat0("temp", s);
-}
-
-char *getTypeChar(enum node_kind src)
-{
-  switch (src)
-  {
-  case INT:
-    return "int";
-    break;
-  case FLOAT:
-    return "float";
-    break;
-  case CHAR:
-    return "char";
-    break;
-  case VOID:
-    return "void";
-    break;
-  default:
-    return NULL;
-  }
-  return NULL;
-}
-
-int getWidth(enum node_kind src)
-{
-  switch (src)
-  {
-  case INT:
-    return INT_LENGTH;
-    break;
-  case FLOAT:
-    return FLOAT_LENGTH;
-    break;
-  case CHAR:
-    return CHAR_LENGTH;
-    break;
-  default:
-    return 0;
-  }
-  return 0;
-}
-
-enum node_kind getType(char *src)
-{
-  if (!strcmp(src, "int"))
-  {
-    return INT;
-  }
-  else if (!strcmp(src, "float"))
-  {
-    return FLOAT;
-  }
-  else if (!strcmp(src, "char"))
-  {
-    return CHAR;
-  }
-  else
-  {
-    return -1;
-  }
-}
-
-enum node_kind getOpFromAssign(enum node_kind src)
-{
-  switch (src)
-  {
-  case DIVASSIGN:
-    return DIV;
-  case PLUSASSIGN:
-    return PLUS;
-  case MINUSASSIGN:
-    return MINUS;
-  case MULTASSIGN:
-    return MULT;
-  default:
-    return;
-  }
-}
-
-enum node_kind getRelOpFromString(char *src)
-{
-  if (strcmp(src, "<") == 0)
-    return JLT;
-  else if (strcmp(src, "<=") == 0)
-    return JLE;
-  else if (strcmp(src, ">") == 0)
-    return JGT;
-  else if (strcmp(src, ">=") == 0)
-    return JGE;
-  else if (strcmp(src, "==") == 0)
-    return EQ;
-  else if (strcmp(src, "!=") == 0)
-    return NEQ;
-  else
-    return 0;
-}
-
-void setArrayAribute(struct node *T, int rtn)
-{
-  struct node *T0 = T->ptr[0];
-  while (T0)
-  {
-    if (T0->ptr[0]->type_int <= 0)
-    {
-      semantic_error(T->pos, T->type_id, "set bound is invalid.");
-      T->error = 1;
-    }
-    T->arrayLimit[T->dimension++] = T0->ptr[0]->type_int;
-    T0 = T0->ptr[1];
-  }
-  T->num = 1;
-  int num = T->dimension;
-  symbolTable.symbols[rtn].dimension = T->dimension;
-  while (num--)
-  {
-    T->num *= T->arrayLimit[num];
-    symbolTable.symbols[rtn].arrayLimit[num] = T->arrayLimit[num];
-  }
-}
-
-void setCodeVal(struct opn *src, struct node *T, enum node_kind type)
-{
-  switch (type)
-  {
-  case INT:
-    src->const_int = T->type_int;
-    break;
-  case FLOAT:
-    src->const_float = T->type_float;
-    break;
-  case CHAR:
-    src->const_char = T->type_id[0];
-    break;
-  default:
-    break;
-  }
-}
-
-void setFalsyVal(struct opn *src, enum node_kind type)
-{
-  switch (type)
-  {
-  case INT:
-    src->const_int = 0;
-    break;
-  case FLOAT:
-    src->const_float = 0.0;
-    break;
-  case CHAR:
-    src->const_char = '\0';
-    break;
-  default:
-    break;
-  }
-}
-
-void setOpn(struct opn *src, int kind, int type, int offset)
-{
-  src->kind = kind;
-  src->offset = offset;
-  src->type = type;
-}
-
-void mergeLogicOp(struct node *T, struct codenode *in, char *label, int originVal)
-{
-  struct opn opn1, opn2, result;
-  setOpn(&result, ID, T->type, symbolTable.symbols[T->place].offset);
-  strcpy(result.id, symbolTable.symbols[T->place].alias);
-  opn1.kind = T->type;
-  opn1.const_int = originVal ? 1 : 0;
-  if (T->ptr[1])
-    T->code = merge(4, T->ptr[0]->code, T->ptr[1]->code, genIR(ASSIGNOP, opn1, opn2, result), in);
-  else
-    T->code = merge(3, T->ptr[0]->code, genIR(ASSIGNOP, opn1, opn2, result), in);
-  opn1.const_int = originVal ? 0 : 1;
-  T->code = merge(3, T->code, genIR(ASSIGNOP, opn1, opn2, result), genLabel(label));
-}
-
-//����һ��TAC����Ľ����ɵ�˫��ѭ����������ͷָ��
-struct codenode *genIR(int op, struct opn opn1, struct opn opn2, struct opn result)
-{
-  struct codenode *h = (struct codenode *)malloc(sizeof(struct codenode));
-  h->op = op;
-  h->opn1 = opn1;
-  h->opn2 = opn2;
-  h->result = result;
-  h->next = h->prior = h;
-  return h;
-}
-
-//����һ�������䣬����ͷָ��
-struct codenode *genLabel(char *label)
-{
-  struct codenode *h = (struct codenode *)malloc(sizeof(struct codenode));
-  h->op = LABEL;
-  strcpy(h->result.id, label);
-  h->next = h->prior = h;
-  return h;
-}
-
-//����GOTO��䣬����ͷָ��
-struct codenode *genGoto(char *label)
-{
-  struct codenode *h = (struct codenode *)malloc(sizeof(struct codenode));
-  h->op = GOTO;
-  strcpy(h->result.id, label);
-  h->next = h->prior = h;
-  return h;
-}
-
-//�ϲ�����м�����˫��ѭ��������β����
-struct codenode *merge(int num, ...)
-{
-  struct codenode *h1, *h2, *p, *t1, *t2;
-  va_list ap;
-  va_start(ap, num);
-  h1 = va_arg(ap, struct codenode *);
-  while (--num > 0)
-  {
-    h2 = va_arg(ap, struct codenode *);
-    if (h1 == NULL)
-      h1 = h2;
-    else if (h2)
-    {
-      t1 = h1->prior;
-      t2 = h2->prior;
-      t1->next = h2;
-      t2->next = h1;
-      h1->prior = t2;
-      h2->prior = t1;
-    }
-  }
-  va_end(ap);
-  return h1;
-}
-
-//����м����
-void prnIR(struct codenode *head)
-{
-  char opnstr1[32], opnstr2[32], resultstr[32];
-  struct codenode *h = head;
-  do
-  {
-    if (h->opn1.kind == INT)
-      sprintf(opnstr1, "#%d", h->opn1.const_int);
-    if (h->opn1.kind == FLOAT)
-      sprintf(opnstr1, "#%f", h->opn1.const_float);
-    if (h->opn1.kind == CHAR)
-      sprintf(opnstr1, "#'%c'", h->opn1.const_char);
-    if (h->opn1.kind == ID)
-      sprintf(opnstr1, "%s", h->opn1.id);
-    if (h->opn2.kind == INT)
-      sprintf(opnstr2, "#%d", h->opn2.const_int);
-    if (h->opn2.kind == FLOAT)
-      sprintf(opnstr2, "#%f", h->opn2.const_float);
-    if (h->opn2.kind == CHAR)
-      sprintf(opnstr2, "#'%c'", h->opn2.const_char);
-    if (h->opn2.kind == ID)
-      sprintf(opnstr2, "%s", h->opn2.id);
-    sprintf(resultstr, "%s", h->result.id);
-    switch (h->op)
-    {
-    case ASSIGNOP:
-      printf("  %s := %s\n", resultstr, opnstr1);
-      break;
-    case ARR_ACCESS:
-      printf("  %s := %s [ %s ]\n", resultstr, opnstr1, opnstr2);
-      break;
-    case ARR_INIT:
-      printf("  %s [ %s ] := %s\n", resultstr, opnstr1, opnstr2);
-      break;
-    case PLUS:
-    case MINUS:
-    case MULT:
-    case DIV:
-      printf("  %s := %s %c %s\n", resultstr, opnstr1,
-             h->op == PLUS ? '+' : h->op == MINUS ? '-' : h->op == MULT ? '*' : '/', opnstr2);
-      break;
-    case FUNCTION:
-      printf("\nFUNCTION %s :\n", h->result.id);
-      break;
-    case PARAM:
-      printf("  PARAM %s\n", h->result.id);
-      break;
-    case LABEL:
-      printf("LABEL %s :\n", h->result.id);
-      break;
-    case GOTO:
-      printf("  GOTO %s\n", h->result.id);
-      break;
-    case JLE:
-      printf("  IF %s <= %s GOTO %s\n", opnstr1, opnstr2, resultstr);
-      break;
-    case JLT:
-      printf("  IF %s < %s GOTO %s\n", opnstr1, opnstr2, resultstr);
-      break;
-    case JGE:
-      printf("  IF %s >= %s GOTO %s\n", opnstr1, opnstr2, resultstr);
-      break;
-    case JGT:
-      printf("  IF %s > %s GOTO %s\n", opnstr1, opnstr2, resultstr);
-      break;
-    case EQ:
-      printf("  IF %s == %s GOTO %s\n", opnstr1, opnstr2, resultstr);
-      break;
-    case NEQ:
-      printf("  IF %s != %s GOTO %s\n", opnstr1, opnstr2, resultstr);
-      break;
-    case ARG:
-      printf("  ARG %s\n", h->result.id);
-      break;
-    case CALL:
-      printf("  %s := CALL %s\n", resultstr, opnstr1);
-      break;
-    case RETURN:
-      if (h->result.kind)
-        printf("  RETURN %s\n", resultstr);
-      else
-        printf("  RETURN\n");
-      break;
-    }
-    h = h->next;
-  } while (h != head);
-}
-
-void prn_symbol()
-{
-  int i = 0;
-  printf("%6s %6s %6s  %6s %6s %6s\n", "var", "alias", "level", "type", "label", "offset");
-  for (i = 0; i < symbolTable.index; i++)
-    printf("%6s %6s %6d  %6s %6c %6d\n", symbolTable.symbols[i].name,
-           symbolTable.symbols[i].alias, symbolTable.symbols[i].level,
-           getTypeChar(symbolTable.symbols[i].type),
-           symbolTable.symbols[i].flag, symbolTable.symbols[i].offset);
-}
-
-int searchSymbolTable(char *name)
-{
-  int i;
-  for (i = symbolTable.index - 1; i >= 0; i--)
-    if (!strcmp(symbolTable.symbols[i].name, name))
-      return i;
-  return -1;
-}
-
-int fillSymbolTable(char *name, char *alias, int level, int type, char flag, int offset)
-{
-  //���ȸ���name����ű������ظ����� �ظ����巵��-1
-  int i;
-  /*���Ų��أ������ⲿ��������ǰ�к������壬
-    ���β������ڷ��ű��У���ʱ���ⲿ������ǰ�������β������������*/
-  for (i = symbolTable.index - 1; symbolTable.symbols[i].level == level || (level == 0 && i >= 0); i--)
-  {
-    if (level == 0 && symbolTable.symbols[i].level == 1)
-      continue; //�ⲿ�������ββ��رȽ�����
-    if (!strcmp(symbolTable.symbols[i].name, name))
-      return -1;
-  }
-  //��д���ű�����
-  strcpy(symbolTable.symbols[symbolTable.index].name, name);
-  strcpy(symbolTable.symbols[symbolTable.index].alias, alias);
-  symbolTable.symbols[symbolTable.index].level = level;
-  symbolTable.symbols[symbolTable.index].type = type;
-  symbolTable.symbols[symbolTable.index].flag = flag;
-  symbolTable.symbols[symbolTable.index].offset = offset;
-  return symbolTable.index++; //���ص��Ƿ����ڷ��ű��е�λ����ţ��м��������ʱ�������ȡ�����ű���
-}
-
-//��д��ʱ���������ű�������ʱ�����ڷ��ű��е�λ��
-int fill_Temp(char *name, int level, int type, char flag, int offset)
-{
-  strcpy(symbolTable.symbols[symbolTable.index].name, "");
-  strcpy(symbolTable.symbols[symbolTable.index].alias, name);
-  symbolTable.symbols[symbolTable.index].level = level;
-  symbolTable.symbols[symbolTable.index].type = type;
-  symbolTable.symbols[symbolTable.index].flag = flag;
-  symbolTable.symbols[symbolTable.index].offset = offset;
-  return symbolTable.index++; //���ص�����ʱ�����ڷ��ű��е�λ�����
-}
-
-void ext_var_list(struct node *T) //�����ⲿ�����б�
+void ext_var_list(struct node *T) 
 {
   int rtn, num = 1;
   switch (T->kind)
   {
   case EXT_DEC_LIST:
-    T->ptr[0]->type = T->type;     //�������������´��ݱ������
+    T->ptr[0]->type = T->type;     //�������������´��ݱ������?
     T->ptr[0]->offset = T->offset; //�ⲿ������ƫ�������´���
     ext_var_list(T->ptr[0]);
     T->error = T->ptr[0]->error ? T->ptr[0]->error : T->error;
-    T->ptr[1]->type = T->type;                //�������������´��ݱ������
+    T->ptr[1]->type = T->type;                //�������������´��ݱ������?
     T->ptr[1]->offset = T->offset + T->width; //�ⲿ������ƫ�������´���
     T->ptr[1]->width = T->width;
     ext_var_list(T->ptr[1]);
@@ -437,7 +20,7 @@ void ext_var_list(struct node *T) //�����ⲿ�����б�
     T->num = T->ptr[1]->num + T->ptr[0]->num;
     break;
   case ARR_INIT:
-    rtn = fillSymbolTable(T->type_id, newAlias(), LEV, T->type, 'A', T->offset); //���һ��������
+    rtn = fillSymbolTable(T->type_id, newAlias(), LEV, T->type, 'A', T->offset); //���һ��������?
     if (rtn == -1)
     {
       T->error = 1;
@@ -450,7 +33,7 @@ void ext_var_list(struct node *T) //�����ⲿ�����б�
     setArrayAribute(T, rtn);
     break;
   case ID:
-    rtn = fillSymbolTable(T->type_id, newAlias(), LEV, T->type, 'V', T->offset); //���һ��������
+    rtn = fillSymbolTable(T->type_id, newAlias(), LEV, T->type, 'V', T->offset); //���һ��������?
     if (rtn == -1)
     {
       T->error = 1;
@@ -471,13 +54,13 @@ void local_var_list(struct node *T)
   struct opn opn1, opn2, result;
   struct node *T0 = T->ptr[1]; //T0Ϊ�������б�������ָ�룬��ID��ASSIGNOP�����ڵǼǵ����ű���Ϊ�ֲ�����
   struct node *T1;
-  int width = getWidth(T->ptr[0]->type); //һ���������
+  int width = getWidth(T->ptr[0]->type); //һ���������?
   T->code = NULL;
   T->ptr[1]->type = T->ptr[0]->type; //ȷ���������и���������
   T->width = 0;
   T0->offset = T->offset;
   while (T0)
-  {                                  //��������DEC_LIST���
+  {                                  //��������DEC_LIST���?
     T0->ptr[0]->type = T0->type;     //�����������´���
     T0->ptr[0]->offset = T0->offset; //�����������´���
     if (T0->ptr[1])
@@ -580,7 +163,7 @@ void local_var_list(struct node *T)
   }
 }
 
-//ƥ�������������
+
 int match_param(int i, struct node *T, struct node *parent)
 {
   int j, num = symbolTable.symbols[i].paramnum;
@@ -609,14 +192,14 @@ int match_param(int i, struct node *T, struct node *parent)
     T = T->ptr[1];
   }
   if (T)
-  { //num�������Ѿ�ƥ���꣬����ʵ�α��ʽ
+  { //num�������Ѿ�ƥ���꣬����ʵ�α���?
     parent->error = 1;
     semantic_error(parent->pos, "", "function's parameters are too many.");
     return 0;
   }
   return 1;
 }
-//�������ʽ���ο�����[2]p84��˼��
+
 void boolExp(struct node *T)
 {
   struct opn opn1, opn2, result;
@@ -645,7 +228,7 @@ void boolExp(struct node *T)
         T->code = genGoto(T->Etrue);
       else
         T->code = genGoto(T->Efalse);
-    case ID: //����ű���÷��ű��е�λ�ã�������type
+    case ID: 
       rtn = searchSymbolTable(T->type_id);
       if (rtn == -1)
       {
@@ -671,7 +254,7 @@ void boolExp(struct node *T)
       }
       T->width = 0;
       break;
-    case RELOP: //�����ϵ������ʽ,2�������������������ʽ����
+    case RELOP: //�����ϵ�������?,2�������������������ʽ����?
       T->ptr[0]->offset = T->ptr[1]->offset = T->offset;
       Exp(T->ptr[0]);
       T->error = T->ptr[0]->error ? T->ptr[0]->error : T->error;
@@ -728,7 +311,7 @@ void boolExp(struct node *T)
     }
   }
 }
-//����������ʽ���ο�����[2]p82��˼��
+
 void Exp(struct node *T)
 {
   int rtn, num, width;
@@ -740,7 +323,7 @@ void Exp(struct node *T)
   {
     switch (T->kind)
     {
-    case ID: //����ű���÷��ű��е�λ�ã�������type
+    case ID: 
       rtn = searchSymbolTable(T->type_id);
       if (rtn == -1)
       {
@@ -759,11 +342,11 @@ void Exp(struct node *T)
       }
       else
       {
-        T->place = rtn; //��㱣������ڷ��ű��е�λ��
-        T->code = NULL; //��ʶ������Ҫ����TAC
+        T->place = rtn; 
+        T->code = NULL; 
         T->type = symbolTable.symbols[rtn].type;
         T->offset = symbolTable.symbols[rtn].offset;
-        T->width = 0; //δ��ʹ���µ�Ԫ
+        T->width = 0; 
       }
       break;
     case INT:
@@ -1086,11 +669,11 @@ void Exp(struct node *T)
         break;
       }
       T->type = symbolTable.symbols[rtn].type;
-      width = getWidth(T->type); //��ź�������ֵ�ĵ����ֽ���
+      width = getWidth(T->type); //��ź�������ֵ�ĵ����ֽ���?
       if (T->ptr[0])
       {
         T->ptr[0]->offset = T->offset;
-        Exp(T->ptr[0]); //��������ʵ�α��ʽ��ֵ��������
+        Exp(T->ptr[0]); //��������ʵ�α��ʽ��ֵ��������?
         T->error = T->ptr[0]->error ? T->ptr[0]->error : T->error;
         T->width = T->ptr[0]->width + width; //�ۼ��ϼ���ʵ��ʹ����ʱ�����ĵ�Ԫ��
         T->code = T->ptr[0]->code;
@@ -1101,7 +684,7 @@ void Exp(struct node *T)
         T->code = NULL;
       }
       match_param(rtn, T->ptr[0], T); //�������Բ�����ƥ��
-      T0 = T->ptr[0];                 //��������б���м����
+      T0 = T->ptr[0];                 //��������б���м����?
       while (T0)
       {
         result.kind = ID;
@@ -1113,11 +696,11 @@ void Exp(struct node *T)
       T->place = fill_Temp(newTemp(), LEV, T->type, 'T', T->offset + T->width - width);
       opn1.kind = ID;
       strcpy(opn1.id, T->type_id); //���溯����
-      opn1.offset = rtn;           //����offset���Ա��溯���������,��Ŀ���������ʱ���ܻ�ȡ��Ӧ��Ϣ
+      opn1.offset = rtn;           //����offset���Ա��溯���������?,��Ŀ���������ʱ���ܻ�ȡ��Ӧ���?
       result.kind = ID;
       strcpy(result.id, symbolTable.symbols[T->place].alias);
       result.offset = symbolTable.symbols[T->place].offset;
-      T->code = merge(2, T->code, genIR(CALL, opn1, opn2, result)); //���ɺ��������м����
+      T->code = merge(2, T->code, genIR(CALL, opn1, opn2, result)); //���ɺ��������м����?
       break;
     case ARGS: //�˴��������ʵ�α��ʽ����ֵ�Ĵ������У�������ARG��ʵ��ϵ��
       T->ptr[0]->offset = T->offset;
@@ -1139,7 +722,7 @@ void Exp(struct node *T)
 }
 
 void semantic_Analysis(struct node *T)
-{ //�Գ����﷨�����ȸ�����,��display�Ŀ��ƽṹ�޸���ɷ��ű������������TAC���ɣ���䲿�֣�
+{ //�Գ����﷨�����ȸ�����,��display�Ŀ��ƽṹ�޸���ɷ��ű������������TAC���ɣ���䲿�֣�?
   int rtn, num, width, tempOffset;
   struct node *T0;
   struct opn opn1, opn2, result;
@@ -1162,35 +745,35 @@ void semantic_Analysis(struct node *T)
         T->code = merge(2, T->code, T->ptr[1]->code);
       }
       break;
-    case EXT_VAR_DEF: //�����ⲿ˵��,����һ������(TYPE���)�е������͵��ڶ������ӵ�������
+    case EXT_VAR_DEF: //�����ⲿ˵��,����һ������(TYPE���?)�е������͵��ڶ������ӵ�������
       T->type = T->ptr[1]->type = getType(T->ptr[0]->type_id);
-      T->ptr[1]->offset = T->offset;        //����ⲿ������ƫ�������´���
-      T->ptr[1]->width = getWidth(T->type); //��һ�������Ŀ�����´���
+      T->ptr[1]->offset = T->offset;        //����ⲿ������ƫ�������´���?
+      T->ptr[1]->width = getWidth(T->type); //��һ�������Ŀ�����´���?
       ext_var_list(T->ptr[1]);              //�����ⲿ����˵���еı�ʶ������
       T->error = T->ptr[1]->error ? T->ptr[1]->error : T->error;
       T->width = getWidth(T->type) * T->ptr[1]->num; //��������ⲿ����˵���Ŀ��
-      T->code = NULL;                                //����ٶ��ⲿ������֧�ֳ�ʼ��
+      T->code = NULL;                                //����ٶ��ⲿ������֧�ֳ�ʼ��?
       break;
     case FUNC_DEF: //��д����������Ϣ�����ű�
       if (T->ptr[0])
-        T->ptr[1]->type = T->ptr[0]->type; //��ȡ�������������͵����������������Ľ��
+        T->ptr[1]->type = T->ptr[0]->type; //��ȡ�������������͵����������������Ľ��?
       else
         T->ptr[1]->type = VOID;
-      T->width = 0; //�����Ŀ������Ϊ0��������ⲿ�����ĵ�ַ�������Ӱ��
+      T->width = 0; //�����Ŀ�������?0��������ⲿ�����ĵ�ַ�������Ӱ��
       tempOffset = T->offset;
       T->offset = DX;               //���þֲ������ڻ��¼�е�ƫ������ֵ
-      semantic_Analysis(T->ptr[1]); //���������Ͳ�����㲿�֣����ﲻ�����üĴ������ݲ���
+      semantic_Analysis(T->ptr[1]); //���������Ͳ�����㲿�֣����ﲻ�����üĴ������ݲ���?
       T->error = T->ptr[1]->error ? T->ptr[1]->error : T->error;
       T->place = T->ptr[1]->place;
-      T->offset += T->ptr[1]->width; //���βε�Ԫ����޸ĺ����ֲ���������ʼƫ����
+      T->offset += T->ptr[1]->width; //���βε�Ԫ����޸ĺ����ֲ���������ʼƫ����?
       T->ptr[2]->offset = T->offset;
       strcpy(T->ptr[2]->Snext, newLabel()); //���������ִ�н������λ������
       T->ptr[2]->error = T->error;
       semantic_Analysis(T->ptr[2]); //����������
       T->error = T->ptr[2]->error ? T->ptr[2]->error : T->error;
-      //������¼��С,����offset���Դ�ŵ��ǻ��¼��С������ƫ��
+      //������¼���?,����offset���Դ�ŵ��ǻ��¼��С������ƫ��?
       symbolTable.symbols[T->ptr[1]->place].offset = T->offset + T->ptr[2]->width;
-      T->code = merge(3, T->ptr[1]->code, T->ptr[2]->code, genLabel(T->ptr[2]->Snext)); //������Ĵ�����Ϊ�����Ĵ���
+      T->code = merge(3, T->ptr[1]->code, T->ptr[2]->code, genLabel(T->ptr[2]->Snext)); //������Ĵ�����Ϊ�����Ĵ���?
       T->offset = tempOffset;
       break;
     case FUNC_DEC:                                                         //���ݷ������ͣ���������д���ű�
@@ -1230,7 +813,7 @@ void semantic_Analysis(struct node *T)
         semantic_Analysis(T->ptr[1]);
         T->error = T->ptr[1]->error ? T->ptr[1]->error : T->error;
         T->num = T->ptr[0]->num + T->ptr[1]->num;             //ͳ�Ʋ�������
-        T->width = T->ptr[0]->width + T->ptr[1]->width;       //�ۼӲ�����Ԫ���
+        T->width = T->ptr[0]->width + T->ptr[1]->width;       //�ۼӲ�����Ԫ���?
         T->code = merge(2, T->ptr[0]->code, T->ptr[1]->code); //���Ӳ�������
       }
       else
@@ -1250,8 +833,8 @@ void semantic_Analysis(struct node *T)
       else
       {
         T->ptr[1]->place = rtn;
-        T->num = 1;                           //������������ĳ�ʼֵ
-        T->width = getWidth(T->ptr[0]->type); //�������
+        T->num = 1;                           //������������ĳ�ʼ�?
+        T->width = getWidth(T->ptr[0]->type); //�������?
         result.kind = ID;
         strcpy(result.id, symbolTable.symbols[rtn].alias);
         result.offset = T->offset;
@@ -1260,7 +843,7 @@ void semantic_Analysis(struct node *T)
       break;
     case COMP_STM:
       LEV++;
-      //���ò�ż�1�����ұ���ò�ֲ������ڷ��ű��е���ʼλ����symbol_scope_TX
+      //���ò�ż�?1�����ұ���ò�ֲ������ڷ��ű��е���ʼλ����symbol_scope_TX
       symbol_scope_TX.TX[symbol_scope_TX.top++] = symbolTable.index;
       T->width = 0;
       T->code = NULL;
@@ -1277,14 +860,14 @@ void semantic_Analysis(struct node *T)
         strcpy(T->ptr[1]->Sbreak, T->Sbreak);
         T->ptr[1]->offset = T->offset + T->width;
         strcpy(T->ptr[1]->Snext, T->Snext); //S.next�������´���
-        semantic_Analysis(T->ptr[1]);       //�����������������
+        semantic_Analysis(T->ptr[1]);       //�����������������?
         T->error = T->ptr[1]->error ? T->ptr[1]->error : T->error;
         T->width += T->ptr[1]->width;
         T->code = merge(2, T->code, T->ptr[1]->code);
       }
       if (!T->error)
       {
-        prn_symbol(); //c���˳�һ���������ǰ��ʾ�ķ��ű�
+        prn_symbol(); //c���˳�һ���������ǰ��ʾ�ķ��ű�?
       }
       LEV--;                                                         //��������䣬��ż�1
       symbolTable.index = symbol_scope_TX.TX[--symbol_scope_TX.top]; //ɾ�����������еķ���
@@ -1308,7 +891,7 @@ void semantic_Analysis(struct node *T)
         T->width += T->ptr[1]->width;
       }
       break;
-    case VAR_DEF: //����һ���ֲ���������,����һ������(TYPE���)�е������͵��ڶ������ӵ�������
+    case VAR_DEF: //����һ���ֲ���������,����һ������(TYPE���?)�е������͵��ڶ������ӵ�������
       local_var_list(T);
       break;
     case STM_LIST:
@@ -1317,8 +900,8 @@ void semantic_Analysis(struct node *T)
         T->code = NULL;
         T->width = 0;
         break;
-      }              //���������
-      if (T->ptr[1]) //2������������ӣ������±����Ϊ��һ���������󵽴��λ��
+      }              //���������?
+      if (T->ptr[1]) //2������������ӣ������±����Ϊ��һ���������󵽴��λ��?
         strcpy(T->ptr[0]->Snext, newLabel());
       else //������н���һ����䣬S.next�������´���
         strcpy(T->ptr[0]->Snext, T->Snext);
@@ -1331,18 +914,18 @@ void semantic_Analysis(struct node *T)
       if (T->ptr[1])
       {
         strcpy(T->ptr[1]->Sbreak, T->Sbreak);
-        strcpy(T->ptr[1]->Snext, T->Snext); //2�������������,S.next�������´���
-        T->ptr[1]->offset = T->offset;      //˳��ṹ����Ԫ��ʽ
+        strcpy(T->ptr[1]->Snext, T->Snext); //2�������������?,S.next�������´���
+        T->ptr[1]->offset = T->offset;      //˳��ṹ����Ԫ���?
         // T->ptr[1]->offset = T->offset + T->ptr[0]->width; //˳��ṹ˳����䵥Ԫ��ʽ
         semantic_Analysis(T->ptr[1]);
         T->error = T->ptr[1]->error ? T->ptr[1]->error : T->error;
-        //�����е�1��Ϊ���ʽ��䣬������䣬�������ʱ����2��ǰ����Ҫ���
+        //�����е�1��Ϊ���ʽ��䣬������䣬�������ʱ����2��ǰ����Ҫ���?
         if (T->ptr[0]->kind == RETURN || T->ptr[0]->kind == EXP_STMT || T->ptr[0]->kind == COMP_STM)
           T->code = merge(2, T->code, T->ptr[1]->code);
         else
           T->code = merge(3, T->code, genLabel(T->ptr[0]->Snext), T->ptr[1]->code);
         if (T->ptr[1]->width > T->width)
-          T->width = T->ptr[1]->width; //˳��ṹ����Ԫ��ʽ
+          T->width = T->ptr[1]->width; //˳��ṹ����Ԫ���?
                                        //T->width+=T->ptr[1]->width;//˳��ṹ˳����䵥Ԫ��ʽ
       }
       break;
@@ -1532,13 +1115,13 @@ void semantic_Analysis0(struct node *T)
 {
   symbolTable.index = 0;
   fillSymbolTable("read", "", 0, INT, 'F', 4);
-  symbolTable.symbols[0].paramnum = 0; //read���βθ���
+  symbolTable.symbols[0].paramnum = 0; 
   fillSymbolTable("write", "", 0, INT, 'F', 4);
   fillSymbolTable("x", "", 1, INT, 'P', DX);
   symbolTable.symbols[1].paramnum = 1;
-  symbol_scope_TX.TX[0] = 0; //�ⲿ�����ڷ��ű��е���ʼ���Ϊ0
+  symbol_scope_TX.TX[0] = 0; 
   symbol_scope_TX.top = 1;
-  T->offset = 0; //�ⲿ��������������ƫ����
+  T->offset = 0; 
   semantic_Analysis(T);
   printf("%d", T->error);
   if (!T->error)
